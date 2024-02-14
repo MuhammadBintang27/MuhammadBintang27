@@ -1,0 +1,276 @@
+* {
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Meiji Sans', 'Helvetica Neue', 'Helvetica', -apple-system, sans-serif;
+}
+
+body {
+    transition: background-color 0.32s ease-out;
+    background-color: #fff;
+}
+p{
+    line-height: 40px;
+    font-size: larger;
+}
+/* header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 0;
+    mix-blend-mode: exclusion;
+    background: transparent;
+    background-color: transparent;
+    z-index: 100;
+    color: #ffffff;
+    font-family: inherit;
+
+}
+header h1{
+    letter-spacing: 3px;
+    font-size: 100%;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+.nav-left {
+    float: left;
+}
+
+.nav-right {
+    float: right;
+}
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav li {
+    padding: 10px 15px;
+    margin: 0;
+    line-height: 100%;
+    position: relative;
+    font-size: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+nav a:hover {
+    color: #d1a0a0;
+    text-decoration: underline;
+    transition: 0.5s;
+}
+.nav-right a.active {
+    text-decoration: underline;
+}
+
+/* Main */
+.main {
+    position: relative; /* Set kontainer utama sebagai posisi relatif */
+}
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin: 20px auto;
+    max-width: 1200px;
+    background-color: #ffffff;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+.text-container {
+    flex: 1;
+    padding: 0 20px;
+}
+.text-container p {
+    font-size: 25px;
+    font-family: 'Sorts Mill Goudy', serif;
+    line-height: 35px;
+}
+
+.education h3 {
+    font-family: serif;
+    letter-spacing: 2px;
+    font-size: 24px;
+    line-height: 150%;
+}
+
+h5 {
+    font-weight: 100;
+    font-family: 'Sorts Mill Goudy', 'Noto Serif KR', serif;
+    font-size: 20px;
+    margin: 10px 0;
+    letter-spacing: 2px;
+}
+
+.medsos {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+    letter-spacing: 2px;
+}
+
+.medsos:hover {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+}
+/* Educational history */
+.education {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 130px;
+}
+.education ul {
+    list-style: none;
+    padding-top: 30px;
+    margin: 0;
+}
+.education li{
+    padding-bottom: 20px;
+}
+.year {
+    position: absolute;
+    margin-left: -100px;
+    color: #888;
+    font-size: 150%;
+    padding-top: 4.5px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+.sekolah{
+    font-size: 98%;
+}
+/* Gallery */
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+    padding: 10px;
+    flex: 0 0 calc(33.33% - 20px);
+    max-width: calc(33.33% - 20px);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    -webkit-transform: rotateZ(-10deg);
+        -ms-transform: rotateZ(-10deg);
+        transform: rotateZ(-10deg);
+        transition: 1s ease;
+}
+
+h2{
+    padding-top: 10px;
+    font-weight: 400;
+    font-family: Georgia;
+}
+.content-awal{
+    background-color: #0e0c0a;
+}
+
+.video-container {
+    position: relative; /* Set kontainer video sebagai posisi relatif */
+}
+
+.text-overlay {
+    font-family: serif;
+    margin-top: -32px;
+    margin-right: auto;
+    margin-left: auto;
+    letter-spacing: 2px;
+    font-size: 250%;
+    line-height: 80%;
+    color: transparent;
+    mix-blend-mode: exclusion;
+    width: 1000px;
+    height: 40px;
+    background-position: center;
+    position: absolute; 
+    top: 50%; 
+    left: 0; 
+    right: 0; 
+    transform: translateY(-50%); 
+    text-align: center; 
+    color: #fff; 
+    z-index: 10; 
+}
+.text-overlay h3{
+    font-family: serif;
+    white-space: nowrap;
+    text-align: center;
+}
+.text-overlay p{
+    font-size: 30%;
+    padding-top: 120px;
+    font-family: sans-serif;
+}
+main video {
+    background-color: #0e0c0a;
+    opacity: 0.3;
+    top: 0;
+    right: 0;
+    left: 0;
+    object-fit: cover;
+    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1; /* Atur z-index agar video berada di depan konten tambahan */
+}
+.aboutme{
+    text-decoration: none;
+    color: #000000;
+}
+.aboutme:hover{
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+    display: inline-block;
+}
+
+/* footer */
+footer{
+    padding-top: 100px;
+}
+.footer-container {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px;
+}
+
+.footer-container div {
+    text-align: center;
+}

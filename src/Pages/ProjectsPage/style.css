@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+body {
+    background-color: #e1dad0;
+    margin: 0;
+    font-family: Poppins, sans-serif;
+    font-size: 15px;
+}
+
+header .logo img {
+    height: 50px;
+}
+
+header {
+    width: 1140px;
+    max-width: 90%;
+    margin: auto;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 100;
+}
+
+header nav {
+    display: flex;
+    gap: 40px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #eee;
+    font-weight: 500;
+}
+
+.carousel {
+    width: 100%;
+    background-color: #555;
+    height: 720px;
+    color: #eee;
+    margin-top: -50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel .list {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.carousel .list .item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.carousel .list .item::before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    content: var(--title);
+    font-size: 15em;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #eee4;
+    z-index: -1;
+}
+
+.carousel .list .item .image {
+    flex-shrink: 0;
+    width: 600px;
+    height: 300px;
+    background-image: var(--img-src);
+    background-size: cover;
+    background-position: center;
+    border: 5px solid #eee; /* Warna border */
+    border-radius: 15px; /* Border melengkung */
+    transition: transform 0.3s ease-in-out;
+}
+
+.carousel .list .item .image:hover {
+    transform: scale(1.05); /* Efek saat hover */
+}
+
+.carousel .list .item .content {
+    width: 1140px;
+    max-width: 90%;
+    margin: auto;
+    height: 100%;
+    padding-top: 50px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.carousel .list .item .info .title {
+    font-size: 6em;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1em;
+}
+
+.carousel .list .item .info .category {
+    opacity: .9;
+}
+
+.carousel .list .item .info .des {
+    margin: 1em 0;
+}
+
+.carousel .list .item .info a {
+    display: inline-flex;
+    gap: 20px;
+    text-decoration: none;
+    color: #eee;
+    font-weight: 500;
+}
+
+/* Set active item */
+.carousel .list .item {
+    z-index: 1;
+}
+
+.carousel .list .item.active {
+    z-index: 2;
+}
+
+/* Arrows */
+.arrows button {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-family: monospace;
+    background-color: #eee3;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+    left: 10%;
+    transition: background 0.5s, color 0.5s;
+}
+
+.arrows button#next {
+    left: unset;
+    right: 10%;
+}
+
+.arrows button:hover {
+    background-color: #eee;
+    color: #000;
+}
+
+.dots li {
+    width: 15px;
+    height: 15px;
+    background-color: #eee5;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dots li.active {
+    background-color: #eee;
+}
+
+.dots {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    bottom: 30px;
+    z-index: 2;
+    width: max-content;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background 0.5s;
+}
+
+/* Responsive */
+@media screen and (max-width: 767px) {
+    .carousel {
+        height: 100vh;
+    }
+
+    .carousel .list .item .info {
+        position: absolute;
+        bottom: 10%;
+        width: 100%;
+        padding: 30px;
+        box-sizing: border-box;
+        text-align: center;
+        backdrop-filter: blur(20px);
+    }
+
+    .carousel .list .item .info .title {
+        font-size: 2em;
+    }
+
+    .carousel .list .item .info .des {
+        font-size: 0.8em;
+        text-align: justify;
+    }
+
+    .carousel .list .item .content {
+        justify-content: center;
+        align-items: start;
+    }
+
+    .arrows button {
+        top: unset;
+        bottom: 20px;
+    }
+}
+
+/* Effect */
+@keyframes transformAnimation {
+    from {
+        transform: translateX(var(--transform-from));
+    }
+    to {
+        transform: translateX(var(--transform-to));
+    }
+}
+
+.carousel.effect .item .image,
+.carousel.effect .item .info .title,
+.carousel.effect .item .info .category,
+.carousel.effect .item .info .des,
+.carousel.effect .item .info a {
+    animation: transformAnimation 1s ease-in-out 1 forwards;
+}
+
+.carousel.effect .item .info .category {
+    animation-delay: 0.1s;
+}
+
+.carousel.effect .item .info .des {
+    animation-delay: 0.2s;
+}
+
+.carousel.effect .item .info a {
+    animation-delay: 0.3s;
+}
+
+.carousel.effect .item.active {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    animation: animationClipPath 0.9s ease-in-out 1 forwards;
+}
+
+@keyframes animationClipPath {
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+.carousel.effect {
+    --transform: 300px;
+}
+
+.carousel.effect .item.active {
+    --transform-from: calc(var(--transform) * -1);
+    --transform-to: 0px;
+}
+
+.carousel.effect .item {
+    --transform-from: 0;
+    --transform-to: var(--transform);
+}
+
+
+.image {
+    position: relative;
+    /* existing image styles */
+  }
+  
+  .hover-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    display: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .image:hover .hover-button {
+    display: block;
+    opacity: 1;
+  }
+  

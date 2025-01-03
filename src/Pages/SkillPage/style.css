@@ -1,0 +1,23 @@
+@keyframes bubbleEffect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.skill {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animasi bubble */
+.scale-up {
+  animation: bubbleEffect 1s ease-in-out;
+}

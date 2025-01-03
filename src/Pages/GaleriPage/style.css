@@ -1,0 +1,90 @@
+@import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
+@import url('https://fonts.cdnfonts.com/css/poppins');
+
+.banner{
+    width: 100%;
+    height: 90vh; /* Reduced height */
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+.banner .slider{
+    position: absolute;
+    width: 150px; /* Reduced width */
+    height: 180px; /* Reduced height */
+    top: 15%; /* Adjusted to keep it centered */
+    left: calc(50% - 75px); /* Adjusted to keep it centered */
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: autoRun 20s linear infinite;
+    z-index: 2;
+}
+@keyframes autoRun{
+    from{
+        transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+    }to{
+        transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
+    }
+}
+
+.banner .slider .item{
+    position: absolute;
+    inset: 0 0 0 0;
+    transform: 
+        rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+        translateZ(500px); /* Reduced translation */
+}
+.banner .slider .item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.banner .content{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1200px, 100vw); /* Reduced max width */
+    height: max-content;
+    padding-bottom: 60px; /* Reduced padding */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+.banner .content h1{
+    font-family: 'ICA Rubrik';
+    font-size: 12em; /* Reduced font size */
+    line-height: 1em;
+    color: #25283B;
+    position: relative;
+}
+.banner .content h1::after{
+    position: absolute;
+    inset: 0 0 0 0;
+    content: attr(data-content);
+    z-index: 2;
+    -webkit-text-stroke: 2px #d2d2d2;
+    color: transparent;
+}
+.banner .content .author{
+    font-family: Poppins;
+    text-align: right;
+    max-width: 180px; /* Reduced max-width */
+}
+.banner .content h2{
+    font-size: 2.5em; /* Reduced font size */
+}
+.banner .content .model{
+    background-image: url(images/fotoutama.png);
+    width: 100%;
+    height: 60vh; /* Reduced height */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-size: auto 120%; /* Reduced background size */
+    background-repeat: no-repeat;
+    background-position: top center;
+    z-index: 1;
+}

@@ -4,23 +4,23 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div>
-      <div className="flex flex-col items-center justify-center h-screen text-white pt-10 px-4 md:px-8 lg:px-16">
+      <div className="flex flex-col items-center justify-center h-screen text-white pt-[93px] px-4 md:px-8 lg:px-16">
         {/* Header Section */}
         <div className="flex items-center relative mt-6 mb-4">
           {/* Circular Background for Hello */}
-          <div className="text-sm md:text-base bg-blue-700 py-1 px-3 rounded-full flex items-center">
+          <div className="text-md md:text-base bg-blue-700 py-1 px-3 rounded-full flex items-center">
             <span className="text-orange-300 font-semibold">Hello!</span>
           </div>
           {/* Smaller Vector Image Positioned Next to the Circular Background */}
           <img
-    src="/vector1.png" // Ensure this path is correct
-    alt="Vector Graphic"
-    className="animated-vector -mt-10 w-8 h-8 md:w-8 md:h-8 animate-move-up-down" // Apply custom Tailwind animation class
-  />
+            src="/vector1.png" // Ensure this path is correct
+            alt="Vector Graphic"
+            className="animated-vector -mt-10 w-8 h-8 md:w-8 md:h-8 animate-move-up-down" // Apply custom Tailwind animation class
+          />
         </div>
 
         {/* Main Title */}
-        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-6">
+        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
           I’m <span className="text-orange-300">Bintang</span>,
           <br /> Web & Mobile Developer
         </h1>

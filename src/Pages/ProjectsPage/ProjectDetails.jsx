@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5"; // Tambahkan ikon panah kembali
 import StarsCanvas from "../../Components/Elements/StarBackground";
+import { motion } from "framer-motion";
 
 // Data proyek
 const projectsData = [
@@ -136,141 +137,162 @@ const ProjectDetails = () => {
   const backgroundStyle = isHexColor(bgColor)
     ? { backgroundColor: bgColor } // Gunakan inline style untuk hex
     : {}; // Kosongkan jika bukan hex
-
-  return (
-    <div
-      className={`relative w-full min-h-screen ${
-        isHexColor(bgColor) ? "" : bgColor
-      } text-textDark`}
-      style={backgroundStyle}
-    >
-      <div className="absolute inset-0 z-0 w-full h-full">
-        <StarsCanvas />
-      </div>
-      <div className="text-white p-8 sm:px-6 md:px-8 lg:px-12 max-w-7xl mx-auto relative">
-        {/* Tombol kembali */}
-        <button
-          onClick={() => navigate("/")}
-          className={`absolute top-5 left-5 bg-white p-2 rounded-full text-${project.color} hover:text-gray-500 flex items-center justify-center`}
-          title="Back"
-        >
-          <IoArrowBack size={24} />
-        </button>
-
-        <div className="mb-16">
-          {/* Project Overview */}
-          <div className="w-full max-w-7xl px-5 mb-10 pt-[93px]">
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
+    const pageVariants = {
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    };
+  
+    const sectionVariants = {
+      hidden: { opacity: 0, scale: 0.9 },
+      visible: (i) => ({
+        opacity: 1,
+        scale: 1,
+        transition: { delay: i * 0.2 },
+      }),
+    };
+    
+    return (
+      <motion.div
+        className={`relative w-full min-h-screen ${
+          isHexColor(bgColor) ? "" : bgColor
+        } text-textDark`}
+        style={backgroundStyle}
+        variants={pageVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="absolute inset-0 z-0 w-full h-full">
+          <StarsCanvas />
+        </div>
+        <div className="text-white p-8 sm:px-6 md:px-8 lg:px-12 max-w-7xl mx-auto relative">
+          <button
+            onClick={() => navigate("/")}
+            className={`absolute top-5 left-5 bg-white p-2 rounded-full text-${project.color} hover:text-gray-500 flex items-center justify-center`}
+            title="Back"
+          >
+            <IoArrowBack size={24} />
+          </button>
+  
+          <motion.div
+            className="mb-16"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={sectionVariants}
+          >
+            <h1 className="mt-10 text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
               Project <span className={`text-${project.color}`}>Overview</span>
               <br /> {project.name}
             </h1>
-            <div className="text-lg text-gray-200 leading-relaxed mb-6 mx-auto max-w-3xl text-justify">
+            <p className="text-lg text-gray-200 leading-relaxed mb-6 mx-auto max-w-3xl text-justify">
               {details}
-            </div>
-          </div>
-
-          {/* Features and Technologies */}
+            </p>
+          </motion.div>
+  
           <div className="flex justify-between mb-[100px] w-full max-w-7xl px-5 md:px-10 lg:px-16 gap-4 md:gap-8 lg:gap-16">
-            {/* Features */}
-            <div className="w-full md:w-1/2 flex justify-center">
-              <div className="">
-                <h3
-                  className={`text-2xl font-bold text-${project.color} mb-4`}
-                >
+            <motion.div
+              className="w-full md:w-1/2 flex justify-center"
+              custom={1}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionVariants}
+            >
+              <div>
+                <h3 className={`text-2xl font-bold text-${project.color} mb-4`}>
                   Technologies Used
                 </h3>
                 <ul className="space-y-2 text-gray-200">
                   {project.technologies.map((tech, idx) => (
                     <li key={idx}>
-                      <span className="font-bold">
-                        {tech.split(":")[0]}:
-                      </span>
+                      <span className="font-bold">{tech.split(":")[0]}:</span>
                       {tech.split(":")[1]}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-
-            {/* Technologies Used */}
-            <div className="w-full md:w-1/2 flex justify-center">
-              <div className="">
-                <h3
-                  className={`text-2xl font-bold text-${project.color} mb-4`}
-                >
+            </motion.div>
+  
+            <motion.div
+              className="w-full md:w-1/2 flex justify-center"
+              custom={2}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionVariants}
+            >
+              <div>
+                <h3 className={`text-2xl font-bold text-${project.color} mb-4`}>
                   Features
                 </h3>
                 <ul className="space-y-2 text-gray-200">
                   {project.features.map((feature, idx) => (
                     <li key={idx}>
-                      <span className="font-bold">{feature.split(":")[0]}:</span>
+                      <span className="font-bold">
+                        {feature.split(":")[0]}:
+                      </span>
                       {feature.split(":")[1]}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
+            </motion.div>
           </div>
-
-          {/* Screenshots */}
-          <div className="w-full max-w-7xl px-5 md:px-10 lg:px-16 mb-10">
+  
+          <motion.div
+            className="w-full max-w-7xl px-5 md:px-10 lg:px-16 mb-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={sectionVariants}
+            custom={3}
+          >
             <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
-              Project{" "}
-              <span className={`text-${project.color}`}>Screenshots</span>
+              Project <span className={`text-${project.color}`}>Screenshots</span>
             </h1>
-
+  
             {project.screenshots.map((screenshot, idx) => (
               <div
                 key={idx}
                 className="flex flex-col md:flex-row items-start justify-between mb-12 gap-9"
               >
-                {/* Left section (text) */}
-                <div className="w-full md:w-1/2 mb-4 md:mb-0">
+                <motion.div
+                  className="w-full md:w-1/2 mb-4 md:mb-0"
+                  custom={idx + 1}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  variants={sectionVariants}
+                >
                   <h4 className="text-xl font-semibold text-white mb-2">
                     {screenshot.title}
                   </h4>
                   <p className="text-lg text-gray-200 text-justify">
                     {screenshot.description}
                   </p>
-                </div>
-
-                {/* Right section (image) */}
-                <div className="w-full md:w-1/2 border-2 border-gray-300 rounded-xl overflow-hidden">
+                </motion.div>
+  
+                <motion.div
+                  className="w-full md:w-1/2 border-2 border-gray-300 rounded-xl overflow-hidden"
+                  custom={idx + 1}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  variants={sectionVariants}
+                >
                   <img
                     src={screenshot.imageUrl}
                     alt={`Screenshot ${idx + 1}`}
                     className="w-full h-auto object-cover cursor-pointer"
                     onClick={() => setModalImage(screenshot.imageUrl)}
                   />
-                </div>
+                </motion.div>
               </div>
             ))}
-          </div>
-
-          {modalImage && (
-            <div
-              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-              onClick={() => setModalImage(null)}
-            >
-              <div className="relative max-w-3xl max-h-[90vh] overflow-auto">
-                <img
-                  src={modalImage}
-                  alt="Modal Screenshot"
-                  className="w-full h-auto object-contain"
-                />
-                <button
-                  onClick={() => setModalImage(null)}
-                  className="absolute top-2 right-2 fixed text-white bg-gray-400 rounded-full p-2 hover:bg-gray-500"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          )}
+          </motion.div>
         </div>
-      </div>
-    </div>
-  );
+      </motion.div>
+    );
 };
 
 export default ProjectDetails;

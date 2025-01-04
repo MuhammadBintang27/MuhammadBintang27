@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import ScrollToTop from "./Components/Elements/ScrollToTop";
 import Main from "./Pages/Main";
+import ProjectDetails from "./Pages/ProjectsPage/ProjectDetails";
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
         {/* Default route */}
         <Route path="/" element={<Main />} />
         <Route path="Main" element={<Main />} />
+        <Route path="project-details" element={<ProjectDetails />} />
       </Routes>
     </Router>
   );

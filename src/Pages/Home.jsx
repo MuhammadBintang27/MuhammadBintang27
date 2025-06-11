@@ -22,7 +22,7 @@ const Home = () => {
         {/* Main Title */}
         <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
           I’m <span className="text-orange-300">Bintang</span>,
-          <br /> Web & Mobile Developer
+          <br /> a Tech Enthusiast.
         </h1>
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full max-w-3xl">
           {/* Image Section */}

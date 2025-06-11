@@ -17,6 +17,7 @@ export default {
         wiggle: 'wiggle 1s ease-in-out infinite',
         fluidWave: 'fluidWave 2s ease-in-out infinite', // Nama animasi untuk ombak
         'move-up-down': 'moveUpDown 2s ease-in-out infinite', // Animasi bergerak ke atas dan bawah
+        'bubble-effect': 'bubbleEffect 1s ease-in-out', // Nama animasi bubble effect
       },
       keyframes: {
         wiggle: {
@@ -49,6 +50,20 @@ export default {
           },
           '100%': {
             transform: 'translateY(0)', // Return to starting position
+          },
+        },
+        bubbleEffect: {
+          '0%': {
+            transform: 'scale(1)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(1.2)',
+            opacity: '0.8',
+          },
+          '100%': {
+            transform: 'scale(1)',
+            opacity: '1',
           },
         },
       },

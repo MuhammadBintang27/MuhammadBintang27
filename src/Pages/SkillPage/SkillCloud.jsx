@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
-import './style.css';
+import { useEffect } from "react";
+import "./style.css";
 
 const SkillCloud = () => {
   useEffect(() => {
-    const skills = document.querySelectorAll('.skill');
+    const skills = document.querySelectorAll(".skill");
 
     const getRandomSkills = (num) => {
       const shuffled = [...skills].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, num);  // Pilih 2 atau 3 skill secara acak
+      return shuffled.slice(0, num); // Pilih 2 atau 3 skill secara acak
     };
 
     const animateSkills = () => {
       // Reset all scales
-      skills.forEach(skill => {
-        skill.classList.remove('scale-up');
+      skills.forEach((skill) => {
+        skill.classList.remove("scale-up");
       });
 
       // Pilih 2 atau 3 skill secara acak dan terapkan animasi bubble
-      const randomSkills = getRandomSkills(2 + Math.floor(Math.random() * 2));  // 2 atau 3 skill
-      randomSkills.forEach(skill => {
-        skill.classList.add('scale-up');
+      const randomSkills = getRandomSkills(2 + Math.floor(Math.random() * 2)); // 2 atau 3 skill
+      randomSkills.forEach((skill) => {
+        skill.classList.add("scale-up");
       });
     };
 
@@ -31,15 +31,25 @@ const SkillCloud = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full max-w-6xl mx-auto">
-      {/* Left Section: My Expertise */}
-      <div className="w-1/2 text-white text-center flex flex-col items-center justify-center">
-        <h1 className="text-5xl font-bold mb-4">My Expertise</h1>
-        <p className="text-lg text-teal-400">Discover the skills I specialize in</p>
+    <div className="flex flex-wrap justify-center items-center h-screen w-full max-w-6xl mx-auto px-4">
+      {/* Left Section: about me */}
+      <div className="w-full md:w-1/2 text-white text-center flex flex-col items-center justify-center mb-8 md:mb-0 ">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
+        <p className="text-base md:text-lg text-teal-400 text-justify md:px-8"> 
+          I’m an Informatics student at Universitas Syiah Kuala, passionate
+          about technology and innovation. Actively involved in campus
+          organizations and IT projects, I’m always learning and growing through
+          hands-on experience. Outside of academics, I'm a huge football fan,
+          especially when it comes to Manchester United, always excited to dive
+          into discussions about the game.
+        </p>
       </div>
 
-      {/* Right Section: Word Cloud */}
-      <div className="w-1/2">
+      {/* Right Section: My Expertise */}
+      <div className="w-full md:w-1/2 text-white text-center flex flex-col items-center justify-center">
+      <div className=" text-4xl md:text-5xl font-bold text-center text-white transform mb-[30px]">
+          My Expertise
+        </div>
         <div className="relative w-[400px] h-[400px] mx-auto flex items-center justify-center">
           {/* Web Development Title */}
           <span className="absolute text-[24px] font-bold text-white top-[7%] left-[30%] transform -translate-x-1/2">

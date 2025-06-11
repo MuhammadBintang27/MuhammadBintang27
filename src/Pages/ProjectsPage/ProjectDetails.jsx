@@ -23,9 +23,7 @@ const projectsData = [
       "JWT: Autentikasi pengguna.",
     ],
     color: "blue-900", // Biru yang lebih terang
-    challenges:
-      "Tantangan 1: Implementasi pembaruan real-time. Menggunakan WebSocket untuk memastikan pembaruan tugas terlihat secara real-time bagi semua pengguna.",
-    screenshots: [
+        screenshots: [
       
         {
           "title": "Login Page",
@@ -91,9 +89,7 @@ const projectsData = [
       "MongoDB: Penyimpanan NoSQL",
     ],
     color: "orange-300",
-    challenges:
-      "Tantangan 2: Menyinkronkan data antar perangkat dengan Firebase dan mengoptimalkan struktur data serta API calls.",
-    screenshots: [
+       screenshots: [
       {
         "title": "Search Section",
         "description": "Section ini memungkinkan pengguna mencari informasi di aplikasi GasCari. Pengguna dapat memasukkan kata kunci, seperti 'Jorge Martin'. Di bagian atas terdapat lima navbar yang mewakili kategori, seperti 'News', 'Motor Race', 'Cars', 'Motorcycles', dan 'All'. Saat kategori dipilih, hasil pencarian hanya menampilkan konten relevan dengan kategori tersebut, dan gambar latar belakang akan berubah sesuai kategori.",
@@ -290,6 +286,26 @@ const ProjectDetails = () => {
               </div>
             ))}
           </motion.div>
+          {modalImage && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+            onClick={() => setModalImage(null)}
+          >
+            <div className="relative max-w-3xl max-h-[90vh] overflow-auto">
+              <img
+                src={modalImage}
+                alt="Modal Screenshot"
+                className="w-full h-auto object-contain"
+              />
+              <button
+                onClick={() => setModalImage(null)}
+                className="absolute top-2 right-2 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
         </div>
       </motion.div>
     );

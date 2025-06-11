@@ -222,7 +222,10 @@ header nav a {
         justify-content: center;
         align-items: start;
     }
-
+    .carousel .list .item .image {
+        width: 70%;
+        height: 30%;
+    }
     .arrows button {
         top: unset;
         bottom: 20px;

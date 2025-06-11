@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="text-white text-center py-8">
+    <footer className="text-white text-center py-[80px]">
       {/* Logo */}
       <div className="text-4xl mb-4">⚡</div>
       {/* Tagline */}
@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="flex justify-center space-x-6 mb-6">
         {/* Instagram */}
         <a
-          href="https://instagram.com"
+          href="https://www.instagram.com/muhammadbintangindra/"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform"
@@ -27,7 +27,7 @@ const Footer = () => {
         </a>
         {/* LinkedIn */}
         <a
-          href="https://linkedin.com"
+          href="https://www.linkedin.com/in/muhammad-bintang-indra-hidayat-b634a2274/"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform"
@@ -44,7 +44,7 @@ const Footer = () => {
         </a>
         {/* Gmail */}
         <a
-          href="mailto:example@example.com"
+          href="mailto:muhammad.bintang.indra@gmail.com"
           className="hover:scale-110 transition-transform"
           aria-label="Gmail"
         >

@@ -22,7 +22,7 @@ const Main = () => {
 
             {/* SkillCloud Section with Zoom-In */}
             <motion.section
-                id="about"
+                id="aboutme"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1 }}
@@ -44,7 +44,7 @@ const Main = () => {
 
             {/* Gallery Section with Slide-Right */}
             <motion.section
-                id="contact"
+                id="gallery"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}

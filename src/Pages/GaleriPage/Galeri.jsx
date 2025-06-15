@@ -6,34 +6,34 @@ const Gallery = () => {
     <div className="banner h-screen">
       <div className="slider" style={{ "--quantity": 10 }}>
         <div className="item" style={{ "--position": 1 }}>
-          <img src="/galeri/foto1.jpg" alt="1" />
+          <img src="/galeri/photo1.jpg" alt="1" />
         </div>
         <div className="item" style={{ "--position": 2 }}>
-          <img src="/galeri/foto2.jpg" alt="2" />
+          <img src="/galeri/photo2.jpg" alt="2" />
         </div>
         <div className="item" style={{ "--position": 3 }}>
-          <img src="/galeri/foto3.jpg" alt="3" />
+          <img src="/galeri/photo3.jpg" alt="3" />
         </div>
         <div className="item" style={{ "--position": 4 }}>
-          <img src="/galeri/foto4.jpg" alt="4" />
+          <img src="/galeri/photo4.jpg" alt="4" />
         </div>
         <div className="item" style={{ "--position": 5 }}>
-          <img src="/galeri/foto5.jpg" alt="5" />
+          <img src="/galeri/photo5.jpg" alt="5" />
         </div>
         <div className="item" style={{ "--position": 6 }}>
-          <img src="/galeri/foto6.jpg" alt="6" />
+          <img src="/galeri/photo6.jpg" alt="6" />
         </div>
         <div className="item" style={{ "--position": 7 }}>
-          <img src="/galeri/foto7p.jpg" alt="7" />
+          <img src="/galeri/photo7.jpg" alt="7" />
         </div>
         <div className="item" style={{ "--position": 8 }}>
-          <img src="/galeri/foto8.jpg" alt="8" />
+          <img src="/galeri/photo8.jpg" alt="8" />
         </div>
         <div className="item" style={{ "--position": 9 }}>
-          <img src="/galeri/foto9.jpg" alt="9" />
+          <img src="/galeri/photo9.jpg" alt="9" />
         </div>
         <div className="item" style={{ "--position": 10 }}>
-          <img src="/galeri/foto10p.jpg" alt="10" />
+          <img src="/galeri/photo10.jpg" alt="10" />
         </div>
       </div>
       <div className="content">

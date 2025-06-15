@@ -1,11 +1,11 @@
 const Footer = () => {
   return (
-    <footer className="text-white text-center py-[80px]">
+    <footer className="relative z-20 text-white text-center py-[80px]">
       {/* Logo */}
       <div className="text-4xl mb-4">⚡</div>
       {/* Tagline */}
       <p className="text-lg mb-6">
-      I don’t just write code, I write stories that solve real problems.      </p>
+      I don't just write code, I write stories that solve real problems.      </p>
       {/* Social Icons */}
       <div className="flex justify-center space-x-6 mb-6">
         {/* Instagram */}

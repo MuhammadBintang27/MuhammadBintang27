@@ -11,6 +11,7 @@ import ProjectDetails from "./Pages/ProjectsPage/ProjectDetails";
 import Gallery from "./Pages/GaleriPage/Galeri";
 import SectionDivider from "./Components/SectionDivider/SectionDivider";
 import LayoutWeb from "./Components/Layouts/Layout";
+import Contact from "./Components/Contact/Contact";
 
 // 404 Page Component
 const NotFound = () => (
@@ -43,6 +44,10 @@ const MainLayout = () => (
 
       <section id="gallery" className="py-20">
         <Gallery />
+      </section>
+
+      <section id="contact">
+        <Contact />
       </section>
     </main>
   </LayoutWeb>

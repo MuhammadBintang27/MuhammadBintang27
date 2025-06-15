@@ -15,22 +15,22 @@ const Gallery = () => {
           <img src="/galeri/foto3.jpg" alt="3" />
         </div>
         <div className="item" style={{ "--position": 4 }}>
-          <img src="/galeri/foto4.JPG" alt="4" />
+          <img src="/galeri/foto4.jpg" alt="4" />
         </div>
         <div className="item" style={{ "--position": 5 }}>
-          <img src="/galeri/foto5.JPG" alt="5" />
+          <img src="/galeri/foto5.jpg" alt="5" />
         </div>
         <div className="item" style={{ "--position": 6 }}>
-          <img src="/galeri/foto6.JPG" alt="6" />
+          <img src="/galeri/foto6.jpg" alt="6" />
         </div>
         <div className="item" style={{ "--position": 7 }}>
           <img src="/galeri/foto7.jpg" alt="7" />
         </div>
         <div className="item" style={{ "--position": 8 }}>
-          <img src="/galeri/foto8.JPG" alt="8" />
+          <img src="/galeri/foto8.jpg" alt="8" />
         </div>
         <div className="item" style={{ "--position": 9 }}>
-          <img src="/galeri/foto9.JPG" alt="9" />
+          <img src="/galeri/foto9.jpg" alt="9" />
         </div>
         <div className="item" style={{ "--position": 10 }}>
           <img src="/galeri/foto10.jpg" alt="10" />

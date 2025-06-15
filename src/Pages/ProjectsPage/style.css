@@ -36,7 +36,7 @@ header nav a {
 
 .carousel {
     width: 100%;
-    background-color: #555;
+    background-color: #1e3a8a;
     height: 720px;
     color: #eee;
     margin-top: -50px;
@@ -58,6 +58,7 @@ header nav a {
     width: 100%;
     height: 100%;
     z-index: 1;
+    transition: transform 1s;
 }
 
 .carousel .list .item::before {
@@ -76,22 +77,6 @@ header nav a {
     z-index: -1;
 }
 
-.carousel .list .item .image {
-    flex-shrink: 0;
-    width: 600px;
-    height: 300px;
-    background-image: var(--img-src);
-    background-size: cover;
-    background-position: center;
-    border: 5px solid #eee; /* Warna border */
-    border-radius: 15px; /* Border melengkung */
-    transition: transform 0.3s ease-in-out;
-}
-
-.carousel .list .item .image:hover {
-    transform: scale(1.05); /* Efek saat hover */
-}
-
 .carousel .list .item .content {
     width: 1140px;
     max-width: 90%;
@@ -105,6 +90,68 @@ header nav a {
     align-items: center;
 }
 
+/* Desktop Project Styles */
+.carousel .list .item.desktop .image {
+    flex-shrink: 0;
+    width: 600px;
+    height: 300px;
+    background-image: var(--img-src);
+    background-size: cover;
+    background-position: center;
+    border: 5px solid #eee;
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+}
+
+.carousel .list .item.desktop .image:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile Project Styles */
+.carousel .list .item.mobile .mobile-frame {
+    flex-shrink: 0;
+    width: 300px;
+    height: 600px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel .list .item.mobile .mobile-frame .image {
+    width: 280px;
+    height: 560px;
+    background-image: var(--img-src);
+    background-size: cover;
+    background-position: center;
+    border: 12px solid #333;
+    border-radius: 30px;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.carousel .list .item.mobile .mobile-frame::before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 10px;
+    background: #333;
+    border-radius: 10px;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.carousel .list .item.mobile .image:hover {
+    transform: scale(1.05);
+}
+
+.carousel .list .item .info {
+    flex: 1;
+}
+
 .carousel .list .item .info .title {
     font-size: 6em;
     font-weight: bold;
@@ -114,10 +161,12 @@ header nav a {
 
 .carousel .list .item .info .category {
     opacity: .9;
+    margin: 1em 0;
 }
 
 .carousel .list .item .info .des {
     margin: 1em 0;
+    text-align: justify;
 }
 
 .carousel .list .item .info a {
@@ -126,15 +175,49 @@ header nav a {
     text-decoration: none;
     color: #eee;
     font-weight: 500;
+    transition: color 0.3s;
+}
+
+.carousel .list .item .info a:hover {
+    color: #FCD34D;
 }
 
 /* Set active item */
 .carousel .list .item {
     z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .carousel .list .item.active {
     z-index: 2;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Hover Button */
+.hover-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-decoration: none;
+}
+
+.image:hover .hover-button {
+    opacity: 1;
 }
 
 /* Arrows */
@@ -166,18 +249,6 @@ header nav a {
     color: #000;
 }
 
-.dots li {
-    width: 15px;
-    height: 15px;
-    background-color: #eee5;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.dots li.active {
-    background-color: #eee;
-}
-
 .dots {
     list-style: none;
     margin: 0;
@@ -190,13 +261,45 @@ header nav a {
     width: max-content;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.dots li {
+    width: 15px;
+    height: 15px;
+    background-color: #eee5;
+    border-radius: 50%;
+    cursor: pointer;
     transition: background 0.5s;
+}
+
+.dots li.active {
+    background-color: #eee;
+}
+
+/* Animation Effect */
+.carousel.effect {
+    animation: effect 1s linear;
+}
+
+@keyframes effect {
+    from {
+        transform: translateX(var(--transform));
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
 /* Responsive */
 @media screen and (max-width: 767px) {
     .carousel {
         height: 100vh;
+    }
+
+    .carousel .list .item .content {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
     }
 
     .carousel .list .item .info {
@@ -218,14 +321,23 @@ header nav a {
         text-align: justify;
     }
 
-    .carousel .list .item .content {
-        justify-content: center;
-        align-items: start;
+    .carousel .list .item.desktop .image {
+        width: 90%;
+        height: 200px;
+        margin: 0 auto;
     }
-    .carousel .list .item .image {
-        width: 70%;
-        height: 30%;
+
+    .carousel .list .item.mobile .mobile-frame {
+        width: 220px;
+        height: 440px;
+        margin: 0 auto;
     }
+
+    .carousel .list .item.mobile .mobile-frame .image {
+        width: 200px;
+        height: 400px;
+    }
+
     .arrows button {
         top: unset;
         bottom: 20px;
@@ -287,13 +399,12 @@ header nav a {
     --transform-to: var(--transform);
 }
 
-
 .image {
     position: relative;
     /* existing image styles */
-  }
-  
-  .hover-button {
+}
+
+.hover-button {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -305,10 +416,10 @@ header nav a {
     border-radius: 5px;
     display: none;
     transition: opacity 0.3s ease;
-  }
-  
-  .image:hover .hover-button {
+}
+
+.image:hover .hover-button {
     display: block;
     opacity: 1;
-  }
-  
+}
+

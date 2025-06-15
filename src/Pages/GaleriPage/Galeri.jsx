@@ -24,7 +24,7 @@ const Gallery = () => {
                     <img src="./../../galeri/foto6.JPG" alt="6" />
                 </div>
                 <div className="item" style={{ '--position': 7 }}>
-                    <img src="./../../galeri/foto7.JPG" alt="7" />
+                    <img src="./../../galeri/foto7.jpg" alt="7" />
                 </div>
                 <div className="item" style={{ '--position': 8 }}>
                     <img src="./../../galeri/foto8.JPG" alt="8" />
@@ -33,7 +33,7 @@ const Gallery = () => {
                     <img src="./../../galeri/foto9.JPG" alt="9" />
                 </div>
                 <div className="item" style={{ '--position': 10 }}>
-                    <img src="./../../galeri/foto10.JPG" alt="10" />
+                    <img src="./../../galeri/foto10.jpg" alt="10" />
                 </div>
             </div>
             <div className="content">

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import Nav from "./Nav";
+import Navbar from "../Navbar/Navbar";
 import Footer from "./Footer";
 import StarsCanvas from "../Elements/StarBackground";
 
-const LayoutWeb = ({ children, bgColor = "bg-blue-900", isDark = true }) => {
+const LayoutWeb = ({ children, bgColor = "bg-[#1B2B65]", isDark = true }) => {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
@@ -27,6 +27,11 @@ const LayoutWeb = ({ children, bgColor = "bg-blue-900", isDark = true }) => {
       } text-textDark`}
       style={backgroundStyle} // Terapkan inline style jika hex
     >
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl -top-20 -left-20" />
+        <div className="absolute w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -bottom-20 -right-20" />
+      </div>
+
       {/* StarsCanvas berada di atas background */}
       <div className="absolute inset-0 z-0 w-full h-full">
         <StarsCanvas />
@@ -34,7 +39,7 @@ const LayoutWeb = ({ children, bgColor = "bg-blue-900", isDark = true }) => {
 
       {/* Konten Utama */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        <Nav />
+        <Navbar />
         <div className="flex-grow">{children}</div> {/* Konten utama */}
         <Footer />
       </div>

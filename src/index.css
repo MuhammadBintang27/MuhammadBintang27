@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-text-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-scroll-text {
+  animation: scroll-text 20s linear infinite;
+}
+
+.animate-scroll-text-reverse {
+  animation: scroll-text-reverse 20s linear infinite;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-blue-900 text-white;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-yellow-400 text-black px-8 py-3 rounded-full font-medium hover:bg-yellow-300 transition-colors duration-300;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-yellow-400 text-yellow-400 px-8 py-3 rounded-full font-medium hover:bg-yellow-400 hover:text-black transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500;
+  }
+
+  .bg-gradient-custom {
+    @apply bg-gradient-to-b from-blue-900 to-black;
+  }
+}

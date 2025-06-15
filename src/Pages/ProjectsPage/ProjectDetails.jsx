@@ -1,314 +1,333 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IoArrowBack } from "react-icons/io5"; // Tambahkan ikon panah kembali
 import StarsCanvas from "../../Components/Elements/StarBackground";
 import { motion } from "framer-motion";
+import LayoutDetails from "../../Components/Layouts/LayoutDetails";
+import ScrollToTop from "../../Components/Elements/ScrollToTop";
+import "./style.css"; // Import the shared styles
 
 // Data proyek
-const projectsData = [
-  {
-    name: "AyaDesign",
-    features: [
-      "Autentikasi: Pengguna bisa mendaftar, masuk, dan keluar dari platform.",
-      "Halaman Showcase: Menampilkan desain yang tersedia untuk dibeli.",
-      "Sistem Keranjang: Pengguna bisa menambah, melihat, atau menghapus desain dari keranjang.",
-      "Detail Pesanan: Menampilkan rincian pesanan, termasuk harga dan jumlah.",
-      "Update Profil: Pengguna bisa memperbarui foto dan informasi akun.",
-      "Checkout ke WhatsApp: Pengguna diarahkan ke WhatsApp dengan pesan draft yang berisi rincian pesanan.",
-    ],
-    technologies: [
-      "React, Vite, Tailwind CSS, Ant Design: Frontend development.",
-      "Express.js: Backend framework.",
-      "MongoDB & Mongoose: Database NoSQL.",
-      "JWT: Autentikasi pengguna.",
-    ],
-    color: "blue-900", // Biru yang lebih terang
-        screenshots: [
-      
-        {
-          "title": "Login Page",
-          "description": "Halaman login ini memungkinkan pengguna untuk masuk dengan memasukkan email dan password. Terdapat link untuk mendaftar akun baru jika pengguna belum memiliki akun.",
-          "imageUrl": "./../project/projectdetails/ayalogin.png"
-        },
-        {
-          "title": "Signup Page",
-          "description": "Halaman pendaftaran akun di mana pengguna dapat membuat akun baru dengan memasukkan nama lengkap, email, password, dan konfirmasi password. Jika sudah memiliki akun, pengguna dapat menggunakan link untuk kembali ke halaman login.",
-          "imageUrl": "./../project/projectdetails/ayasignup.png"
-        },
-        {
-          "title": "Homepage",
-          "description": "Halaman utama ini menampilkan pesan yang mengundang pengguna untuk menemukan jasa desain kekinian. Halaman ini juga menyertakan contoh desain dan tombol 'Go Shopping' untuk mengarahkan pengguna ke halaman showcase dan tombol 'Get Started' untuk mengarahkan pengguna yang belum login ke halaman login.",
-          "imageUrl": "./../project/projectdetails/ayahomepage.png"
-        },
-        {
-          "title": "About Page",
-          "description": "Halaman tentang ini memberikan penjelasan mengenai Ayadesign, termasuk informasi mengenai sosial media Ayadesign dan hal-hal terkait lainnya yang dapat membantu pengguna memahami lebih lanjut tentang layanan yang ditawarkan.",
-          "imageUrl": "./../project/projectdetails/ayaabout.png"
-        },
-        {
-          "title": "Showcase Page",
-          "description": "Halaman showcase menampilkan desain-desain yang tersedia untuk dijual, lengkap dengan harga. Pengguna dapat mengklik salah satu desain untuk melihat detail lebih lanjut di halaman Design Detail.",
-          "imageUrl": "./../project/projectdetails/ayashowcase.png"
-        },
-        {
-          "title": "Design Detail Page",
-          "description": "Di halaman ini, pengguna dapat melihat detail lebih mendalam tentang desain yang dipilih dan diminta untuk mengisi beberapa detail tambahan sebelum menambahkannya ke keranjang belanja.",
-          "imageUrl": "./../project/projectdetails/ayadesigndetail.png"
-        },
-        {
-          "title": "Cart Page",
-          "description": "Halaman keranjang ini menampilkan desain-desain yang telah dimasukkan ke dalam keranjang, lengkap dengan harga masing-masing dan total harga. Setiap item di keranjang dilengkapi dengan tombol yang mengarah ke halaman order details.Di halaman ini juga ada tombol 'Checkout' yang akan mengarahkan pengguna ke WhatsApp admin dengan pesan pesanan yang sudah otomatis terisi.",
-          "imageUrl": "./../project/projectdetails/ayacart.png"
-        },
-        {
-          "title": "Order Details Page",
-          "description": "Halaman ini memungkinkan pengguna untuk melihat kembali detail pesanan yang telah dimasukkan ke keranjang. Di halaman ini juga ada tombol 'Checkout' yang akan mengarahkan pengguna ke WhatsApp admin dengan pesan pesanan yang sudah otomatis terisi.",
-          "imageUrl": "./../project/projectdetails/ayadetail.png"
-        }
-      
-      
-    ],
-  },
-  {
-    name: "GasCari",
-    features: [
-      "Crawling: Mengumpulkan URL artikel.",
-      "Scraping: Mengekstrak konten artikel.",
-      "Preprocessing: Pembersihan dan stemming teks.",
-      "TF-IDF: Pembobotan kata.",
-      "Similarity: Membandingkan query dengan Cosine dan Jaccard.",
-      "UI: Antarmuka pengguna yang ramah dengan React dan Tailwind.",
-      "Categories: Semua, Motor, Mobil, Balap Motor, Berita.",
-    ],
-    technologies: [
-      "React: UI",
-      "Tailwind CSS: Framework desain",
-      "Flask: Backend processing",
-      "Selenium & BeautifulSoup: Web scraping",
-      "Scikit-learn: Perhitungan kesamaan",
-      "MongoDB: Penyimpanan NoSQL",
-    ],
-    color: "orange-300",
-       screenshots: [
-      {
-        "title": "Search Section",
-        "description": "Section ini memungkinkan pengguna mencari informasi di aplikasi GasCari. Pengguna dapat memasukkan kata kunci, seperti 'Jorge Martin'. Di bagian atas terdapat lima navbar yang mewakili kategori, seperti 'News', 'Motor Race', 'Cars', 'Motorcycles', dan 'All'. Saat kategori dipilih, hasil pencarian hanya menampilkan konten relevan dengan kategori tersebut, dan gambar latar belakang akan berubah sesuai kategori.",
-        "imageUrl": "./../project/projectdetails/gascarisearch.png"
-      },
-      {
-        "title": "Result Section",
-        "description": "Section ini menampilkan hasil pencarian berdasarkan kata kunci yang dimasukkan. Hasilnya disajikan menggunakan dua metode, yaitu 'Cosine' dan 'Jaccard', untuk membandingkan relevansi hasil pencarian. Hasil ditampilkan dalam bentuk kartu yang mencakup gambar, judul, tanggal, skor relevansi, dan tautan untuk membaca lebih lanjut.",
-        "imageUrl": "./../project/projectdetails/gascariresult.png"
-      }
-    ],
-  },
-];
+
+
+const TechBadge = ({ tech }) => (
+  <motion.div
+    whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.4)" }}
+    whileTap={{ scale: 0.95 }}
+    className="px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full border border-gray-700 hover:border-yellow-400 transition-all duration-300"
+  >
+    <span className="text-white text-sm font-medium">{tech}</span>
+  </motion.div>
+);
+
+const ProjectLink = ({ href, icon, text }) => (
+  <motion.a
+    whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.4)" }}
+    whileTap={{ scale: 0.95 }}
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 px-6 py-3 bg-black/30 backdrop-blur-sm rounded-full border border-gray-700 text-white hover:border-yellow-400 transition-all duration-300 group"
+  >
+    <motion.span
+      whileHover={{ rotate: 360 }}
+      transition={{ duration: 0.5 }}
+      className="group-hover:text-yellow-400"
+    >
+      {icon}
+    </motion.span>
+    <span className="group-hover:text-yellow-400">{text}</span>
+  </motion.a>
+);
 
 const ProjectDetails = () => {
   const location = useLocation();
-  const navigate = useNavigate(); // Hook untuk navigasi
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState(null);
+  const navigate = useNavigate();
+  const state = location.state;
 
-  // Check if state is present
-  if (!location.state) {
-    return <p>Project not found.</p>;
-  }
-
-  const { projectName, description, imgSrc, bgColor, details } = location.state;
-
-  // Cari proyek berdasarkan projectName
-  const project = projectsData.find((p) => p.name === projectName);
-
-  // Jika proyek tidak ditemukan, tampilkan pesan error
-  if (!project) {
-    return <div>Project not found</div>;
-  }
-
-  // Fungsi untuk memeriksa apakah nilai `bgColor` adalah hex
-  const isHexColor = (color) =>
-    /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
-
-  // Tentukan style berdasarkan tipe `bgColor`
-  const backgroundStyle = isHexColor(bgColor)
-    ? { backgroundColor: bgColor } // Gunakan inline style untuk hex
-    : {}; // Kosongkan jika bukan hex
-    const pageVariants = {
-      hidden: { opacity: 0, y: 20 },
-      visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-    };
-  
-    const sectionVariants = {
-      hidden: { opacity: 0, scale: 0.9 },
-      visible: (i) => ({
-        opacity: 1,
-        scale: 1,
-        transition: { delay: i * 0.2 },
-      }),
-    };
-    
+  // If no state is present, show the not found page
+  if (!state) {
     return (
-      <motion.div
-        className={`relative w-full min-h-screen ${
-          isHexColor(bgColor) ? "" : bgColor
-        } text-textDark`}
-        style={backgroundStyle}
-        variants={pageVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="absolute inset-0 z-0 w-full h-full">
-          <StarsCanvas />
-        </div>
-        <div className="text-white p-8 sm:px-6 md:px-8 lg:px-12 max-w-7xl mx-auto relative">
-          <button
-            onClick={() => navigate("/")}
-            className={`absolute top-5 left-5 bg-white p-2 rounded-full text-${project.color} hover:text-gray-500 flex items-center justify-center`}
-            title="Back"
-          >
-            <IoArrowBack size={24} />
-          </button>
-  
-          <motion.div
-            className="mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={sectionVariants}
-          >
-            <h1 className="mt-10 text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
-              Project <span className={`text-${project.color}`}>Overview</span>
-              <br /> {project.name}
-            </h1>
-            <p className="text-lg text-gray-200 leading-relaxed mb-6 mx-auto max-w-3xl text-justify">
-              {details}
-            </p>
-          </motion.div>
-  
-          <div className="flex justify-between mb-[100px] w-full max-w-7xl px-5 md:px-10 lg:px-16 gap-4 md:gap-8 lg:gap-16">
-            <motion.div
-              className="w-full md:w-1/2 flex justify-center"
-              custom={1}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={sectionVariants}
+      <LayoutDetails>
+        <ScrollToTop />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-center min-h-screen"
+        >
+          <div className="text-center">
+            <h1 className="text-4xl text-white mb-4">Project Not Found</h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/')}
+              className="px-6 py-3 bg-yellow-400 text-blue-900 rounded-full hover:bg-yellow-300 transition-colors"
             >
-              <div>
-                <h3 className={`text-2xl font-bold text-${project.color} mb-4`}>
-                  Technologies Used
-                </h3>
-                <ul className="space-y-2 text-gray-200">
-                  {project.technologies.map((tech, idx) => (
-                    <li key={idx}>
-                      <span className="font-bold">{tech.split(":")[0]}:</span>
-                      {tech.split(":")[1]}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-  
-            <motion.div
-              className="w-full md:w-1/2 flex justify-center"
-              custom={2}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={sectionVariants}
-            >
-              <div>
-                <h3 className={`text-2xl font-bold text-${project.color} mb-4`}>
-                  Features
-                </h3>
-                <ul className="space-y-2 text-gray-200">
-                  {project.features.map((feature, idx) => (
-                    <li key={idx}>
-                      <span className="font-bold">
-                        {feature.split(":")[0]}:
-                      </span>
-                      {feature.split(":")[1]}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+              Back to Home
+            </motion.button>
           </div>
-  
-          <motion.div
-            className="w-full max-w-7xl px-5 md:px-10 lg:px-16 mb-10"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={sectionVariants}
-            custom={3}
-          >
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight text-center mb-10">
-              Project <span className={`text-${project.color}`}>Screenshots</span>
-            </h1>
-  
-            {project.screenshots.map((screenshot, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col md:flex-row items-start justify-between mb-12 gap-9"
-              >
-                <motion.div
-                  className="w-full md:w-1/2 mb-4 md:mb-0"
-                  custom={idx + 1}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={sectionVariants}
-                >
-                  <h4 className="text-xl font-semibold text-white mb-2">
-                    {screenshot.title}
-                  </h4>
-                  <p className="text-lg text-gray-200 text-justify">
-                    {screenshot.description}
-                  </p>
-                </motion.div>
-  
-                <motion.div
-                  className="w-full md:w-1/2 border-2 border-gray-300 rounded-xl overflow-hidden"
-                  custom={idx + 1}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={sectionVariants}
-                >
-                  <img
-                    src={screenshot.imageUrl}
-                    alt={`Screenshot ${idx + 1}`}
-                    className="w-full h-auto object-cover cursor-pointer"
-                    onClick={() => setModalImage(screenshot.imageUrl)}
-                  />
-                </motion.div>
-              </div>
-            ))}
-          </motion.div>
-          {modalImage && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-            onClick={() => setModalImage(null)}
-          >
-            <div className="relative max-w-3xl max-h-[90vh] overflow-auto">
-              <img
-                src={modalImage}
-                alt="Modal Screenshot"
-                className="w-full h-auto object-contain"
-              />
-              <button
-                onClick={() => setModalImage(null)}
-                className="absolute top-2 right-2 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-600"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        )}
-        </div>
-      </motion.div>
+        </motion.div>
+      </LayoutDetails>
     );
+  }
+
+  const {
+    projectName,
+    description,
+    imgSrc,
+    bgColor,
+    details,
+    techStack = [],
+    githubUrl = "",
+    websiteUrl = "",
+    screenshots = [],
+    type = "desktop" // tambahkan type agar bisa otomatisasi
+  } = state;
+
+  // Ambil 3 gambar pertama
+  const mainScreenshots = screenshots.slice(0, 3);
+
+  return (
+    <LayoutDetails bgColor={bgColor}>
+      <ScrollToTop />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-6xl mx-auto px-4 md:px-8 py-20"
+      >
+        {/* Back button */}
+        <motion.button
+          whileHover={{ x: -5 }}
+          onClick={() => navigate('/')}
+          className="mb-8 flex items-center text-white hover:text-yellow-400 transition-colors"
+        >
+          <IoArrowBack className="mr-2" /> Back to Projects
+        </motion.button>
+
+        {/* Project header */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-black/30 rounded-3xl overflow-hidden backdrop-blur-lg border border-gray-700 hover:border-yellow-400/50 transition-all duration-300"
+        >
+          <div className="p-8 md:p-12">
+            {/* Project title and description */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mb-8"
+            >
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                {projectName.split(' ')[0]}
+              </h1>
+              {projectName.split(' ').length > 1 && (
+                <p className="text-2xl md:text-3xl text-gray-300 font-medium">
+                  {projectName.split(' ').slice(1).join(' ')}
+                </p>
+              )}
+            </motion.div>
+
+            {/* Project Mockup Gallery */}
+            {mainScreenshots.length > 0 && (
+              <div className="relative mb-8 flex flex-col md:flex-row justify-center items-center gap-8">
+                {/* Watermark background text, repeated rows */}
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-center items-center z-0">
+                  {Array.from({ length: type === 'mobile' ? 6 : 3 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className="font-extrabold uppercase text-[8vw] md:text-[5vw] text-white/10 whitespace-nowrap leading-none"
+                      style={{ letterSpacing: '0.05em', userSelect: 'none' }}
+                    >
+                      {projectName}
+                    </span>
+                  ))}
+                </div>
+                {/* Mockup Layer (with z-10) */}
+                {type === "mobile" ? (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="relative w-full flex flex-col md:flex-row justify-center items-center gap-6 md:gap-8 z-10"
+                  >
+                    {/* Left mockup */}
+                    {mainScreenshots[1] && (
+                      <motion.div
+                        initial={{ rotate: -12, scale: 0.9 }}
+                        animate={{ rotate: -12, scale: 0.9 }}
+                        whileHover={{ rotate: 0, scale: 1.05 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="hidden md:block opacity-80"
+                      >
+                        <img
+                          src={mainScreenshots[1].imageUrl}
+                          alt={mainScreenshots[1].title}
+                          className="w-[140px] h-[297px] md:w-[280px] md:h-[594px] object-cover rounded-2xl shadow-xl"
+                        />
+                      </motion.div>
+                    )}
+                    {/* Center mockup */}
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="z-10"
+                    >
+                      <img
+                        src={mainScreenshots[0]?.imageUrl}
+                        alt={mainScreenshots[0]?.title}
+                        className="w-[140px] h-[297px] md:w-[280px] md:h-[594px] object-cover rounded-2xl shadow-2xl"
+                      />
+                    </motion.div>
+                    {/* Right mockup */}
+                    {mainScreenshots[2] && (
+                      <motion.div
+                        initial={{ rotate: 12, scale: 0.9 }}
+                        animate={{ rotate: 12, scale: 0.9 }}
+                        whileHover={{ rotate: 0, scale: 1.05 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="hidden md:block opacity-80"
+                      >
+                        <img
+                          src={mainScreenshots[2].imageUrl}
+                          alt={mainScreenshots[2].title}
+                          className="w-[140px] h-[297px] md:w-[280px] md:h-[594px] object-cover rounded-2xl shadow-xl"
+                        />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="relative w-full flex flex-col md:flex-row justify-center items-center gap-8 z-10"
+                  >
+                    {/* Left mockup */}
+                    {mainScreenshots[1] && (
+                      <motion.div
+                        initial={{ rotate: -12, scale: 0.9 }}
+                        animate={{ rotate: -12, scale: 0.9 }}
+                        whileHover={{ rotate: 0, scale: 1.05 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="hidden md:block opacity-80"
+                      >
+                        <div className="w-72 h-44 bg-black rounded-lg p-2 flex items-center justify-center shadow-2xl">
+                          <img
+                            src={mainScreenshots[1].imageUrl}
+                            alt={mainScreenshots[1].title}
+                            className="h-full object-contain rounded-md"
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                    {/* Center mockup */}
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="z-10"
+                    >
+                      <div className="w-80 h-52 bg-black rounded-lg p-2 flex items-center justify-center shadow-2xl">
+                        <img
+                          src={mainScreenshots[0]?.imageUrl}
+                          alt={mainScreenshots[0]?.title}
+                          className="h-full object-contain rounded-md"
+                        />
+                      </div>
+                    </motion.div>
+                    {/* Right mockup */}
+                    {mainScreenshots[2] && (
+                      <motion.div
+                        initial={{ rotate: 12, scale: 0.9 }}
+                        animate={{ rotate: 12, scale: 0.9 }}
+                        whileHover={{ rotate: 0, scale: 1.05 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="hidden md:block opacity-80"
+                      >
+                        <div className="w-72 h-44 bg-black rounded-lg p-2 flex items-center justify-center shadow-2xl">
+                          <img
+                            src={mainScreenshots[2].imageUrl}
+                            alt={mainScreenshots[2].title}
+                            className="h-full object-contain rounded-md"
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+            )}
+
+            {/* Project details */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="prose prose-lg prose-invert max-w-none"
+            >
+              <h2 className="text-2xl font-semibold text-white mb-4">Project Details</h2>
+              <div className="text-gray-300 space-y-4 whitespace-pre-wrap">
+                {details}
+              </div>
+            </motion.div>
+
+            {/* Tech Stack */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="mt-10 mb-8"
+            >
+              <h2 className="text-2xl font-semibold text-white mb-4">Tech Stack</h2>
+              <div className="flex flex-wrap gap-3">
+                {techStack.map((tech, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1 * index }}
+                  >
+                    <TechBadge tech={tech} />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Project Links */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="flex flex-wrap gap-4 mb-8"
+            >
+              {githubUrl && (
+                <ProjectLink
+                  href={githubUrl}
+                  icon={
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12" />
+                    </svg>
+                  }
+                  text="Github Project"
+                />
+              )}
+              {websiteUrl && (
+                <ProjectLink
+                  href={websiteUrl}
+                  icon={
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  }
+                  text="Visit Website"
+                />
+              )}
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </LayoutDetails>
+  );
 };
 
 export default ProjectDetails;

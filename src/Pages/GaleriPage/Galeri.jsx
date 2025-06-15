@@ -24,7 +24,7 @@ const Gallery = () => {
           <img src="/galeri/photo6.jpg" alt="6" />
         </div>
         <div className="item" style={{ "--position": 7 }}>
-          <img src="/galeri/photo7.jpg" alt="7" />
+          <img src="/galeri/photo7p.jpg" alt="7" />
         </div>
         <div className="item" style={{ "--position": 8 }}>
           <img src="/galeri/photo8.jpg" alt="8" />
@@ -33,7 +33,7 @@ const Gallery = () => {
           <img src="/galeri/photo9.jpg" alt="9" />
         </div>
         <div className="item" style={{ "--position": 10 }}>
-          <img src="/galeri/photo10.jpg" alt="10" />
+          <img src="/galeri/photo10p.jpg" alt="10" />
         </div>
       </div>
       <div className="content">
@@ -47,7 +47,7 @@ const Gallery = () => {
         </div>
         <div
           className="model"
-          style={{ backgroundImage: `url("/fototengah.png")` }}
+          style={{ backgroundImage: `url("/phototengah.png")` }}
         ></div>
       </div>
     </div>

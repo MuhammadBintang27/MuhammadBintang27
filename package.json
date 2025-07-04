@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "convert-images": "node scripts/convert-to-webp.js",
+    "optimize-images": "npm run convert-images"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -41,6 +43,7 @@
     "gh-pages": "^6.2.0",
     "globals": "^15.14.0",
     "postcss": "^8.4.49",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.5"
   }

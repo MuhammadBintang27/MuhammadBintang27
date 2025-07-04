@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link component for routing
 import "./style.css";
+import OptimizedImage from "../../Components/Elements/OptimizedImage";
 
 const Projects = () => {
   const [active, setActive] = useState(0);
@@ -132,6 +133,45 @@ const Projects = () => {
       ]
     },
     {
+      imgSrc: "/project/agromarfeed.png",
+      bgColor: "#3CB371",
+      title: "Agro MarFeed",
+      category: "Agro-Maritime E-Commerce Platform",
+      bgText: "AGROMARFEED",
+      details: "AgroMarFeed is an e-commerce platform that connects farmers and fishermen supplying processed agricultural or marine waste with livestock and fish farmers. The platform features a modern, responsive design and leverages AI for smart chat, product description suggestions, and automated image editing. Sellers can manage their stores, products, orders, and finances from a unified dashboard. By utilizing organic waste as animal feed, AgroMarFeed helps reduce costs, increase income for suppliers, and support a circular economy.",
+      link: "/project-details",
+      type: "desktop",
+      techStack: [
+        "React",
+        "TailwindCSS",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "AI ChatBot (GPT-4o-mini)",
+        "AI Image Edit (GPT-Image-1)",
+        "Midtrans Payment Gateway"
+      ],
+      githubUrl: "https://github.com/MuhammadBintang27/AgroMarFeed.git",
+      websiteUrl: "https://agromarfeed.vercel.app",
+      screenshots: [
+        {
+          title: "Product Catalog",
+          description: "Displays a variety of available animal feed products with detailed information, search, and filtering features.",
+          imageUrl: "/project/projectdetails/agromarfeed-katalog.png"
+        },
+        {
+          title: "Consultation Menu",
+          description: "Direct consultation service with feed experts or veterinarians, including online meeting scheduling.",
+          imageUrl: "/project/projectdetails/agromarfeed-konsultasi.png"
+        },
+        {
+          title: "Shopping Cart",
+          description: "Shopping cart page for managing selected products and proceeding to checkout.",
+          imageUrl: "/project/projectdetails/agromarfeed-cart.png"
+        }
+      ]
+    },
+    {
       imgSrc: "/project/darahtanyoe.png",
       bgColor: "#ECA6A6",
       title: "DARAHTANYOE MOBILE APP",
@@ -171,7 +211,8 @@ const Projects = () => {
           "imageUrl": "/project/projectdetails/darahtanyoeLogin.png"
         }
       ]
-    }
+    },
+    
   ];
 
   const handleNext = () => {
@@ -260,7 +301,7 @@ const Projects = () => {
               {item.type === "desktop" ? (
                 <div className="image mx-auto mt-4 md:mt-0" />
               ) : (
-                <img
+                <OptimizedImage
                   src={item.imgSrc}
                   alt={item.title}
                   className="mx-auto my-4 md:my-0 w-[140px] h-[297px] md:w-[280px] md:h-[594px] rounded-xl shadow-lg object-cover bg-transparent"

@@ -1,39 +1,40 @@
 import React from "react";
 import "./style.css";
+import OptimizedImage from "../../Components/Elements/OptimizedImage";
 
 const Gallery = () => {
   return (
     <div className="banner h-screen">
       <div className="slider" style={{ "--quantity": 10 }}>
         <div className="item" style={{ "--position": 1 }}>
-          <img src="/galeri/photo1.jpg" alt="1" />
+          <OptimizedImage src="/galeri/photo1.jpg" alt="1" bare />
         </div>
         <div className="item" style={{ "--position": 2 }}>
-          <img src="/galeri/photo2.jpg" alt="2" />
+          <OptimizedImage src="/galeri/photo2.jpg" alt="2" bare />
         </div>
         <div className="item" style={{ "--position": 3 }}>
-          <img src="/galeri/photo3.jpg" alt="3" />
+          <OptimizedImage src="/galeri/photo3.jpg" alt="3" bare />
         </div>
         <div className="item" style={{ "--position": 4 }}>
-          <img src="/galeri/photo4.jpg" alt="4" />
+          <OptimizedImage src="/galeri/photo4.jpg" alt="4" bare />
         </div>
         <div className="item" style={{ "--position": 5 }}>
-          <img src="/galeri/photo5.jpg" alt="5" />
+          <OptimizedImage src="/galeri/photo5.jpg" alt="5" bare />
         </div>
         <div className="item" style={{ "--position": 6 }}>
-          <img src="/galeri/photo6.jpg" alt="6" />
+          <OptimizedImage src="/galeri/photo6.jpg" alt="6" bare />
         </div>
         <div className="item" style={{ "--position": 7 }}>
-          <img src="/galeri/photo7ps.jpg" alt="7" />
+          <OptimizedImage src="/galeri/photo7ps.jpg" alt="7" bare />
         </div>
         <div className="item" style={{ "--position": 8 }}>
-          <img src="/galeri/photo8.jpg" alt="8" />
+          <OptimizedImage src="/galeri/photo8.jpg" alt="8" bare />
         </div>
         <div className="item" style={{ "--position": 9 }}>
-          <img src="/galeri/photo9.jpg" alt="9" />
+          <OptimizedImage src="/galeri/photo9.jpg" alt="9" bare />
         </div>
         <div className="item" style={{ "--position": 10 }}>
-          <img src="/galeri/photo10ps.jpg" alt="10" />
+          <OptimizedImage src="/galeri/photo10ps.jpg" alt="10" bare />
         </div>
       </div>
       <div className="content">

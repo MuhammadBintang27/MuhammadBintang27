@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import OptimizedImage from '../Elements/OptimizedImage';
 
 const AnimatedProfileImage = ({ profileImage }) => {
   return (
@@ -66,7 +67,7 @@ const AnimatedProfileImage = ({ profileImage }) => {
       {/* Profile Image Container */}
       <div className="relative w-[400px] h-[500px] perspective-1000">
         {/* Static Image */}
-        <img
+        <OptimizedImage
           src={profileImage}
           alt="Profile"
           className="w-full h-full object-cover rounded-lg relative z-10"

@@ -1,6 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Space+Mono:wght@400;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --tech-bg-900: #02040b;
+  --tech-bg-800: #020617;
+  --tech-bg-700: #02030a;
+  --tech-hero-900: #090d16;
+  --tech-hero-800: #0b1220;
+  --tech-hero-700: #060b16;
+  --tech-accent-cyan: rgba(56, 189, 248, 0.16);
+  --tech-accent-amber: rgba(251, 191, 36, 0.12);
+}
 
 @keyframes scroll-text {
   0% {
@@ -30,11 +43,15 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   body {
-    @apply bg-blue-900 text-white;
+    background:
+      radial-gradient(circle at 72% 34%, var(--tech-accent-cyan), transparent 38%),
+      radial-gradient(circle at 88% 62%, var(--tech-accent-amber), transparent 42%),
+      linear-gradient(160deg, var(--tech-bg-900) 0%, var(--tech-bg-800) 48%, var(--tech-bg-700) 100%);
+    @apply text-white;
     font-family: 'Inter', sans-serif;
   }
 }
@@ -50,6 +67,20 @@
 }
 
 @layer utilities {
+  .bg-techstack-theme {
+    background:
+      radial-gradient(circle at 72% 34%, var(--tech-accent-cyan), transparent 38%),
+      radial-gradient(circle at 88% 62%, var(--tech-accent-amber), transparent 42%),
+      linear-gradient(160deg, var(--tech-bg-900) 0%, var(--tech-bg-800) 48%, var(--tech-bg-700) 100%);
+  }
+
+  .bg-techstack-hero {
+    background:
+      radial-gradient(circle at 22% 12%, rgba(56, 189, 248, 0.1), transparent 35%),
+      radial-gradient(circle at 78% 88%, rgba(251, 191, 36, 0.1), transparent 36%),
+      linear-gradient(156deg, var(--tech-hero-900) 0%, var(--tech-hero-800) 52%, var(--tech-hero-700) 100%);
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500;
   }

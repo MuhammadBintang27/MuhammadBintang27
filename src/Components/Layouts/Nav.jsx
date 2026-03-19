@@ -37,7 +37,6 @@ const Nav = () => {
   const routes = [
     { id: "home", name: "Home" },
     { id: "aboutme", name: "About Me" },
-    { id: "project", name: "Projects" },
     { id: "gallery", name: "Gallery" },
   ];
 

@@ -33,14 +33,18 @@ const StarBackground = (props) => {
   );
 };
 
-const StarsCanvas = () => (
-  <div className="w-full h-auto fixed inset-0 z-[1]">
-    <Canvas camera={{ position: [0, 0, 1] }}>
-      <Suspense fallback={null}>
-        <StarBackground />
-      </Suspense>
-    </Canvas>
-  </div>
-);
+const StarsCanvas = ({ fixed = true, className = "" }) => {
+  const positionClass = fixed ? "fixed" : "absolute";
+
+  return (
+    <div className={`pointer-events-none ${positionClass} inset-0 z-[1] h-full w-full ${className}`}>
+      <Canvas camera={{ position: [0, 0, 1] }}>
+        <Suspense fallback={null}>
+          <StarBackground />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+};
 
 export default StarsCanvas;

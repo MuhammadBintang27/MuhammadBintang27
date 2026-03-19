@@ -53,6 +53,11 @@ const Navbar = () => {
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
+      if (window.__lenis) {
+        window.__lenis.scrollTo(offsetPosition);
+        return;
+      }
+
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -77,7 +82,6 @@ const Navbar = () => {
             <ul className="flex items-center space-x-8">
               {[
                 { name: 'Home', id: 'home' },
-                { name: 'Project', id: 'project' },
                 { name: 'Gallery', id: 'gallery' }
               ].map((item) => (
                 <li key={item.name}>

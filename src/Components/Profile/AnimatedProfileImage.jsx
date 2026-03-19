@@ -2,13 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import OptimizedImage from '../Elements/OptimizedImage';
 
-const AnimatedProfileImage = ({ profileImage }) => {
+const AnimatedProfileImage = ({ profileImage, className = '' }) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0.4 }}
-      className="w-full md:w-1/2 flex justify-center md:justify-end relative"
+      className={`w-full flex justify-center md:justify-end relative ${className}`}
     >
       {/* Animated geometric background */}
       <div className="absolute inset-0 overflow-hidden" style={{ zIndex: -1 }}>
@@ -123,22 +123,7 @@ const AnimatedProfileImage = ({ profileImage }) => {
             }}
           />
 
-          {/* Right side glow */}
-          <motion.div
-            className="absolute right-0 w-[2px] bg-gradient-to-b from-yellow-400 via-blue-400 to-transparent"
-            initial={{ height: "0%", top: "100%" }}
-            animate={{
-              height: ["0%", "100%", "100%", "0%"],
-              top: ["100%", "0%", "0%", "100%"],
-              opacity: [0.8, 1, 1, 0.8]
-            }}
-            transition={{
-              duration: 8,
-              times: [0, 0.4, 0.6, 1],
-              repeat: Infinity,
-              repeatDelay: 2
-            }}
-          />
+          
 
           {/* Sparkle effects */}
           <motion.div

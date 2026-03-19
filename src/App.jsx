@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import Home from "./Pages/Home";
-import Projects from "./Pages/ProjectsPage/Projects";
-import ProjectDetails from "./Pages/ProjectsPage/ProjectDetails";
-import Gallery from "./Pages/GaleriPage/Galeri";
-import SectionDivider from "./Components/SectionDivider/SectionDivider";
 import LayoutWeb from "./Components/Layouts/Layout";
 import Contact from "./Components/Contact/Contact";
+import TechStack from "./Components/TechStack/TechStack";
+import HeroSection from "./Components/ScrollRevealSection/HeroSection";
+import AchievementsSection from "./Components/Achievements/AchievementsSection";
+import Home from "./Pages/Home";
+import InitialLoader from "./Components/Elements/InitialLoader";
+import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
 
 // 404 Page Component
 const NotFound = () => (
@@ -34,16 +35,21 @@ const NotFound = () => (
 const MainLayout = () => (
   <LayoutWeb>
     <main>
-      <section id="home">
+
+      <section className="relative">
+        <HeroSection />
+      </section>
+
+      <section className="relative -mt-px">
         <Home />
       </section>
 
-      <section id="project" className="py-[50px]">
-        <Projects />
+      <section className="relative -mt-px">
+        <AchievementsSection />
       </section>
 
-      <section id="gallery" className="py-20">
-        <Gallery />
+      <section id="tech-stack" className="h-screen flex items-center overflow-visible">
+        <TechStack />
       </section>
 
       <section id="contact">
@@ -54,16 +60,56 @@ const MainLayout = () => (
 );
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const minimumLoaderDuration = 1200;
+    const startTime = performance.now();
+    let timeoutId;
+
+    const finishLoading = () => {
+      const elapsed = performance.now() - startTime;
+      const remainingTime = Math.max(minimumLoaderDuration - elapsed, 0);
+
+      timeoutId = window.setTimeout(() => {
+        setIsLoading(false);
+      }, remainingTime);
+    };
+
+    if (document.readyState === "complete") {
+      finishLoading();
+    } else {
+      window.addEventListener("load", finishLoading, { once: true });
+    }
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("load", finishLoading);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isLoading ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <InitialLoader />;
+  }
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainLayout />} />
-        <Route path="/project-details" element={<ProjectDetails />} />
-        <Route path="/project-details/mobile" element={<ProjectDetails />} />
-        <Route path="/404" element={<NotFound />} />
-        <Route path="*" element={<Navigate to="/404" replace />} />
-      </Routes>
-    </Router>
+    <CinematicScrollProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainLayout />} />
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
+        </Routes>
+      </Router>
+    </CinematicScrollProvider>
   );
 };
 

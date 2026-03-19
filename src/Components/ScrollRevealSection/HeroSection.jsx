@@ -315,7 +315,7 @@ const HeroSection = ({
                   paddingLeft: '8px',
                 }}
               >
-                Infrastruktur Cerdas
+                Software Engineer | Tech Enthusiast
               </p>
 
               <p

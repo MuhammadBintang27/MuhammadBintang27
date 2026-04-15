@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,6 +10,7 @@ import Contact from "./Components/Contact/Contact";
 import TechStack from "./Components/TechStack/TechStack";
 import HeroSection from "./Components/ScrollRevealSection/HeroSection";
 import AchievementsSection from "./Components/Achievements/AchievementsSection";
+import ProjectsSection from "./Components/Projects/ProjectsSection";
 import Home from "./Pages/Home";
 import InitialLoader from "./Components/Elements/InitialLoader";
 import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
@@ -46,6 +47,10 @@ const MainLayout = () => (
 
       <section className="relative -mt-px">
         <AchievementsSection />
+      </section>
+
+      <section className="relative -mt-px">
+        <ProjectsSection />
       </section>
 
       <section id="tech-stack" className="h-screen flex items-center overflow-visible">

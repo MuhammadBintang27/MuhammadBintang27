@@ -1,72 +1,72 @@
 export const PROJECTS = [
-  {
-    title: "DarahTanyoe",
-    description: "Blood Donation Platform",
-    src: "/galeri/darahtanyoe.webp",
-    ctaText: "View Project",
-    ctaLink: "#",
-    summary:
-      "A digital platform designed to connect blood donors with people who urgently need blood in Aceh.",
-    content: [
-      "Developed a platform that allows users to search for blood donors based on location and blood type.",
-      "Designed the system to reduce the time needed to find donors during emergency situations.",
-    ],
-    tags: ["Web Development", "Database", "Community Platform"],
-  },
-  {
-    title: "CIRVIA",
-    description: "AI & Innovation Project",
-    src: "/galeri/cirvia.webp",
-    ctaText: "View Project",
-    ctaLink: "#",
-    summary:
-      "An AI-based project focused on building intelligent solutions to support digital innovation.",
-    content: [
-      "Explored the integration of artificial intelligence into practical applications.",
-      "Focused on problem-solving approaches using data-driven insights and automation.",
-    ],
-    tags: ["Artificial Intelligence", "Machine Learning", "Innovation"],
-  },
-  {
-    title: "AgroMarFeed",
-    description: "Smart Aquaculture Platform",
-    src: "/galeri/agromarfeed.webp",
-    ctaText: "View Project",
-    ctaLink: "#",
-    summary:
-      "A technology solution aimed at improving efficiency in aquaculture feeding management.",
-    content: [
-      "Designed a system to help monitor and optimize feeding processes in aquaculture environments.",
-      "Focused on improving productivity and reducing waste through better feeding strategies.",
-    ],
-    tags: ["AgriTech", "IoT Concept", "Data Monitoring"],
-  },
-  {
-    title: "WanTuTriAI",
-    description: "AI Assistant Platform",
-    src: "/galeri/wantutri.webp",
-    ctaText: "View Project",
-    ctaLink: "#",
-    summary:
-      "An AI-powered assistant designed to help users interact with intelligent systems more efficiently.",
-    content: [
-      "Built an AI-driven interface that helps users perform tasks and retrieve information quickly.",
-      "Focused on creating a simple interaction flow for everyday productivity.",
-    ],
-    tags: ["AI", "LLM", "Automation"],
-  },
-  {
-    title: "AceRental Playstation",
-    description: "Playstation Rental Management",
-    src: "/galeri/acerental.webp",
-    ctaText: "View Project",
-    ctaLink: "#",
-    summary:
-      "A system designed to manage PlayStation rental operations including booking, inventory, and customer management.",
-    content: [
-      "Developed features for managing console availability, rental duration, and transaction records.",
-      "Focused on simplifying rental operations for small entertainment businesses.",
-    ],
-    tags: ["Web App", "Management System", "Fullstack"],
-  },
+ {
+  slug: "darahtanyoe",
+  title: "DarahTanyoe",
+  description: "Blood Donation Platform",
+  category: "Web App & Mobile App",
+  year: "2025",
+  role: "Full-Stack Developer",
+  src: "/project/darahtanyoe.webp",
+  github: "https://github.com/MuhammadBintang27/DarahTanyoe_App.git",
+  ctaLink: "",
+  summary:
+    "DarahTanyoe is my undergraduate thesis project, consisting of a web platform for hospitals and blood donation organizations and a mobile application for blood donors. The system streamlines blood request management, donor discovery based on blood type and location, and communication between stakeholders during emergency situations. This project earned 2nd Place at the Hack4Health Hackathon organized by Institut Teknologi Bandung (ITB).",
+  tags: ["Healthcare", "Mobile App", "Web Development"],
+},
+{
+  slug: "cirvia",
+  title: "CIRVIA",
+  description: "AI & Innovation Project",
+  category: "AI · Innovation",
+  year: "2025",
+  role: "Full-Stack Developer",
+  src: "/project/cirvia.webp",
+  github: null,
+  ctaLink: "https://cirvia-usk.vercel.app/",
+  summary:
+    "CIRVIA (Circuit Virtual Interactive Application) is an AI-powered physics learning platform that combines virtual circuit simulation, computer vision, and adaptive learning technologies. Students can build electrical circuits using hand gestures detected through MediaPipe and browser-based computer vision without requiring laboratory equipment. The platform also provides personalized learning recommendations, AI-generated feedback, learning-style analysis, and teacher analytics dashboards. CIRVIA was awarded a Bronze Medal at the 2025 National Digital Learning Innovation Competition (LIDM).",
+  tags: ["Artificial Intelligence", "Computer Vision", "EdTech"],
+},
+{
+  slug: "agromarfeed",
+  title: "AgroMarFeed",
+  description: "Smart Aquaculture Platform",
+  category: "AgriTech · E-Commerce",
+  year: "2025",
+  role: "Backend Developer",
+  src: "/project/agromarfeed.webp",
+  github: null,
+  ctaLink: "https://www.agromarfeed.com/",
+  summary:
+    "AgroMarFeed is an AI-enhanced e-commerce platform that connects farmers and fishermen selling processed agricultural and marine waste products with livestock and aquaculture businesses. The platform provides intelligent features such as AI chat assistance, product description enhancement, image editing automation, financial analytics, and seller management tools. By promoting circular economy practices and reducing feed production costs, the project supports sustainable agriculture and won 3rd Place at the UTU Awards E-Commerce Design Competition.",
+  tags: ["AgriTech", "E-Commerce", "Artificial Intelligence"],
+},
+{
+  slug: "wantutri-ai",
+  title: "WanTuTriAI",
+  description: "AI Video Generation Platform",
+  category: "AI · Generative AI",
+  year: "2025",
+  role: "Backend Developer",
+  src: "/project/wantutri.webp",
+  github: null,
+  ctaLink: "https://wantutriai.xyz/",
+  summary:
+    "WanTuTriAI is an autonomous storytelling engine developed during an AI hackathon in collaboration with Alibaba. The platform transforms simple product ideas into short-form promotional videos through a three-step workflow: AI script generation, visual scene synthesis, and audio-visual production. By automating the creative process, businesses can generate engaging marketing content without requiring dedicated scriptwriters, designers, videographers, or editors.",
+  tags: ["Generative AI", "LLM", "Video Generation"],
+},
+{
+  slug: "acerental-playstation",
+  title: "AceRental Playstation",
+  description: "Playstation Rental Management",
+  category: "Android App · Business Tool",
+  year: "2025",
+  role: "Mobile Developer",
+  src: "/project/acerental.webp",
+  github: "https://github.com/MuhammadBintang27/ace-rental-playstation-kotlin.git",
+  ctaLink: "",
+  summary:
+    "AceRental Playstation is a personal Android application developed to support the daily operations of my PlayStation rental business. The application functions as a cashier and management system, helping track rental sessions, customer transactions, payment records, and operational activities. It was built to replace manual record-keeping and improve the efficiency of business management.",
+  tags: ["Android", "Business Management", "Mobile App"],
+},
 ];

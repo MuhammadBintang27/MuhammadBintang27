@@ -7,7 +7,7 @@ import logikaImage from '../../assets/images/achievement/logika.webp';
 import lidmImage from '../../assets/images/achievement/lidm.webp';
 import hack4HealthImage from '../../assets/images/achievement/hack4health.webp';
 import utuImage from '../../assets/images/achievement/utu.webp';
-
+import alibabaImage from '../../assets/images/achievement/alibaba.webp';
 gsap.registerPlugin(ScrollTrigger);
 
 const ACHIEVEMENTS = [
@@ -33,8 +33,7 @@ const ACHIEVEMENTS = [
   },
   {
     title: 'Top 10 AI X Creativity Hackathon Alibaba Cloud',
-    image:
-      'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop',
+    image: alibabaImage,
     initialX: 22,
     initialY: -48,
     initialRotate: 3,
@@ -64,17 +63,21 @@ const ACHIEVEMENTS = [
   },
 ];
 
+const computeScale = () => Math.min(1, window.innerWidth / 1400);
+
 const AchievementsSection = () => {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const cardsContainerRef = useRef(null);
   const cardRefs = useRef([]);
   const zCounterRef = useRef(200);
+  const scaleRef = useRef(computeScale());
+
   const dragBounds = {
-    top: -420,
-    left: -760,
-    right: 760,
-    bottom: 320,
+    top: -420 * scaleRef.current,
+    left: -760 * scaleRef.current,
+    right: 760 * scaleRef.current,
+    bottom: 320 * scaleRef.current,
   };
 
   const bringCardToFront = (index) => {
@@ -131,11 +134,16 @@ const AchievementsSection = () => {
         },
       );
 
-      gsap.set(cardRefs.current, {
-        x: (index) => ACHIEVEMENTS[index].initialX,
-        y: (index) => ACHIEVEMENTS[index].initialY,
-        rotate: (index) => ACHIEVEMENTS[index].initialRotate,
-      });
+      const setInitialPositions = () => {
+        scaleRef.current = computeScale();
+        gsap.set(cardRefs.current, {
+          x: (index) => ACHIEVEMENTS[index].initialX * scaleRef.current,
+          y: (index) => ACHIEVEMENTS[index].initialY * scaleRef.current,
+          rotate: (index) => ACHIEVEMENTS[index].initialRotate,
+        });
+      };
+
+      setInitialPositions();
 
       const spreadTimeline = gsap.timeline({
         defaults: { ease: 'power3.out' },
@@ -148,6 +156,7 @@ const AchievementsSection = () => {
           pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onRefresh: setInitialPositions,
         },
       });
 
@@ -158,8 +167,8 @@ const AchievementsSection = () => {
         spreadTimeline.to(
           cardRefs.current[index],
           {
-            x: item.targetX,
-            y: item.targetY,
+            x: () => item.targetX * scaleRef.current,
+            y: () => item.targetY * scaleRef.current,
             rotate: item.targetRotate,
           },
           index * 0.14,
@@ -198,7 +207,7 @@ const AchievementsSection = () => {
 
           <div
             ref={cardsContainerRef}
-            className="relative mx-auto h-[70vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)]"
+            className="relative mx-auto h-[60vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)] sm:h-[70vh]"
           >
             {ACHIEVEMENTS.map((item, index) => (
               <motion.article

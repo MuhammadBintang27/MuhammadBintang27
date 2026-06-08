@@ -1,88 +1,131 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
+const NAV_ITEMS = [
+  { label: "Home", id: "home" },
+  { label: "Achievement", id: "achievements" },
+  { label: "Projects", id: "projects" },
+  { label: "Tech Stack", id: "tech-stack" },
+  { label: "Contact", id: "contact" },
+];
 
 const Nav = () => {
-  const [activeSection, setActiveSection] = useState("home");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Fungsi untuk menangani scroll ke elemen
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") setIsOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  const handleNavClick = (id) => {
+    setIsOpen(false);
+    if (location.pathname === "/") {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 320);
+    } else {
+      navigate(`/#${id}`);
     }
   };
 
-  // Menggunakan Intersection Observer untuk mendeteksi bagian aktif
-  useEffect(() => {
-    const sections = document.querySelectorAll("section");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id); // Set bagian aktif berdasarkan ID
-          }
-        });
-      },
-      { threshold: 0.6 } // Trigger jika 60% elemen terlihat
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => {
-      sections.forEach((section) => observer.unobserve(section));
-    };
-  }, []);
-
-  // Daftar menu navigasi
-  const routes = [
-    { id: "home", name: "Home" },
-    { id: "aboutme", name: "About Me" },
-    { id: "gallery", name: "Gallery" },
-  ];
-
   return (
-    <div className="fixed top-0 left-0 w-full p-9 z-10 ">
-      <div className="container mx-auto flex justify-between items-center flex-wrap">
-        {/* Logo */}
-        <div
-          className="text-white text-3xl font-bold cursor-pointer"
-          onClick={() => scrollToSection("home")}
+    <>
+      {/* Hamburger / Close button — always visible */}
+      <div className="fixed right-4 top-4 z-[200] sm:right-6 sm:top-6">
+        <button
+          onClick={() => setIsOpen((v) => !v)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          className="relative flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-full border border-white/15 bg-[#0f1014]/80 backdrop-blur-md transition hover:border-white/30"
         >
-          Bintang
-        </div>
-
-        {/* Hamburger Menu Button (for mobile) */}
-        <div className="lg:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-white text-3xl focus:outline-none"
-          >
-            ☰
-          </button>
-        </div>
-
-        {/* Navigation Links */}
-        <div
-          className={`lg:flex lg:gap-10 text-white text-lg lg:flex-wrap ${
-            isMenuOpen ? "flex flex-col gap-4" : "hidden"
-          }`}
-        >
-          {routes.map((route) => (
-            <button
-              key={route.id}
-              onClick={() => scrollToSection(route.id)}
-              className={`group hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105 pb-2  ${
-                activeSection === route.id
-                  ? "text-yellow-400 border-b-2 border-yellow-400"
-                  : ""
-              }`}
-            >
-              {route.name}
-            </button>
-          ))}
-        </div>
+          <motion.span
+            animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            className="block h-px w-[18px] origin-center bg-white"
+          />
+          <motion.span
+            animate={{ opacity: isOpen ? 0 : 1, scaleX: isOpen ? 0 : 1 }}
+            transition={{ duration: 0.15 }}
+            className="block h-px w-[18px] bg-white"
+          />
+          <motion.span
+            animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            className="block h-px w-[18px] origin-center bg-white"
+          />
+        </button>
       </div>
-    </div>
+
+      {/* Full-screen overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28 }}
+            className="fixed inset-0 z-[190] bg-[#09090c]"
+          >
+            {/* Logo */}
+            <div className="absolute left-5 top-5 sm:left-8 sm:top-7">
+              <button
+                onClick={() => handleNavClick("home")}
+                className="text-base font-black uppercase tracking-tight text-[#e8e0c2]/70 transition hover:text-[#e8e0c2]"
+              >
+                Bintang.
+              </button>
+            </div>
+
+            {/* Nav items */}
+            <div className="flex h-full flex-col justify-center px-8 sm:px-16 lg:px-24">
+              <nav aria-label="Main navigation">
+                {NAV_ITEMS.map((item, i) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -32 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.32, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <button
+                      onClick={() => handleNavClick(item.id)}
+                      className="group block py-0.5 text-left text-[clamp(2.6rem,8.5vw,7rem)] font-black uppercase leading-[1.05] tracking-[-0.025em] text-[#e8e0c2]/55 transition-colors duration-100 hover:text-[#e8e0c2]"
+                    >
+                      {item.label}
+                    </button>
+                  </motion.div>
+                ))}
+              </nav>
+            </div>
+
+            {/* Bottom bar */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.28, duration: 0.3 }}
+              className="absolute bottom-7 left-5 right-5 flex items-end justify-between sm:left-8 sm:right-8"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
+                Muhammad Bintang Indra Hidayat
+              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
+                Portfolio · {new Date().getFullYear()}
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

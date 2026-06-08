@@ -1,24 +1,23 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 
 const rgba = (a) => `rgba(232,224,194,${a})`;
 
 const ChevronRail = ({ count = 10, alpha = 0.82, className = '', style }) => (
-  <motion.div className={`flex flex-col items-center justify-between ${className}`} style={style}>
+  <div className={`flex flex-col items-center justify-between ${className}`} style={style}>
     {Array.from({ length: count }).map((_, i) => (
-      <motion.div
+      <div
         key={i}
-        animate={{ opacity: [alpha, alpha * 0.52, alpha * 0.1], y: [0, 4, 10] }}
-        transition={{ duration: 1.32, repeat: Infinity, ease: 'easeInOut', delay: i * 0.13 }}
         className="flex justify-center"
+        style={{ opacity: alpha, animationDelay: `${i * 0.13}s`, animation: 'chevronDrift 1.32s ease-in-out infinite' }}
       >
         <span
           className="block h-[12px] w-[12px] rotate-45 border-b-2 border-r-2"
           style={{ borderColor: rgba(alpha) }}
         />
-      </motion.div>
+      </div>
     ))}
-  </motion.div>
+  </div>
 );
 
 const ScrollLineDivider = () => {
@@ -60,8 +59,9 @@ const ScrollLineDivider = () => {
     <section
       ref={ref}
       aria-hidden="true"
-      className="relative h-[80vh] overflow-hidden border-y border-[#e8e0c2]/15 bg-[#0d0e12]"
+      className="relative h-[50vh] overflow-hidden border-y border-[#e8e0c2]/15 bg-[#0d0e12]"
     >
+      <style>{`@keyframes chevronDrift{0%{opacity:1;transform:translateY(0)}50%{opacity:.52;transform:translateY(4px)}100%{opacity:.1;transform:translateY(10px)}}`}</style>
       {/* Garis vertikal kecil di atas tengah (dari top section turun ke garis 1) */}
       <motion.div
         className="absolute left-1/2 -translate-x-1/2 w-px origin-top"

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import Footer from "./Footer";
-import StarsCanvas from "../Elements/StarBackground";
 
 const LayoutDetails = ({ children, bgColor = "bg-techstack-theme", isDark = true }) => {
   useEffect(() => {
@@ -32,11 +31,7 @@ const LayoutDetails = ({ children, bgColor = "bg-techstack-theme", isDark = true
         <div className="absolute h-96 w-96 rounded-full bg-amber-300/12 blur-3xl -bottom-20 -right-20" />
       </div>
 
-      {/* StarsCanvas berada di atas background */}
-      <div className="absolute inset-0 z-0 w-full h-full">
-        <StarsCanvas />
-      </div>
-
+     
       {/* Konten Utama */}
       <div className="relative z-10 min-h-screen flex flex-col">
         <div className="flex-grow">{children}</div> {/* Konten utama */}

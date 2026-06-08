@@ -1,173 +1,75 @@
-import React, { useState } from 'react';
-import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
-import emailjs from '@emailjs/browser';
+import { SiGmail } from 'react-icons/si';
+import { FaWhatsapp, FaInstagram, FaGithub, FaLinkedin } from 'react-icons/fa';
+import ScrollLineDivider from '../SectionDivider/ScrollLineDivider';
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const contacts = [
+  {
+    label: 'Gmail',
+    icon: SiGmail,
+    href: 'mailto:muhammad.bintang.indra@gmail.com',
+  },
+  {
+    label: 'WhatsApp',
+    icon: FaWhatsapp,
+    href: 'https://wa.me/6282261583328',
+  },
+  {
+    label: 'Instagram',
+    icon: FaInstagram,
+    href: 'https://www.instagram.com/muhammadbintangindra/',
+  },
+  {
+    label: 'GitHub',
+    icon: FaGithub,
+    href: 'https://github.com/MuhammadBintang27',
+  },
+  {
+    label: 'LinkedIn',
+    icon: FaLinkedin,
+    href: 'https://www.linkedin.com/in/muhammad-bintang-indra-hidayat-b634a2274/',
+  },
+];
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+const Contact = () => (
+  <>
+    <ScrollLineDivider />
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+    <section
+      id="contact"
+      className="relative bg-[linear-gradient(180deg,#101117_0%,#0d0f14_100%)] py-20 sm:py-28"
+    >
+      <div className="mx-auto w-full max-w-4xl px-4 text-center sm:px-8">
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/62">
+          Get in Touch
+        </p>
 
-    try {
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: 'Muhammad Bintang Indra Hidayat',
-          reply_to: formData.email,
-        },
-        PUBLIC_KEY
-      );
+        <h2 className="mb-6 text-[clamp(3rem,9vw,7rem)] font-black leading-[0.92] tracking-[-0.02em] text-[#e8e0c2]">
+          Hit Me Up
+        </h2>
 
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        <p className="mx-auto mb-16 max-w-[52ch] text-[1rem] leading-relaxed text-white/50 sm:text-[1.05rem]">
+          Whether you have a question, want to collaborate, or just want to say hi, feel free to reach out!
+        </p>
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Content with higher z-index */}
-      <div className="relative z-50 min-h-screen flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Let's Connect
-            </h2>
-            <p className="text-lg text-gray-300">
-              I'll get back to you within 24 hours
-            </p>
-          </div>
-
-          <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-8 border border-gray-800 shadow-[0_0_24px_4px_rgba(253,224,71,0.2)]">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
-                  placeholder="Your name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
-                  placeholder="your.email@example.com"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  id="message"
-                  rows="4"
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 resize-none"
-                  placeholder="Your message..."
-                ></textarea>
-              </div>
-
-              <div className="text-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-black bg-yellow-400 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </div>
-
-              {submitStatus === 'success' && (
-                <div className="text-center text-green-400 mt-4">
-                  Message sent successfully!
-                </div>
-              )}
-              {submitStatus === 'error' && (
-                <div className="text-center text-red-400 mt-4">
-                  Failed to send message. Please try again.
-                </div>
-              )}
-            </form>
-
-            <div className="mt-12 flex justify-center space-x-8">
-              <a
-                href="https://github.com/MuhammadBintang27"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-yellow-400 transition-colors duration-300"
-              >
-                <FaGithub className="h-8 w-8" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/muhammad-bintang-indra-hidayat-b634a2274/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-yellow-400 transition-colors duration-300"
-              >
-                <FaLinkedin className="h-8 w-8" />
-              </a>
-              <a
-                href="https://www.instagram.com/muhammadbintangindra/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-yellow-400 transition-colors duration-300"
-              >
-                <FaInstagram className="h-8 w-8" />
-              </a>
-            </div>
-          </div>
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+          {contacts.map(({ label, icon: Icon, href }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith('mailto') ? '_self' : '_blank'}
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="group flex h-24 w-24 items-center justify-center rounded-full bg-yellow-400 shadow-[0_0_28px_rgba(250,204,21,0.55)] transition-all duration-300 hover:scale-110 hover:shadow-[0_0_42px_rgba(250,204,21,0.80)] sm:h-28 sm:w-28"
+            >
+              <Icon className="h-10 w-10 text-[#0f1014] sm:h-12 sm:w-12" />
+            </a>
+          ))}
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default Contact; 
+      </div>
+    </section>
+  </>
+);
+
+export default Contact;

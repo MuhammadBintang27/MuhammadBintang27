@@ -160,7 +160,7 @@ const HeroSection = ({
   }, []);
 
   return (
-    <section ref={sectionRef} id="home" className="relative h-[320vh] w-full overflow-x-clip">
+    <section ref={sectionRef} id="hero" className="relative h-[320vh] w-full overflow-x-clip">
       <div
         ref={stageRef}
         className="relative h-screen min-h-[100svh] w-full overflow-hidden bg-techstack-theme"
@@ -175,8 +175,8 @@ const HeroSection = ({
             <div className="absolute right-0 top-0 h-px w-[48%] bg-cyan-100/72" />
           </div>
           <div className="absolute left-4 right-4 top-[42px] flex items-center justify-between text-[0.62rem] font-bold uppercase tracking-[0.22em] text-cyan-100/92 sm:left-8 sm:right-8 sm:text-[0.68rem]">
-            <span>Integrity</span>
-            <span>Advancement</span>
+            <span>CREATE</span>
+            <span>INSPIRE</span>
           </div>
           <div className="absolute left-4 right-4 top-[58px] sm:left-8 sm:right-8">
             <div className="absolute left-0 top-0 h-px w-[44%] bg-cyan-100/50" />
@@ -389,7 +389,7 @@ const HeroSection = ({
                     lineHeight: 1,
                   }}
                 >
-                  100,000
+                  10,000+
                 </p>
 
                 <div
@@ -404,7 +404,7 @@ const HeroSection = ({
                     fontFamily: "'DM Mono','Courier New',monospace",
                   }}
                 >
-                  Computer Hours Delivered
+                  Hours of Coding
                 </p>
 
                 <div className="mt-2 flex items-end justify-end gap-[2px]">

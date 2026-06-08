@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import ScrollLineDivider from '../SectionDivider/ScrollLineDivider';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
@@ -11,7 +12,7 @@ const techKeys = [
     short: 'RE',
     color: '#61dafb',
     label: 'Frontend core',
-    description: 'Komponen interaktif, stateful UI, dan fondasi utama untuk web app yang dinamis.',
+    description: 'Builds interactive and dynamic user interfaces with a component-based architecture.',
   },
   {
     name: 'Next.js',
@@ -19,7 +20,7 @@ const techKeys = [
     short: 'NX',
     color: '#f8fafc',
     label: 'Full-stack web',
-    description: 'Routing, SSR, dan struktur aplikasi modern saat butuh performa sekaligus DX yang rapi.',
+    description: 'Provides routing, server-side rendering, and modern tooling for scalable web applications.',
   },
   {
     name: 'Node.js',
@@ -27,23 +28,23 @@ const techKeys = [
     short: 'ND',
     color: '#4ade80',
     label: 'Runtime backend',
-    description: 'API, automation, dan service layer yang cepat untuk prototyping sampai production workflows.',
+    description: 'Powers fast and scalable backend services, APIs, and automation workflows.',
   },
   {
     name: 'GitHub',
     icon: '/tech/github.svg',
     short: 'GH',
     color: '#c084fc',
-    label: 'Version control',
-    description: 'Kolaborasi, source control, dan deployment flow yang terhubung langsung ke project lifecycle.',
+    label: 'Collaboration',
+    description: 'Enables version control, team collaboration, and streamlined development workflows.',
   },
   {
     name: 'Express',
     icon: '/tech/express.svg',
     short: 'EX',
     color: '#38bdf8',
-    label: 'API layer',
-    description: 'Backend ringan untuk REST endpoints, middleware, dan integrasi service yang fleksibel.',
+    label: 'API framework',
+    description: 'Lightweight framework for building RESTful APIs and backend services.',
   },
   {
     name: 'MongoDB',
@@ -51,7 +52,7 @@ const techKeys = [
     short: 'MG',
     color: '#34d399',
     label: 'NoSQL database',
-    description: 'Schema fleksibel untuk produk yang berkembang cepat dan butuh iterasi data tanpa friction besar.',
+    description: 'Flexible document database designed for rapid development and evolving data structures.',
   },
   {
     name: 'Laravel',
@@ -59,15 +60,15 @@ const techKeys = [
     short: 'LV',
     color: '#fb7185',
     label: 'PHP framework',
-    description: 'Cocok untuk aplikasi dengan struktur backend yang jelas, auth, ORM, dan workflow yang matang.',
+    description: 'Robust framework for building secure and maintainable web applications.',
   },
   {
     name: 'MySQL',
     icon: '/tech/mysql.svg',
     short: 'MY',
     color: '#60a5fa',
-    label: 'Relational data',
-    description: 'Pilihan saat relasi data, query yang solid, dan kestabilan storage jadi prioritas utama.',
+    label: 'SQL database',
+    description: 'Reliable relational database for structured data and complex queries.',
   },
   {
     name: 'TensorFlow',
@@ -75,7 +76,7 @@ const techKeys = [
     short: 'TF',
     color: '#fb923c',
     label: 'Machine learning',
-    description: 'Dipakai untuk eksplorasi model, training pipeline, dan eksperimen AI yang lebih terstruktur.',
+    description: 'Framework for developing, training, and deploying machine learning models.',
   },
   {
     name: 'PyTorch',
@@ -83,120 +84,120 @@ const techKeys = [
     short: 'PT',
     color: '#f97316',
     label: 'Deep learning',
-    description: 'Lebih nyaman untuk riset, eksperimen model, dan iterasi cepat saat mencoba ide computer vision atau NLP.',
+    description: 'Popular deep learning framework for research, experimentation, and production AI.',
   },
   {
     name: 'Flutter',
     icon: '/tech/flutter.svg',
     short: 'FL',
     color: '#22d3ee',
-    label: 'Cross-platform app',
-    description: 'Saat satu codebase perlu melayani mobile UI yang konsisten dengan delivery yang efisien.',
+    label: 'Cross-platform mobile',
+    description: 'Builds high-performance mobile applications from a single codebase.',
   },
   {
     name: 'Kotlin',
     icon: '/tech/kotlin.svg',
     short: 'KT',
     color: '#a78bfa',
-    label: 'Android native',
-    description: 'Untuk Android development yang lebih native, aman, dan enak dipakai membangun fitur yang spesifik.',
+    label: 'Android development',
+    description: 'Modern programming language for creating native Android applications.',
   },
   {
-    name: 'React',
-    icon: '/tech/react.svg',
-    short: 'RE',
-    color: '#61dafb',
-    label: 'Frontend core',
-    description: 'Komponen interaktif, stateful UI, dan fondasi utama untuk web app yang dinamis.',
+    name: 'TypeScript',
+    icon: '/tech/typescript.svg',
+    short: 'TS',
+    color: '#3178c6',
+    label: 'Typed JavaScript',
+    description: 'Enhances JavaScript with static typing for safer and more maintainable code.',
   },
   {
-    name: 'Next.js',
-    icon: '/tech/nextdotjs.svg',
-    short: 'NX',
-    color: '#f8fafc',
-    label: 'Full-stack web',
-    description: 'Routing, SSR, dan struktur aplikasi modern saat butuh performa sekaligus DX yang rapi.',
+    name: 'Tailwind CSS',
+    icon: '/tech/tailwindcss.svg',
+    short: 'TW',
+    color: '#06b6d4',
+    label: 'CSS framework',
+    description: 'Utility-first framework for building responsive and modern user interfaces.',
   },
   {
-    name: 'Node.js',
-    icon: '/tech/nodedotjs.svg',
-    short: 'ND',
-    color: '#4ade80',
-    label: 'Runtime backend',
-    description: 'API, automation, dan service layer yang cepat untuk prototyping sampai production workflows.',
+    name: 'Python',
+    icon: '/tech/python.svg',
+    short: 'PY',
+    color: '#facc15',
+    label: 'Programming language',
+    description: 'Versatile language widely used for automation, data science, AI, and backend development.',
   },
   {
-    name: 'GitHub',
+    name: 'PostgreSQL',
+    icon: '/tech/postgresql.svg',
+    short: 'PG',
+    color: '#3b82f6',
+    label: 'Relational database',
+    description: 'Advanced SQL database known for reliability, scalability, and performance.',
+  },
+  {
+    name: 'Docker',
+    icon: '/tech/docker.svg',
+    short: 'DK',
+    color: '#0ea5e9',
+    label: 'Containerization',
+    description: 'Packages applications into portable containers for consistent deployment.',
+  },
+  {
+    name: 'Vue.js',
+    icon: '/tech/vue.svg',
+    short: 'VU',
+    color: '#42b883',
+    label: 'Frontend framework',
+    description: 'Progressive JavaScript framework for building modern and reactive interfaces.',
+  },
+  {
+    name: 'Vercel',
+    icon: '/tech/vercel.svg',
+    short: 'VC',
+    color: '#ffffff',
+    label: 'Deployment platform',
+    description: 'Optimized platform for deploying frontend and full-stack web applications.',
+  },
+  {
+    name: 'OpenCV',
+    icon: '/tech/opencv.svg',
+    short: 'CV',
+    color: '#ef4444',
+    label: 'Computer vision',
+    description: 'Open-source library for image processing and computer vision applications.',
+  },
+  {
+    name: 'Scikit-Learn',
+    icon: '/tech/python.svg',
+    short: 'SK',
+    color: '#f97316',
+    label: 'Machine learning',
+    description: 'Comprehensive toolkit for classical machine learning and data analysis.',
+  },
+  {
+    name: 'OpenAI',
+    icon: '/tech/openai.svg',
+    short: 'LX',
+    color: '#eab308',
+    label: 'AI services',
+    description: 'Provides powerful AI models and APIs for natural language processing, computer vision, and more.',
+  },
+  {
+    name: 'Github',
     icon: '/tech/github.svg',
-    short: 'GH',
-    color: '#c084fc',
-    label: 'Version control',
-    description: 'Kolaborasi, source control, dan deployment flow yang terhubung langsung ke project lifecycle.',
-  },
-  {
-    name: 'Express',
-    icon: '/tech/express.svg',
-    short: 'EX',
-    color: '#38bdf8',
-    label: 'API layer',
-    description: 'Backend ringan untuk REST endpoints, middleware, dan integrasi service yang fleksibel.',
-  },
-  {
-    name: 'MongoDB',
-    icon: '/tech/mongodb.svg',
-    short: 'MG',
-    color: '#34d399',
-    label: 'NoSQL database',
-    description: 'Schema fleksibel untuk produk yang berkembang cepat dan butuh iterasi data tanpa friction besar.',
-  },
-  {
-    name: 'Laravel',
-    icon: '/tech/laravel.svg',
-    short: 'LV',
-    color: '#fb7185',
-    label: 'PHP framework',
-    description: 'Cocok untuk aplikasi dengan struktur backend yang jelas, auth, ORM, dan workflow yang matang.',
-  },
-  {
-    name: 'MySQL',
-    icon: '/tech/mysql.svg',
-    short: 'MY',
-    color: '#60a5fa',
-    label: 'Relational data',
-    description: 'Pilihan saat relasi data, query yang solid, dan kestabilan storage jadi prioritas utama.',
-  },
-  {
-    name: 'TensorFlow',
-    icon: '/tech/tensorflow.svg',
-    short: 'TF',
-    color: '#fb923c',
-    label: 'Machine learning',
-    description: 'Dipakai untuk eksplorasi model, training pipeline, dan eksperimen AI yang lebih terstruktur.',
-  },
-  {
-    name: 'PyTorch',
-    icon: '/tech/pytorch.svg',
-    short: 'PT',
+    short: 'GT',
     color: '#f97316',
-    label: 'Deep learning',
-    description: 'Lebih nyaman untuk riset, eksperimen model, dan iterasi cepat saat mencoba ide computer vision atau NLP.',
+    label: 'Version control',
+    description: 'Tracks code changes and supports efficient collaboration across development teams.',
   },
   {
-    name: 'Flutter',
-    icon: '/tech/flutter.svg',
-    short: 'FL',
-    color: '#22d3ee',
-    label: 'Cross-platform app',
-    description: 'Saat satu codebase perlu melayani mobile UI yang konsisten dengan delivery yang efisien.',
+    name: 'FastAPI',
+    icon: '/tech/fastapi.svg',
+    short: 'FA',
+    color: '#14b8a6',
+    label: 'Python backend',
+    description: 'High-performance framework for building modern APIs with Python.',
   },
-  {
-    name: 'Kotlin',
-    icon: '/tech/kotlin.svg',
-    short: 'KT',
-    color: '#a78bfa',
-    label: 'Android native',
-    description: 'Untuk Android development yang lebih native, aman, dan enak dipakai membangun fitur yang spesifik.',
-  }
 ].map((skill, index) => {
   const columns = 4;
   const rows = 6;
@@ -242,7 +243,6 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
     const base = new THREE.Color(skill.color);
     return base.lerp(new THREE.Color('#0b1220'), 0.36);
   }, [skill.color]);
-
   const handleHoverStart = (event) => {
     event.stopPropagation();
     onHoverChange(skill);
@@ -301,6 +301,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
       delta,
       8,
     );
+
   });
 
   return (
@@ -482,13 +483,26 @@ const TechStack = () => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.25 }}
-      className="relative isolate h-full w-full px-2 sm:px-4 overflow-visible flex flex-col justify-center gap-10 lg:block"
-    >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_72%_34%,rgba(56,189,248,0.16),transparent_38%),radial-gradient(circle_at_88%_62%,rgba(251,191,36,0.12),transparent_42%),linear-gradient(160deg,#02040b_0%,#020617_48%,#02030a_100%)]" />
+    <>
+      <ScrollLineDivider />
+
+      <div id="tech-stack" className="bg-[#101117]">
+        <header className=" pt-16 text-center ">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/62">
+            Skills &amp; Tools
+          </p>
+          <h2 className="text-[clamp(2.3rem,7vw,6.2rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] text-[#e8e0c2]">
+            Tech Stack
+          </h2>
+        </header>
+
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.25 }}
+          className="relative isolate h-screen w-full px-2 sm:px-4 overflow-visible flex flex-col justify-center gap-10 lg:block"
+        >
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[#101117]" />
 
       <div className="relative z-20 w-full max-w-xl select-text lg:absolute lg:left-[10%] lg:top-1/2 lg:w-[24%] lg:max-w-none lg:-translate-y-1/2 lg:[transform:translateY(-50%)_perspective(1400px)_rotateY(28deg)_rotateX(8deg)_skewY(-6deg)_scaleY(0.9)] lg:origin-left">
         <motion.article
@@ -503,13 +517,13 @@ const TechStack = () => {
           </p>
 
           <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl lg:mt-3 lg:text-[3.4rem] lg:leading-[0.94]">
-            {hoveredSkill ? hoveredSkill.name : 'Arahkan cursor ke keyboard'}
+            {hoveredSkill ? hoveredSkill.name : 'Hover over a keycap to see details!'}
           </h3>
 
           <p className="mt-5 max-w-sm text-base leading-8 text-slate-300 sm:text-lg lg:mt-3 lg:max-w-[17rem] lg:text-[1rem] lg:leading-6">
             {hoveredSkill
               ? hoveredSkill.description
-              : 'Keyboard berisi 24 skill dalam grid 4 x 6 dengan profil keycap tinggi, material matte, dan sudut sinematik seperti setup mechanical keyboard.'}
+              : 'Keycaps represent various technologies I have experience with. Hovering over each keycap reveals the technology name, category, and a brief description of its role in my skill set.'}
           </p>
 
         </motion.article>
@@ -519,12 +533,12 @@ const TechStack = () => {
         <Canvas
           dpr={[1, 1.35]}
           shadows
-          camera={{ position: [8.9, 2.55, 5.0], fov: 31 }}
+          camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
           gl={{ antialias: true, alpha: true }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
           onPointerMissed={() => setHoveredSkill(null)}
         >
-          <fog attach="fog" args={['#01040c', 7.4, 17]} />
+          <fog attach="fog" args={['#101117', 7.4, 17]} />
           <ambientLight intensity={0.52} />
           <directionalLight
             position={[4.5, 6.5, 5.4]}
@@ -551,7 +565,9 @@ const TechStack = () => {
           />
         </Canvas>
       </div>
-    </motion.section>
+        </motion.section>
+      </div>
+    </>
   );
 };
 

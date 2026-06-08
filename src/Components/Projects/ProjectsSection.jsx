@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ScrollLineDivider from "../SectionDivider/ScrollLineDivider";
 import { PROJECTS } from "../../data/projectsData";
@@ -7,11 +6,13 @@ import { PROJECTS } from "../../data/projectsData";
 const ProjectsSection = () => {
   const navigate = useNavigate();
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const previewRef = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      if (previewRef.current) {
+        previewRef.current.style.transform = `translate(${e.clientX + 28}px, ${e.clientY - 72}px)`;
+      }
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
@@ -21,29 +22,25 @@ const ProjectsSection = () => {
     <>
       <ScrollLineDivider />
 
-      {/* Floating cursor preview — desktop only */}
-      <AnimatePresence>
+      {/* Floating cursor preview — desktop only, position via DOM ref */}
+      <div
+        ref={previewRef}
+        className="pointer-events-none fixed left-0 top-0 z-[50] hidden md:block"
+        style={{
+          opacity: hoveredIndex !== null ? 1 : 0,
+          scale: hoveredIndex !== null ? 1 : 0.88,
+          transition: 'opacity 0.18s ease, scale 0.18s ease',
+        }}
+      >
         {hoveredIndex !== null && (
-          <motion.div
-            key={hoveredIndex}
-            initial={{ opacity: 0, scale: 0.88 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.88 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="pointer-events-none fixed z-[50] hidden md:block"
-            style={{
-              left: mousePos.x + 28,
-              top: mousePos.y - 72,
-            }}
-          >
-            <img
-              src={PROJECTS[hoveredIndex].src}
-              alt={PROJECTS[hoveredIndex].title}
-              className="h-[220px] w-[360px] rounded-xl object-cover shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
-            />
-          </motion.div>
+          <img
+            src={PROJECTS[hoveredIndex].src}
+            alt={PROJECTS[hoveredIndex]?.title}
+            loading="lazy"
+            className="h-[220px] w-[360px] rounded-xl object-cover shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+          />
         )}
-      </AnimatePresence>
+      </div>
 
       <section
         id="projects"

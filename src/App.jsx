@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,13 +7,15 @@ import {
 } from "react-router-dom";
 import LayoutWeb from "./Components/Layouts/Layout";
 import Contact from "./Components/Contact/Contact";
-import TechStack from "./Components/TechStack/TechStack";
 import HeroSection from "./Components/ScrollRevealSection/HeroSection";
 import AchievementsSection from "./Components/Achievements/AchievementsSection";
 import ProjectsSection from "./Components/Projects/ProjectsSection";
 import Home from "./Pages/Home";
 import InitialLoader from "./Components/Elements/InitialLoader";
 import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
+
+const TechStack = lazy(() => import("./Components/TechStack/TechStack"));
+const ProjectDetail = lazy(() => import("./Pages/ProjectDetail"));
 
 // 404 Page Component
 const NotFound = () => (
@@ -37,7 +39,7 @@ const MainLayout = () => (
   <LayoutWeb>
     <main>
 
-      <section className="relative">
+      <section className="relative hidden md:block">
         <HeroSection />
       </section>
 
@@ -53,13 +55,13 @@ const MainLayout = () => (
         <ProjectsSection />
       </section>
 
-      <section id="tech-stack" className="h-screen flex items-center overflow-visible">
-        <TechStack />
+      <section className="relative -mt-px">
+        <Suspense fallback={<div className="h-screen bg-[#0f1014]" />}>
+          <TechStack />
+        </Suspense>
       </section>
 
-      <section id="contact">
-        <Contact />
-      </section>
+      <Contact />
     </main>
   </LayoutWeb>
 );
@@ -110,6 +112,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<MainLayout />} />
+          <Route path="/projects/:slug" element={<Suspense fallback={<div className="h-screen bg-[#0f1014]" />}><ProjectDetail /></Suspense>} />
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>

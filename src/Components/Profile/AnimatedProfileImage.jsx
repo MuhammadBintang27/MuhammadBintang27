@@ -89,7 +89,7 @@ const AnimatedProfileImage = ({ profileImage, className = '' }) => {
         >
           {/* Front cylinder half */}
           <motion.div
-            className="absolute inset-0 w-full rounded-lg bg-gradient-to-b from-yellow-400/30 via-blue-400/20 to-transparent backdrop-blur-sm"
+            className="absolute inset-0 w-full rounded-lg bg-gradient-to-b from-yellow-400/30 via-blue-400/20 to-transparent"
             initial={{ height: "0%", top: "100%" }}
             animate={{
               height: ["0%", "100%", "100%", "0%"],
@@ -125,22 +125,6 @@ const AnimatedProfileImage = ({ profileImage, className = '' }) => {
 
           
 
-          {/* Sparkle effects */}
-          <motion.div
-            className="absolute inset-0 overflow-hidden"
-            animate={{
-              background: [
-                "radial-gradient(circle at 30% 40%, rgba(234, 179, 8, 0.2) 0%, transparent 8%)",
-                "radial-gradient(circle at 70% 60%, rgba(96, 165, 250, 0.2) 0%, transparent 8%)",
-                "radial-gradient(circle at 50% 50%, rgba(234, 179, 8, 0.2) 0%, transparent 8%)",
-              ]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-          />
         </motion.div>
 
         {/* Rotating ring effect */}

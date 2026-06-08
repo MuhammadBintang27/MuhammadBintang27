@@ -1,6 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Space+Mono:wght@400;700&display=swap");
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --tech-bg-900: #02040b;
+  --tech-bg-800: #020617;
+  --tech-bg-700: #02030a;
+  --tech-hero-900: #090d16;
+  --tech-hero-800: #0b1220;
+  --tech-hero-700: #060b16;
+  --tech-accent-cyan: rgba(56, 189, 248, 0.16);
+  --tech-accent-amber: rgba(251, 191, 36, 0.12);
+}
 
 @keyframes scroll-text {
   0% {
@@ -30,12 +46,90 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+    @apply font-sans;
   }
 
   body {
-    @apply bg-blue-900 text-white;
+    background:
+      radial-gradient(circle at 72% 34%, var(--tech-accent-cyan), transparent 38%),
+      radial-gradient(circle at 88% 62%, var(--tech-accent-amber), transparent 42%),
+      linear-gradient(160deg, var(--tech-bg-900) 0%, var(--tech-bg-800) 48%, var(--tech-bg-700) 100%);
+    @apply text-slate-100;
     font-family: 'Inter', sans-serif;
+  }
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.809 0.105 251.813);
+    --chart-2: oklch(0.623 0.214 259.815);
+    --chart-3: oklch(0.546 0.245 262.881);
+    --chart-4: oklch(0.488 0.243 264.376);
+    --chart-5: oklch(0.424 0.199 265.638);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.809 0.105 251.813);
+    --chart-2: oklch(0.623 0.214 259.815);
+    --chart-3: oklch(0.546 0.245 262.881);
+    --chart-4: oklch(0.488 0.243 264.376);
+    --chart-5: oklch(0.424 0.199 265.638);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+  .theme {
+    --font-sans: 'Geist Variable', sans-serif;
+  }
+  * {
+    @apply outline-none;
   }
 }
 
@@ -50,6 +144,20 @@
 }
 
 @layer utilities {
+  .bg-techstack-theme {
+    background:
+      radial-gradient(circle at 72% 34%, var(--tech-accent-cyan), transparent 38%),
+      radial-gradient(circle at 88% 62%, var(--tech-accent-amber), transparent 42%),
+      linear-gradient(160deg, var(--tech-bg-900) 0%, var(--tech-bg-800) 48%, var(--tech-bg-700) 100%);
+  }
+
+  .bg-techstack-hero {
+    background:
+      radial-gradient(circle at 22% 12%, rgba(56, 189, 248, 0.1), transparent 35%),
+      radial-gradient(circle at 78% 88%, rgba(251, 191, 36, 0.1), transparent 36%),
+      linear-gradient(156deg, var(--tech-hero-900) 0%, var(--tech-hero-800) 52%, var(--tech-hero-700) 100%);
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500;
   }

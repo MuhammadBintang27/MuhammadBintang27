@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -68,6 +68,7 @@ const computeScale = () => Math.min(1, window.innerWidth / 1400);
 const AchievementsSection = () => {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
+  const [loadedImages, setLoadedImages] = useState({});
   const cardsContainerRef = useRef(null);
   const cardRefs = useRef([]);
   const zCounterRef = useRef(200);
@@ -151,7 +152,7 @@ const AchievementsSection = () => {
           trigger: sectionRef.current,
           start: 'top top',
           end: '+=240%',
-          scrub: 1,
+          scrub: true,
           pin: sectionRef.current,
           pinSpacing: true,
           anticipatePin: 1,
@@ -183,10 +184,12 @@ const AchievementsSection = () => {
     <>
       <ScrollLineDivider />
 
+      <style>{`@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}`}</style>
       <section
         ref={sectionRef}
         id="achievements"
         className="relative min-h-screen overflow-hidden border-b border-cyan-100/20 bg-[linear-gradient(180deg,#0f1014_0%,#12141b_44%,#101117_100%)] py-10 sm:py-12"
+        style={{ willChange: 'transform' }}
       >
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24"
@@ -225,11 +228,31 @@ const AchievementsSection = () => {
                 style={{ zIndex: ACHIEVEMENTS.length - index + 20 }}
               >
                 <div className="w-[min(64vw,330px)] overflow-hidden rounded-[8px] border border-black/90 bg-[#0c0c10] p-[10px] shadow-[0_24px_46px_rgba(0,0,0,0.58)] sm:w-[300px]">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="pointer-events-none h-52 w-full rounded-[2px] object-cover sm:h-[290px]"
-                  />
+                  <div className="relative h-52 w-full sm:h-[290px]">
+                    {!loadedImages[index] && (
+                      <div className="absolute inset-0 rounded-[2px] overflow-hidden bg-neutral-800">
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
+                            animation: 'shimmer 1.4s infinite',
+                            backgroundSize: '200% 100%',
+                          }}
+                        />
+                      </div>
+                    )}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      loading="lazy"
+                      onLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+                      className="pointer-events-none h-full w-full rounded-[2px] object-cover"
+                      style={{
+                        opacity: loadedImages[index] ? 1 : 0,
+                        transition: 'opacity 0.5s ease',
+                      }}
+                    />
+                  </div>
                   <h3 className="mt-2 pb-1 text-center text-[clamp(0.98rem,1.3vw,1.35rem)] font-bold leading-tight text-white/92">
                     {item.title}
                   </h3>

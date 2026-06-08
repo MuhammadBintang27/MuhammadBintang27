@@ -10,63 +10,23 @@ const AnimatedProfileImage = ({ profileImage, className = '' }) => {
       transition={{ duration: 0.8, delay: 0.4 }}
       className={`w-full flex justify-center md:justify-end relative ${className}`}
     >
-      {/* Animated geometric background */}
-      <div className="absolute inset-0 overflow-hidden" style={{ zIndex: -1 }}>
-        {/* Diagonal lines */}
-        {[...Array(6)].map((_, index) => (
-          <motion.div
-            key={`line-${index}`}
-            className="absolute h-[1px] w-[200%] bg-gradient-to-r from-yellow-400/20 via-blue-400/20 to-transparent"
-            style={{
-              top: `${index * 20}%`,
-              left: '-50%',
-              transform: 'rotate(-35deg)',
-            }}
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ 
-              x: 0,
-              opacity: [0, 1, 1, 0],
-              transition: {
-                duration: 3,
-                delay: index * 0.2,
-                repeat: Infinity,
-                repeatType: "reverse"
-              }
-            }}
-          />
-        ))}
-        
-        {/* Floating shapes */}
-        <motion.div
-          className="absolute top-20 -left-10 w-20 h-20 border border-yellow-400/20 rounded-full"
-          animate={{
-            y: [0, 20, 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-40 -right-10 w-32 h-32 border border-blue-400/20"
-          style={{ transform: 'rotate(45deg)' }}
-          animate={{
-            rotate: 405,
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
+      <style>{`
+        @keyframes ringRotate {
+          0% { border-color: rgba(234,179,8,0.2); transform: rotateY(0deg); }
+          50% { border-color: rgba(96,165,250,0.2); }
+          100% { border-color: rgba(234,179,8,0.2); transform: rotateY(360deg); }
+        }
+        @keyframes cylinderFill {
+          0%, 80%, 100% { height: 0%; top: 100%; }
+          32%, 48% { height: 100%; top: 0%; }
+        }
+        @keyframes cylinderGlow {
+          0%, 80%, 100% { height: 0%; top: 100%; opacity: 0.8; }
+          32%, 48% { height: 100%; top: 0%; opacity: 1; }
+        }
+      `}</style>
 
-      {/* Profile Image Container */}
       <div className="relative w-[400px] h-[500px] perspective-1000">
-        {/* Static Image */}
         <OptimizedImage
           src={profileImage}
           alt="Profile"
@@ -77,70 +37,25 @@ const AnimatedProfileImage = ({ profileImage, className = '' }) => {
           }}
         />
 
-        {/* Magic Cylinder Effect */}
-        <motion.div
-          className="absolute inset-0 z-20"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {},
-          }}
-        >
-          {/* Front cylinder half */}
-          <motion.div
-            className="absolute inset-0 w-full rounded-lg bg-gradient-to-b from-yellow-400/30 via-blue-400/20 to-transparent"
-            initial={{ height: "0%", top: "100%" }}
-            animate={{
-              height: ["0%", "100%", "100%", "0%"],
-              top: ["100%", "0%", "0%", "100%"]
-            }}
-            transition={{
-              duration: 8,
-              times: [0, 0.4, 0.6, 1],
-              repeat: Infinity,
-              repeatDelay: 2
-            }}
+        <div className="absolute inset-0 z-20">
+          <div
+            className="absolute w-full rounded-lg bg-gradient-to-b from-yellow-400/30 via-blue-400/20 to-transparent"
             style={{
-              borderBottom: "4px solid rgba(234, 179, 8, 0.3)",
+              animation: 'cylinderFill 10s ease-in-out infinite',
+              borderBottom: '4px solid rgba(234, 179, 8, 0.3)',
             }}
           />
-
-          {/* Left side glow */}
-          <motion.div
+          <div
             className="absolute left-0 w-[2px] bg-gradient-to-b from-yellow-400 via-blue-400 to-transparent"
-            initial={{ height: "0%", top: "100%" }}
-            animate={{
-              height: ["0%", "100%", "100%", "0%"],
-              top: ["100%", "0%", "0%", "100%"],
-              opacity: [0.8, 1, 1, 0.8]
-            }}
-            transition={{
-              duration: 8,
-              times: [0, 0.4, 0.6, 1],
-              repeat: Infinity,
-              repeatDelay: 2
-            }}
+            style={{ animation: 'cylinderGlow 10s ease-in-out infinite' }}
           />
+        </div>
 
-          
-
-        </motion.div>
-
-        {/* Rotating ring effect */}
-        <motion.div
-          className="absolute inset-0 border-4 border-yellow-400/20 rounded-lg"
-          animate={{
-            rotateY: [0, 360],
-            borderColor: ["rgba(234, 179, 8, 0.2)", "rgba(96, 165, 250, 0.2)", "rgba(234, 179, 8, 0.2)"]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+        <div
+          className="absolute inset-0 border-4 rounded-lg"
           style={{
-            transformStyle: "preserve-3d"
+            animation: 'ringRotate 8s linear infinite',
+            transformStyle: 'preserve-3d',
           }}
         />
       </div>

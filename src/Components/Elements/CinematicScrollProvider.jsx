@@ -12,9 +12,9 @@ const CinematicScrollProvider = ({ children }) => {
     }
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.8,
       smoothWheel: true,
-      wheelMultiplier: 0.9,
+      wheelMultiplier: 1.0,
       touchMultiplier: 1.15,
     });
 
@@ -29,6 +29,7 @@ const CinematicScrollProvider = ({ children }) => {
     lenis.on("scroll", handleLenisScroll);
     gsap.ticker.add(handleGsapTick);
     gsap.ticker.lagSmoothing(0);
+    ScrollTrigger.config({ limitCallbacks: true });
 
     // Expose Lenis instance so existing components can trigger smooth programmatic scroll.
     window.__lenis = lenis;

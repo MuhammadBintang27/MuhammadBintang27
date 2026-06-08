@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'perf: compress gelap.webp 619KB -> 432KB *)"
+    ]
+  }
+}

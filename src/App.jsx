@@ -69,6 +69,12 @@ const MainLayout = () => (
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Preload heavy lazy chunks during the loader screen so they're ready when needed
+  useEffect(() => {
+    import("./Components/TechStack/TechStack");
+    import("./Pages/ProjectDetail");
+  }, []);
+
   useEffect(() => {
     const minimumLoaderDuration = 1200;
     const startTime = performance.now();

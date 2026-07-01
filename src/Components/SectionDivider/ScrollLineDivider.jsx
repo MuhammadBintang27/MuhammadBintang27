@@ -1,15 +1,23 @@
 import { useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useInView, useScroll, useSpring, useTransform } from 'framer-motion';
 
 const rgba = (a) => `rgba(232,224,194,${a})`;
 
-const ChevronRail = ({ count = 10, alpha = 0.82, className = '', style }) => (
+// Pauses the infinite chevron animation while off-screen so it doesn't burn
+// CPU/battery for a section the user isn't looking at. No visible difference,
+// since the animation is invisible either way when out of view.
+const ChevronRail = ({ count = 10, alpha = 0.82, className = '', style, isInView = true }) => (
   <div className={`flex flex-col items-center justify-between ${className}`} style={style}>
     {Array.from({ length: count }).map((_, i) => (
       <div
         key={i}
         className="flex justify-center"
-        style={{ opacity: alpha, animationDelay: `${i * 0.13}s`, animation: 'chevronDrift 1.32s ease-in-out infinite' }}
+        style={{
+          opacity: alpha,
+          animationDelay: `${i * 0.13}s`,
+          animation: 'chevronDrift 1.32s ease-in-out infinite',
+          animationPlayState: isInView ? 'running' : 'paused',
+        }}
       >
         <span
           className="block h-[12px] w-[12px] rotate-45 border-b-2 border-r-2"
@@ -24,26 +32,27 @@ const ScrollLineDivider = () => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const sp = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.5 });
+  const isInView = useInView(ref, { margin: '200px' });
+
+  // Garis-garis horizontal dianimasikan lewat scaleX (bukan width) supaya
+  // browser cukup transform di compositor thread, tidak perlu reflow layout
+  // tiap frame saat scroll.
 
   // ─── Garis 1: paling atas, kiri+kanan bertemu TEPAT di tengah (50%) ───
   const g1p  = useTransform(sp, [0.06, 0.22], [0, 1], { clamp: true });
-  const g1hw = useTransform(g1p, [0, 1], ['0%', '50%']); // sampai tengah
   const g1co = useTransform(sp, [0.30, 0.46], [0, 1], { clamp: true });
 
   // ─── Garis 2: berhenti di ~35% dari masing-masing sisi ───
   const g2p  = useTransform(sp, [0.12, 0.28], [0, 1], { clamp: true });
-  const g2hw = useTransform(g2p, [0, 1], ['0%', '35%']);
   const g2vp = useTransform(sp, [0.26, 0.48], [0, 1], { clamp: true });
   // tidak ada chevron
 
   // ─── Garis 3: berhenti di ~20% dari masing-masing sisi ───
   const g3p  = useTransform(sp, [0.18, 0.34], [0, 1], { clamp: true });
-  const g3hw = useTransform(g3p, [0, 1], ['0%', '20%']);
   const g3co = useTransform(sp, [0.42, 0.58], [0, 1], { clamp: true });
 
   // ─── Garis 4: paling bawah, berhenti di ~8% dari masing-masing sisi ───
   const g4p  = useTransform(sp, [0.24, 0.40], [0, 1], { clamp: true });
-  const g4hw = useTransform(g4p, [0, 1], ['0%', '8%']);
   const g4vp = useTransform(sp, [0.38, 0.60], [0, 1], { clamp: true });
   // tidak ada chevron
 
@@ -79,13 +88,13 @@ const ScrollLineDivider = () => {
         {/* ════ GARIS 1: bertemu di tengah → 1 vertikal tengah + chevron ════ */}
         {/* Horizontal dari kiri */}
         <motion.div
-          className="absolute left-0 h-px"
-          style={{ top: TOPS[0], width: g1hw, background: rgba(0.45) }}
+          className="absolute left-0 h-px origin-left"
+          style={{ top: TOPS[0], width: '50%', scaleX: g1p, background: rgba(0.45) }}
         />
         {/* Horizontal dari kanan */}
         <motion.div
-          className="absolute right-0 h-px"
-          style={{ top: TOPS[0], width: g1hw, background: rgba(0.45) }}
+          className="absolute right-0 h-px origin-right"
+          style={{ top: TOPS[0], width: '50%', scaleX: g1p, background: rgba(0.45) }}
         />
         {/* Chevron di tengah menggantikan garis vertikal */}
         <ChevronRail
@@ -93,16 +102,17 @@ const ScrollLineDivider = () => {
           style={{ top: `calc(${TOPS[0]} + 4px)`, bottom: '3%', opacity: g1co }}
           count={22}
           alpha={0.92}
+          isInView={isInView}
         />
 
         {/* ════ GARIS 2: berhenti ~35% → 2 vertikal (kiri & kanan), tanpa chevron ════ */}
         <motion.div
-          className="absolute left-0 h-px"
-          style={{ top: TOPS[1], width: g2hw, background: rgba(0.50) }}
+          className="absolute left-0 h-px origin-left"
+          style={{ top: TOPS[1], width: '35%', scaleX: g2p, background: rgba(0.50) }}
         />
         <motion.div
-          className="absolute right-0 h-px"
-          style={{ top: TOPS[1], width: g2hw, background: rgba(0.50) }}
+          className="absolute right-0 h-px origin-right"
+          style={{ top: TOPS[1], width: '35%', scaleX: g2p, background: rgba(0.50) }}
         />
         {/* Vertikal kiri dari ujung garis 2 */}
         <motion.div
@@ -131,12 +141,12 @@ const ScrollLineDivider = () => {
 
         {/* ════ GARIS 3: berhenti ~20% → 2 vertikal + chevron di kiri & kanan ════ */}
         <motion.div
-          className="absolute left-0 h-px"
-          style={{ top: TOPS[2], width: g3hw, background: rgba(0.60) }}
+          className="absolute left-0 h-px origin-left"
+          style={{ top: TOPS[2], width: '20%', scaleX: g3p, background: rgba(0.60) }}
         />
         <motion.div
-          className="absolute right-0 h-px"
-          style={{ top: TOPS[2], width: g3hw, background: rgba(0.60) }}
+          className="absolute right-0 h-px origin-right"
+          style={{ top: TOPS[2], width: '20%', scaleX: g3p, background: rgba(0.60) }}
         />
         {/* Chevron kiri menggantikan garis vertikal kiri */}
         <ChevronRail
@@ -144,23 +154,25 @@ const ScrollLineDivider = () => {
           style={{ top: `calc(${TOPS[2]} + 4px)`, bottom: '3%', opacity: g3co }}
           count={16}
           alpha={0.78}
+          isInView={isInView}
         />
         {/* Chevron kanan menggantikan garis vertikal kanan */}
         <ChevronRail
           className="absolute right-[20%] w-4 translate-x-1/2"
           style={{ top: `calc(${TOPS[2]} + 4px)`, bottom: '3%', opacity: g3co }}
+          isInView={isInView}
           count={16}
           alpha={0.78}
         />
 
         {/* ════ GARIS 4: berhenti ~8% → 2 vertikal paling tepi, tanpa chevron ════ */}
         <motion.div
-          className="absolute left-0 h-px"
-          style={{ top: TOPS[3], width: g4hw, background: rgba(0.70) }}
+          className="absolute left-0 h-px origin-left"
+          style={{ top: TOPS[3], width: '8%', scaleX: g4p, background: rgba(0.70) }}
         />
         <motion.div
-          className="absolute right-0 h-px"
-          style={{ top: TOPS[3], width: g4hw, background: rgba(0.70) }}
+          className="absolute right-0 h-px origin-right"
+          style={{ top: TOPS[3], width: '8%', scaleX: g4p, background: rgba(0.70) }}
         />
         {/* Vertikal kiri */}
         <motion.div

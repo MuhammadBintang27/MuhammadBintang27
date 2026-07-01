@@ -189,7 +189,6 @@ const AchievementsSection = () => {
         ref={sectionRef}
         id="achievements"
         className="relative min-h-screen overflow-hidden border-b border-cyan-100/20 bg-[linear-gradient(180deg,#0f1014_0%,#12141b_44%,#101117_100%)] py-10 sm:py-12"
-        style={{ willChange: 'transform' }}
       >
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24"

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaGithub, FaArrowLeft, FaExternalLinkAlt } from "react-icons/fa";
+import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { PROJECTS } from "../data/projectsData";
 
@@ -181,9 +182,10 @@ const ProjectDetail = () => {
                         {proj.title}
                       </h3>
                     </div>
-                    <span className="mb-0.5 shrink-0 text-lg text-white/22 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300">
-                      ↗
-                    </span>
+                    <ArrowUpRight
+                      className="mb-0.5 h-5 w-5 shrink-0 text-white/22 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300"
+                      strokeWidth={1.75}
+                    />
                   </div>
                 </motion.button>
               ))}

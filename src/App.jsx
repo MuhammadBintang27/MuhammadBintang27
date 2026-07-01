@@ -13,6 +13,7 @@ import ProjectsSection from "./Components/Projects/ProjectsSection";
 import Home from "./Pages/Home";
 import InitialLoader from "./Components/Elements/InitialLoader";
 import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
+import LazyMount from "./Components/Elements/LazyMount";
 
 const TechStack = lazy(() => import("./Components/TechStack/TechStack"));
 const ProjectDetail = lazy(() => import("./Pages/ProjectDetail"));
@@ -56,9 +57,9 @@ const MainLayout = () => (
       </section>
 
       <section className="relative -mt-px">
-        <Suspense fallback={<div className="h-screen bg-[#0f1014]" />}>
+        <LazyMount fallback={<div className="h-screen bg-[#0f1014]" />}>
           <TechStack />
-        </Suspense>
+        </LazyMount>
       </section>
 
       <Contact />
@@ -68,12 +69,6 @@ const MainLayout = () => (
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
-
-  // Preload heavy lazy chunks during the loader screen so they're ready when needed
-  useEffect(() => {
-    import("./Components/TechStack/TechStack");
-    import("./Pages/ProjectDetail");
-  }, []);
 
   useEffect(() => {
     const minimumLoaderDuration = 1200;

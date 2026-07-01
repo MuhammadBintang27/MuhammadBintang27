@@ -164,7 +164,6 @@ const HeroSection = ({
       <div
         ref={stageRef}
         className="relative h-screen min-h-[100svh] w-full overflow-hidden bg-techstack-theme"
-        style={{ willChange: 'transform' }}
       >
         <div className="pointer-events-none absolute inset-2 z-40 border-2 border-cyan-100/55 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] sm:inset-4">
           <div className="absolute -left-[2px] -top-[2px] h-8 w-8 border-l-2 border-t-2 border-cyan-100/95 sm:h-10 sm:w-10" />

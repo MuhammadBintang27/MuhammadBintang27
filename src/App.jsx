@@ -1,4 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from "react";
+import { AnimatePresence } from "framer-motion";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,6 +9,7 @@ import {
 import LayoutWeb from "./Components/Layouts/Layout";
 import Contact from "./Components/Contact/Contact";
 import HeroSection from "./Components/ScrollRevealSection/HeroSection";
+import MobileHero from "./Components/ScrollRevealSection/MobileHero";
 import AchievementsSection from "./Components/Achievements/AchievementsSection";
 import ProjectsSection from "./Components/Projects/ProjectsSection";
 import Home from "./Pages/Home";
@@ -44,6 +46,10 @@ const MainLayout = () => (
         <HeroSection />
       </section>
 
+      <section className="relative md:hidden">
+        <MobileHero />
+      </section>
+
       <section className="relative -mt-px">
         <Home />
       </section>
@@ -57,7 +63,7 @@ const MainLayout = () => (
       </section>
 
       <section className="relative -mt-px">
-        <LazyMount fallback={<div className="h-screen bg-[#0f1014]" />}>
+        <LazyMount mountOnIdle fallback={<div className="h-screen bg-[#0f1014]" />}>
           <TechStack />
         </LazyMount>
       </section>
@@ -68,19 +74,28 @@ const MainLayout = () => (
 );
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  // Two-phase reveal: first mount the app behind the still-opaque loader so
+  // all the heavy setup (router, Lenis, GSAP, hero) happens off-screen, then
+  // lift the curtain once the main thread is idle — keeps the exit smooth.
+  const [showApp, setShowApp] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
     const minimumLoaderDuration = 1200;
+    const appMountSettleTime = 450;
     const startTime = performance.now();
     let timeoutId;
+    let exitTimeoutId;
 
     const finishLoading = () => {
       const elapsed = performance.now() - startTime;
       const remainingTime = Math.max(minimumLoaderDuration - elapsed, 0);
 
       timeoutId = window.setTimeout(() => {
-        setIsLoading(false);
+        setShowApp(true);
+        exitTimeoutId = window.setTimeout(() => {
+          setShowLoader(false);
+        }, appMountSettleTime);
       }, remainingTime);
     };
 
@@ -92,33 +107,38 @@ const App = () => {
 
     return () => {
       window.clearTimeout(timeoutId);
+      window.clearTimeout(exitTimeoutId);
       window.removeEventListener("load", finishLoading);
     };
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isLoading ? "hidden" : "auto";
+    document.body.style.overflow = showLoader ? "hidden" : "auto";
 
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isLoading]);
-
-  if (isLoading) {
-    return <InitialLoader />;
-  }
+  }, [showLoader]);
 
   return (
-    <CinematicScrollProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainLayout />} />
-          <Route path="/projects/:slug" element={<Suspense fallback={<div className="h-screen bg-[#0f1014]" />}><ProjectDetail /></Suspense>} />
-          <Route path="/404" element={<NotFound />} />
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-      </Router>
-    </CinematicScrollProvider>
+    <>
+      {/* Loader exits as a curtain lifting over the app; AnimatePresence keeps
+          it mounted just long enough to play the exit animation. */}
+      <AnimatePresence>{showLoader && <InitialLoader key="initial-loader" />}</AnimatePresence>
+
+      {showApp && (
+        <CinematicScrollProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<MainLayout />} />
+              <Route path="/projects/:slug" element={<Suspense fallback={<div className="h-screen bg-[#0f1014]" />}><ProjectDetail /></Suspense>} />
+              <Route path="/404" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/404" replace />} />
+            </Routes>
+          </Router>
+        </CinematicScrollProvider>
+      )}
+    </>
   );
 };
 

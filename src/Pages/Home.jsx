@@ -15,45 +15,68 @@ const Home = () => {
   const sectionRef = useRef(null);
   const leftColumnRef = useRef(null);
   const rightColumnRef = useRef(null);
+  const parallaxRef = useRef(null);
   const ctaRef = useRef(null);
   const badgeRef = useRef(null);
   const titleRef = useRef(null);
   const descRef = useRef(null);
+  const eduRef = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(
-        [leftColumnRef.current, rightColumnRef.current, ctaRef.current,
-          badgeRef.current, titleRef.current, descRef.current],
-        { autoAlpha: 0 },
-      );
+      const staggerItems = [
+        badgeRef.current, titleRef.current, descRef.current,
+        eduRef.current, ctaRef.current,
+      ];
 
+      gsap.set([leftColumnRef.current, rightColumnRef.current, ...staggerItems], {
+        autoAlpha: 0,
+      });
+
+      // Reveal fires earlier and moves faster so the section is already alive
+      // by the time it fills the viewport, instead of arriving late.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 74%',
+          start: 'top 88%',
           toggleActions: 'play none none reverse',
         },
-        defaults: { ease: 'power4.out' },
+        defaults: { ease: 'power3.out' },
       });
 
       tl.fromTo(
         leftColumnRef.current,
-        { x: -110, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 1.55 },
+        { x: -56, autoAlpha: 0 },
+        { x: 0, autoAlpha: 1, duration: 0.85 },
       )
         .fromTo(
           rightColumnRef.current,
-          { x: 110, autoAlpha: 0 },
-          { x: 0, autoAlpha: 1, duration: 1.55 },
+          { x: 56, scale: 0.96, autoAlpha: 0 },
+          { x: 0, scale: 1, autoAlpha: 1, duration: 0.85 },
           '<',
         )
         .fromTo(
-          [badgeRef.current, titleRef.current, descRef.current, ctaRef.current],
-          { y: 28, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, duration: 1.1, stagger: 0.16 },
-          '-=0.52',
+          staggerItems,
+          { y: 26, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.65, stagger: 0.09 },
+          '-=0.6',
         );
+
+      // Gentle scroll parallax on the portrait for a sense of depth.
+      gsap.fromTo(
+        parallaxRef.current,
+        { yPercent: 7 },
+        {
+          yPercent: -7,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        },
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -65,6 +88,23 @@ const Home = () => {
       id="home"
       className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#0f1014_0%,#12141b_44%,#101117_100%)]"
     >
+      <style>{`
+        @keyframes homeGlowDrift {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(40px, -28px) scale(1.12); }
+        }
+        @keyframes eduShine {
+          0%, 55%, 100% { transform: translateX(-130%) skewX(-18deg); }
+          25%, 35% { transform: translateX(230%) skewX(-18deg); }
+        }
+      `}</style>
+
+      {/* Ambient glow */}
+      <div
+        className="pointer-events-none absolute -right-20 bottom-1/4 h-96 w-96 rounded-full bg-amber-300/[0.06] blur-3xl"
+        style={{ animation: 'homeGlowDrift 18s ease-in-out infinite reverse' }}
+      />
+
       {/* Top divider indicator */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20">
         <div className="mx-4 border-t border-cyan-100/20 sm:mx-8" />
@@ -92,8 +132,9 @@ const Home = () => {
 
               <p
                 ref={badgeRef}
-                className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-cyan-100/62"
+                className="mb-3 flex items-center justify-center gap-3 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-cyan-100/62 md:justify-start"
               >
+                <span className="h-px w-8 bg-gradient-to-r from-cyan-300/70 to-transparent" />
                 Inside My Build
               </p>
 
@@ -122,7 +163,14 @@ const Home = () => {
               </p>
 
               {/* Education decoration */}
-              <div className="mb-8 inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 backdrop-blur-sm">
+              <div
+                ref={eduRef}
+                className="relative mb-8 inline-flex items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 backdrop-blur-sm transition-colors duration-300 hover:border-cyan-200/25"
+              >
+                <span
+                  className="pointer-events-none absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/[0.09] to-transparent"
+                  style={{ animation: 'eduShine 5.5s ease-in-out infinite' }}
+                />
                 <div className="rounded-full ">
                   <img src="/logousk.webp" alt="Education" className="h-6" />
                 </div>
@@ -156,9 +204,11 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right — profile image */}
+            {/* Right — profile image (inner wrapper carries the scroll parallax) */}
             <div ref={rightColumnRef} className="flex w-full justify-center md:w-1/2 md:justify-end">
-              <AnimatedProfileImage profileImage={profileImage} />
+              <div ref={parallaxRef} className="w-full">
+                <AnimatedProfileImage profileImage={profileImage} />
+              </div>
             </div>
 
           </div>

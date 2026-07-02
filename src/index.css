@@ -1,7 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Space+Mono:wght@400;700&display=swap");
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/900.css";
+@import "@fontsource/barlow-condensed/900-italic.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
 
 @tailwind base;
 @tailwind components;
@@ -56,7 +60,7 @@
       radial-gradient(circle at 88% 62%, var(--tech-accent-amber), transparent 42%),
       linear-gradient(160deg, var(--tech-bg-900) 0%, var(--tech-bg-800) 48%, var(--tech-bg-700) 100%);
     @apply text-slate-100;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Geist Variable', 'Inter', sans-serif;
   }
   :root {
     --background: oklch(1 0 0);

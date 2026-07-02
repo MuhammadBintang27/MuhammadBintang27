@@ -309,9 +309,8 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
       <RoundedBox
         args={[1.0, 1.0, 0.24]}
         radius={0.105}
-        smoothness={6}
+        smoothness={3}
         position={[0, 0, -0.18]}
-        castShadow
         receiveShadow
       >
         <meshStandardMaterial
@@ -327,7 +326,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
       <RoundedBox
         args={[0.86, 0.86, 0.44]}
         radius={0.125}
-        smoothness={8}
+        smoothness={3}
         position={[0, 0, 0.1]}
         castShadow
         receiveShadow
@@ -345,9 +344,8 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
       <RoundedBox
         args={[0.72, 0.72, 0.22]}
         radius={0.09}
-        smoothness={10}
+        smoothness={3}
         position={[0, 0, 0.34]}
-        castShadow
         receiveShadow
       >
         <meshStandardMaterial
@@ -436,7 +434,7 @@ const KeyboardScene = ({ hoveredSkill, onHoverChange }) => {
       <RoundedBox
         args={[5.08, 6.34, 0.42]}
         radius={0.2}
-        smoothness={10}
+        smoothness={4}
         position={[0, 0, -0.36]}
         castShadow
         receiveShadow
@@ -453,7 +451,7 @@ const KeyboardScene = ({ hoveredSkill, onHoverChange }) => {
       <RoundedBox
         args={[4.62, 5.78, 0.16]}
         radius={0.1}
-        smoothness={8}
+        smoothness={4}
         position={[0, 0, -0.12]}
         receiveShadow
       >
@@ -481,6 +479,29 @@ const KeyboardScene = ({ hoveredSkill, onHoverChange }) => {
 
 const TechStack = () => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
+  const canvasWrapRef = useRef(null);
+  // Render the 3D scene only while the section is on screen. Once the user
+  // scrolls past it, the WebGL frameloop is fully stopped so it can't steal
+  // frames from scroll animations elsewhere on the page.
+  const [canvasActive, setCanvasActive] = useState(false);
+
+  useEffect(() => {
+    const node = canvasWrapRef.current;
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setCanvasActive(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setCanvasActive(entries.some((entry) => entry.isIntersecting));
+      },
+      { rootMargin: '160px' },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -498,8 +519,9 @@ const TechStack = () => {
 
         <motion.section
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className="relative isolate h-screen w-full px-2 sm:px-4 overflow-visible flex flex-col justify-center gap-10 lg:block"
         >
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[#101117]" />
@@ -529,12 +551,13 @@ const TechStack = () => {
         </motion.article>
       </div>
 
-      <div className="relative z-10 w-full lg:ml-auto lg:w-[76%] h-[420px] sm:h-[500px] lg:h-full overflow-visible">
+      <div ref={canvasWrapRef} className="relative z-10 w-full lg:ml-auto lg:w-[76%] h-[420px] sm:h-[500px] lg:h-full overflow-visible">
         <Canvas
           dpr={[1, 1.35]}
           shadows
+          frameloop={canvasActive ? 'always' : 'never'}
           camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
-          gl={{ antialias: true, alpha: true }}
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
           onPointerMissed={() => setHoveredSkill(null)}
         >
@@ -544,8 +567,8 @@ const TechStack = () => {
             position={[4.5, 6.5, 5.4]}
             intensity={1.25}
             castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
+            shadow-mapSize-width={512}
+            shadow-mapSize-height={512}
           />
           <pointLight position={[-4.2, 2.8, 2.2]} intensity={0.72} color="#67e8f9" />
           <pointLight position={[4.2, 2.1, 4.4]} intensity={0.5} color="#f59e0b" />
@@ -561,6 +584,7 @@ const TechStack = () => {
             scale={14}
             blur={2.4}
             far={4.4}
+            frames={1}
             color="#020617"
           />
         </Canvas>

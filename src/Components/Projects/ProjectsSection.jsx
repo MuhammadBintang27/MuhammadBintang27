@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import ScrollLineDivider from "../SectionDivider/ScrollLineDivider";
 import { PROJECTS } from "../../data/projectsData";
@@ -9,42 +10,52 @@ const ProjectsSection = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const previewRef = useRef(null);
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (previewRef.current) {
-        previewRef.current.style.transform = `translate(${e.clientX + 28}px, ${e.clientY - 72}px)`;
-      }
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  // Follow the cursor by writing the transform straight to the DOM node —
+  // no React re-render per mousemove. Scoped to this section only.
+  const handleMouseMove = (e) => {
+    if (previewRef.current) {
+      previewRef.current.style.transform = `translate(${e.clientX + 28}px, ${e.clientY - 72}px)`;
+    }
+  };
 
   return (
     <>
       <ScrollLineDivider />
 
-      {/* Floating cursor preview — desktop only, position via DOM ref */}
+      {/* Floating cursor preview — desktop only. All images stay mounted and
+          pre-decoded; hovering only flips opacity, so the first hover never
+          stutters on image decode. */}
       <div
         ref={previewRef}
         className="pointer-events-none fixed left-0 top-0 z-[50] hidden md:block"
         style={{
           opacity: hoveredIndex !== null ? 1 : 0,
           scale: hoveredIndex !== null ? 1 : 0.88,
-          transition: 'opacity 0.18s ease, scale 0.18s ease',
+          rotate: hoveredIndex !== null ? '0deg' : '-2deg',
+          transition: 'opacity 0.18s ease, scale 0.18s ease, rotate 0.18s ease',
         }}
       >
-        {hoveredIndex !== null && (
-          <img
-            src={PROJECTS[hoveredIndex].src}
-            alt={PROJECTS[hoveredIndex]?.title}
-            loading="lazy"
-            className="h-[220px] w-[360px] rounded-xl object-cover shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
-          />
-        )}
+        <div className="relative h-[220px] w-[360px] overflow-hidden rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+          {PROJECTS.map((project, index) => (
+            <img
+              key={project.slug}
+              src={project.src}
+              alt={project.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{
+                opacity: hoveredIndex === index ? 1 : 0,
+                transition: 'opacity 0.16s ease',
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <section
         id="projects"
+        onMouseMove={handleMouseMove}
         className="relative bg-[linear-gradient(180deg,#0f1014_0%,#12141b_44%,#101117_100%)] py-16 sm:py-20"
       >
           {/* Header */}
@@ -62,8 +73,12 @@ const ProjectsSection = () => {
           {/* Work list — full width */}
           <ul className="px-4 sm:px-8">
             {PROJECTS.map((project, index) => (
-              <li
+              <motion.li
                 key={project.slug}
+                initial={{ opacity: 0, y: 36 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
                 className="group border-t border-white/10 last:border-b last:border-white/10"
               >
                 <button
@@ -73,11 +88,11 @@ const ProjectsSection = () => {
                   onMouseLeave={() => setHoveredIndex(null)}
                   className="flex w-full cursor-pointer items-center gap-4 py-5 text-left transition-colors duration-200 sm:py-7"
                 >
-                  <span className="w-10 shrink-0 font-mono text-sm text-white/30 sm:w-14 sm:text-base">
+                  <span className="w-10 shrink-0 font-mono text-sm text-white/30 transition-colors duration-200 group-hover:text-cyan-300/70 sm:w-14 sm:text-base">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
-                  <h3 className="flex-1 text-[clamp(1.5rem,4.5vw,3.5rem)] font-black uppercase leading-none tracking-tight text-[#e8e0c2] transition-colors duration-200 group-hover:text-cyan-300">
+                  <h3 className="flex-1 text-[clamp(1.5rem,4.5vw,3.5rem)] font-black uppercase leading-none tracking-tight text-[#e8e0c2] transition-all duration-200 group-hover:translate-x-2 group-hover:text-cyan-300">
                     {project.title}
                   </h3>
 
@@ -91,7 +106,7 @@ const ProjectsSection = () => {
                     strokeWidth={1.75}
                   />
                 </button>
-              </li>
+              </motion.li>
             ))}
           </ul>
       </section>

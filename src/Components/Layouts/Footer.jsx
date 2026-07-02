@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaArrowUp } from 'react-icons/fa';
 
 const SOCIAL_LINKS = [
   {
@@ -23,24 +23,34 @@ const SOCIAL_LINKS = [
   },
 ];
 
+const scrollToTop = () => {
+  if (window.__lenis) window.__lenis.scrollTo(0);
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 const Footer = () => (
-  <footer className="relative bg-[#0a0c11] px-4 py-12 sm:px-8">
+  <footer className="relative overflow-hidden bg-[#0a0c11] px-4 pb-8 pt-14 sm:px-8">
     <div className="mx-auto w-full max-w-6xl">
-      <div className="border-t border-white/8 pt-10">
-        <div className="flex flex-col items-center gap-6 text-center">
 
-          <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/45">
-              Portfolio
-            </p>
-            <h3 className="text-2xl font-black uppercase tracking-tight text-[#e8e0c2] sm:text-3xl">
-              Muhammad Bintang
-            </h3>
-          </div>
-
-          
-        </div>
+      {/* Bottom bar */}
+      <div className=" flex flex-col items-center justify-between gap-4 border-t border-white/8 pt-6 sm:flex-row">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
+          Muhammad Bintang Indra Hidayat
+        </p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
+          Portfolio · {new Date().getFullYear()}
+        </p>
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          className="group flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/35 transition-colors hover:text-cyan-200"
+        >
+          Back to top
+          <FaArrowUp className="h-3 w-3 transition-transform duration-200 group-hover:-translate-y-0.5" />
+        </button>
       </div>
+
     </div>
   </footer>
 );

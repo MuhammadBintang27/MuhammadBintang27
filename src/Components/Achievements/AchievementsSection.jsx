@@ -70,6 +70,8 @@ const AchievementsSection = () => {
   const headingRef = useRef(null);
   const [loadedImages, setLoadedImages] = useState({});
   const cardsContainerRef = useRef(null);
+  const trackViewportRef = useRef(null);
+  const trackRef = useRef(null);
   const cardRefs = useRef([]);
   const zCounterRef = useRef(200);
   const scaleRef = useRef(computeScale());
@@ -117,8 +119,6 @@ const AchievementsSection = () => {
     }
 
     const context = gsap.context(() => {
-      cardRefs.current = cardRefs.current.filter(Boolean);
-
       gsap.fromTo(
         headingRef.current,
         { opacity: 0, y: 42 },
@@ -134,51 +134,128 @@ const AchievementsSection = () => {
           },
         },
       );
-
-      const setInitialPositions = () => {
-        scaleRef.current = computeScale();
-        gsap.set(cardRefs.current, {
-          x: (index) => ACHIEVEMENTS[index].initialX * scaleRef.current,
-          y: (index) => ACHIEVEMENTS[index].initialY * scaleRef.current,
-          rotate: (index) => ACHIEVEMENTS[index].initialRotate,
-        });
-      };
-
-      setInitialPositions();
-
-      const spreadTimeline = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '+=240%',
-          scrub: true,
-          pin: sectionRef.current,
-          pinSpacing: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onRefresh: setInitialPositions,
-        },
-      });
-
-      // Hold first viewport: title + complete stacked cards visible before scattering.
-      spreadTimeline.to({}, { duration: 0.95 });
-
-      ACHIEVEMENTS.forEach((item, index) => {
-        spreadTimeline.to(
-          cardRefs.current[index],
-          {
-            x: () => item.targetX * scaleRef.current,
-            y: () => item.targetY * scaleRef.current,
-            rotate: item.targetRotate,
-          },
-          index * 0.14,
-        );
-      });
     }, sectionRef);
 
-    return () => context.revert();
+    // Pinned scatter animation is desktop-only; on phones the cards live in a
+    // native swipe carousel instead, so no pin and no drag-vs-scroll fights.
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
+      const desktopContext = gsap.context(() => {
+        cardRefs.current = cardRefs.current.filter(Boolean);
+
+        const setInitialPositions = () => {
+          scaleRef.current = computeScale();
+          gsap.set(cardRefs.current, {
+            x: (index) => ACHIEVEMENTS[index].initialX * scaleRef.current,
+            y: (index) => ACHIEVEMENTS[index].initialY * scaleRef.current,
+            rotate: (index) => ACHIEVEMENTS[index].initialRotate,
+          });
+        };
+
+        setInitialPositions();
+
+        const spreadTimeline = gsap.timeline({
+          defaults: { ease: 'power3.out' },
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: '+=240%',
+            scrub: true,
+            pin: sectionRef.current,
+            pinSpacing: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onRefresh: setInitialPositions,
+          },
+        });
+
+        // Hold first viewport: title + complete stacked cards visible before scattering.
+        spreadTimeline.to({}, { duration: 0.95 });
+
+        ACHIEVEMENTS.forEach((item, index) => {
+          spreadTimeline.to(
+            cardRefs.current[index],
+            {
+              x: () => item.targetX * scaleRef.current,
+              y: () => item.targetY * scaleRef.current,
+              rotate: item.targetRotate,
+            },
+            index * 0.14,
+          );
+        });
+      }, sectionRef);
+
+      return () => desktopContext.revert();
+    });
+
+    // Mobile: vertical scroll drives the card track horizontally — the
+    // section pins until every card has slid past, in both directions.
+    mm.add('(max-width: 767px)', () => {
+      const mobileContext = gsap.context(() => {
+        const track = trackRef.current;
+        const viewport = trackViewportRef.current;
+        if (!track || !viewport) {
+          return;
+        }
+
+        const getDistance = () => Math.max(track.scrollWidth - viewport.clientWidth, 0);
+
+        gsap.to(track, {
+          x: () => -getDistance(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: () => `+=${getDistance()}`,
+            scrub: true,
+            pin: sectionRef.current,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }, sectionRef);
+
+      return () => mobileContext.revert();
+    });
+
+    return () => {
+      mm.revert();
+      context.revert();
+    };
   }, []);
+
+  const renderCardSurface = (item, index) => (
+    <div className="w-full overflow-hidden rounded-[8px] border border-black/90 bg-[#0c0c10] p-[10px] shadow-[0_24px_46px_rgba(0,0,0,0.58)]">
+      <div className="relative h-52 w-full sm:h-[290px]">
+        {!loadedImages[index] && (
+          <div className="absolute inset-0 overflow-hidden rounded-[2px] bg-neutral-800">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
+                animation: 'shimmer 1.4s infinite',
+                backgroundSize: '200% 100%',
+              }}
+            />
+          </div>
+        )}
+        <img
+          src={item.image}
+          alt={item.title}
+          loading="lazy"
+          onLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+          className="pointer-events-none h-full w-full rounded-[2px] object-cover"
+          style={{
+            opacity: loadedImages[index] ? 1 : 0,
+            transition: 'opacity 0.5s ease',
+          }}
+        />
+      </div>
+      <h3 className="mt-2 pb-1 text-center text-[clamp(0.98rem,1.3vw,1.35rem)] font-bold leading-tight text-white/92">
+        {item.title}
+      </h3>
+    </div>
+  );
 
   return (
     <>
@@ -197,7 +274,7 @@ const AchievementsSection = () => {
           }}
         />
 
-        <div className="relative z-30 mx-auto w-full max-w-[1500px] px-4 pt-6 sm:px-8 sm:pt-8">
+        <div className="relative z-30 mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-[1500px] flex-col justify-center px-4 pt-6 sm:px-8 sm:pt-8 md:min-h-0 md:justify-start">
           <header ref={headingRef} className="mb-8 text-center sm:mb-10">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/62">
               Milestones
@@ -207,9 +284,32 @@ const AchievementsSection = () => {
             </h2>
           </header>
 
+          {/* Mobile — horizontal card track driven by vertical scroll: the
+              section pins while the cards slide through, then releases */}
+          <div className="md:hidden">
+            <div ref={trackViewportRef} className="-mx-4 overflow-hidden">
+              <div ref={trackRef} className="flex w-max gap-5 px-8 pb-2 pt-2">
+                {ACHIEVEMENTS.map((item, index) => (
+                  <motion.article
+                    key={item.title}
+                    initial={{ opacity: 0, y: 26 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                    className="w-[76vw] max-w-[320px] shrink-0"
+                    style={{ rotate: index % 2 === 0 ? '-1.6deg' : '1.6deg' }}
+                  >
+                    {renderCardSurface(item, index)}
+                  </motion.article>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop — pinned scatter + draggable cards */}
           <div
             ref={cardsContainerRef}
-            className="relative mx-auto h-[60vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)] sm:h-[70vh]"
+            className="relative mx-auto hidden h-[60vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)] sm:h-[70vh] md:block"
           >
             {ACHIEVEMENTS.map((item, index) => (
               <motion.article
@@ -223,39 +323,10 @@ const AchievementsSection = () => {
                 dragConstraints={dragBounds}
                 dragElastic={0.16}
                 whileTap={{ cursor: 'grabbing', scale: 1.02 }}
-                className="absolute left-1/2 top-1/2 z-30 cursor-grab -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 z-30 w-[300px] cursor-grab -translate-x-1/2 -translate-y-1/2"
                 style={{ zIndex: ACHIEVEMENTS.length - index + 20 }}
               >
-                <div className="w-[min(64vw,330px)] overflow-hidden rounded-[8px] border border-black/90 bg-[#0c0c10] p-[10px] shadow-[0_24px_46px_rgba(0,0,0,0.58)] sm:w-[300px]">
-                  <div className="relative h-52 w-full sm:h-[290px]">
-                    {!loadedImages[index] && (
-                      <div className="absolute inset-0 rounded-[2px] overflow-hidden bg-neutral-800">
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)',
-                            animation: 'shimmer 1.4s infinite',
-                            backgroundSize: '200% 100%',
-                          }}
-                        />
-                      </div>
-                    )}
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      loading="lazy"
-                      onLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
-                      className="pointer-events-none h-full w-full rounded-[2px] object-cover"
-                      style={{
-                        opacity: loadedImages[index] ? 1 : 0,
-                        transition: 'opacity 0.5s ease',
-                      }}
-                    />
-                  </div>
-                  <h3 className="mt-2 pb-1 text-center text-[clamp(0.98rem,1.3vw,1.35rem)] font-bold leading-tight text-white/92">
-                    {item.title}
-                  </h3>
-                </div>
+                {renderCardSurface(item, index)}
               </motion.article>
             ))}
 

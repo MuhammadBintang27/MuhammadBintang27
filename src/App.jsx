@@ -43,7 +43,7 @@ const App = () => (
         <Route
           path="/calm"
           element={
-            <SplashGate Loader={InitialLoader}>
+            <SplashGate key="splash-calm" Loader={InitialLoader}>
               <MainLayout />
             </SplashGate>
           }
@@ -61,7 +61,7 @@ const App = () => (
         <Route
           path="/playful"
           element={
-            <SplashGate Loader={PlayfulLoader}>
+            <SplashGate key="splash-playful" Loader={PlayfulLoader}>
               <Suspense fallback={<div className="h-screen bg-[#F2E1C4]" />}>
                 <PlayfulMainLayout />
               </Suspense>

@@ -124,11 +124,9 @@ const Nav = () => {
                   type="button"
                   onClick={switchToPlayful}
                   aria-label="Switch to the playful version"
-                  className="group flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/40 hover:text-white"
+                  className="rounded-full bg-[#E5301E] px-5 py-2.5 text-sm font-bold text-[#FFFDF8] shadow-[3px_3px_0_rgba(0,0,0,0.35)] transition hover:bg-[#C22112]"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#E5301E]" />
                   Playful
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">↗</span>
                 </button>
               </div>
 

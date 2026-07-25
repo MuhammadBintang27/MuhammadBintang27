@@ -6,7 +6,7 @@ const NAME = PROFILE.shortName.toUpperCase();
 const PlayfulHero = () => (
   <section
     id="home"
-    className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden bg-[#F2E1C4] px-4 pb-16 pt-36 sm:px-8 lg:gap-0 lg:pb-24 lg:pt-8"
+    className="relative flex min-h-screen flex-col items-center justify-start overflow-hidden bg-[#F2E1C4] px-4 pb-16 pt-24 sm:px-8 lg:justify-center lg:pb-24 lg:pt-8"
   >
     <div className="relative mx-auto flex w-full max-w-[1800px] justify-center">
       {/* Shrink-wrapped to the wordmark's own rendered width/height, so the
@@ -127,7 +127,7 @@ const PlayfulHero = () => (
       initial={{ opacity: 0, scale: 0.9, y: 44 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.85, delay: 1.55, ease: [0.16, 1, 0.3, 1] }}
-      className="relative z-10 flex w-full justify-center lg:hidden"
+      className="relative z-10 mt-6 flex w-full justify-center lg:mt-0 lg:hidden"
     >
       {/* Photo + bug share one bob (animation on the wrapper) so the bug stays
           perched on the photo's bottom-right corner as it floats. */}
@@ -156,23 +156,30 @@ const PlayfulHero = () => (
       </motion.div>
     </motion.div>
 
-    {/* Caption blurbs — pinned to the section bottom on every size (absolute),
+    {/* Flexible spacer — soaks up whatever vertical room is left between the
+        photo and the captions, so the gap scales with the viewport height on
+        typical phones. Capped so it doesn't balloon into a huge gap on
+        unusually tall/narrow screens. Irrelevant at lg, where captions pin
+        absolutely. */}
+    <div aria-hidden className="w-full flex-1 lg:hidden max-h-[clamp(0px,8vh,80px)]" />
+
+    {/* Caption blurbs — pinned to the section bottom on desktop (absolute),
         so the wordmark + photo stay centred without the captions skewing them.
-        Stacked & centred on mobile; split into left/right columns on desktop. */}
-    <div className="absolute inset-x-0 bottom-8 z-10 mx-auto flex w-full max-w-[1600px] flex-col items-center gap-4 px-6 text-center md:flex-row md:items-start md:justify-between md:gap-10 md:px-8 md:text-left">
+        Below lg they're a normal flow item pushed down by the spacer above. */}
+    <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-center gap-4 px-6 text-center md:flex-row md:items-start md:justify-between md:gap-10 md:px-8 md:text-left lg:absolute lg:inset-x-0 lg:bottom-8">
       <motion.p
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
         className="max-w-sm font-mouse text-xl leading-tight tracking-wide text-[#241A12] sm:text-2xl"
       >
-        Blending engineering and creativity into products that feel clear, useful, and human.
+        Technology should feel simple. Complex behind the scenes. Effortless in your hands.
       </motion.p>
       <motion.p
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut', delay: 1.9 }}
         className="max-w-sm font-mouse text-xl leading-tight tracking-wide text-[#241A12] md:text-right sm:text-2xl"
       >
-        Exploring AI workflows, designing clean interfaces, and shipping ideas end-to-end.
+        Design should feel natural. Beautiful when noticed. Invisible when needed.
       </motion.p>
     </div>
   </section>

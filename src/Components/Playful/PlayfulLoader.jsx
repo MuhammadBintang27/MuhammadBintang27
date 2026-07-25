@@ -4,6 +4,15 @@ import { motion } from 'framer-motion';
 const NAME = 'BINTANG';
 const TICKER_TEXT = 'COOKING UP THE PORTFOLIO';
 
+// Corner doodles that pop in and bob — same sticker set as the hero, so the
+// loader already feels like the playful world before it opens.
+const DOODLES = [
+  { src: '/playful/terminal.webp', className: 'left-3 top-10 w-[26%] max-w-[190px] sm:left-10 sm:top-16', rotate: -12, delay: 0.45 },
+  { src: '/playful/laptop.webp', className: 'right-3 top-10 w-[24%] max-w-[175px] sm:right-10 sm:top-16', rotate: 10, delay: 0.55 },
+  { src: '/playful/mouse.webp', className: 'bottom-24 left-4 w-[20%] max-w-[140px] sm:bottom-28 sm:left-12', rotate: -8, delay: 0.65 },
+  { src: '/playful/bug.webp', className: 'bottom-24 right-4 w-[18%] max-w-[128px] sm:bottom-28 sm:right-12', rotate: 12, delay: 0.75 },
+];
+
 const PlayfulLoader = () => {
   const [progress, setProgress] = useState(1);
 
@@ -32,20 +41,37 @@ const PlayfulLoader = () => {
       exit={{ y: '-100%' }}
       transition={{ duration: 0.85, ease: [0.83, 0, 0.17, 1] }}
     >
-      {/* Top row — decorative nav pills, echoes the Playful nav */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
-        className="relative z-10 flex items-center justify-end gap-3 px-6 pt-6 sm:px-10 sm:pt-8"
-      >
-        <span className="rounded-full bg-[#E5301E] px-5 py-2 text-sm font-bold text-[#FFFDF8] shadow-[3px_3px_0_rgba(36,26,18,0.18)]">
-          Projects
-        </span>
-        <span className="rounded-full bg-[#FFFDF8] px-5 py-2 text-sm font-bold text-[#241A12] shadow-[3px_3px_0_rgba(36,26,18,0.18)]">
-          ☰ Menu
-        </span>
-      </motion.div>
+      {/* Warm dotted paper — echoes the hero and version-chooser preview */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-50"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(214,140,10,0.22) 1.5px, transparent 1.5px)',
+          backgroundSize: '22px 22px',
+        }}
+      />
+
+      {/* Floating corner doodles */}
+      {DOODLES.map((d) => (
+        <motion.img
+          key={d.src}
+          src={d.src}
+          alt=""
+          aria-hidden="true"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          className={`pointer-events-none absolute z-0 object-contain drop-shadow-[3px_4px_0_rgba(36,26,18,0.14)] ${d.className}`}
+          initial={{ opacity: 0, scale: 0.4, rotate: d.rotate * 2 }}
+          animate={{ opacity: 1, scale: 1, rotate: d.rotate, y: [0, -8, 0] }}
+          transition={{
+            opacity: { duration: 0.4, delay: d.delay },
+            scale: { type: 'spring', stiffness: 420, damping: 12, delay: d.delay },
+            rotate: { type: 'spring', stiffness: 420, damping: 12, delay: d.delay },
+            y: { duration: 2.4, ease: 'easeInOut', repeat: Infinity, delay: d.delay },
+          }}
+        />
+      ))}
+
+      
 
       {/* Center — comic-sticker wordmark with tilted tag badges */}
       <motion.div
@@ -85,7 +111,7 @@ const PlayfulLoader = () => {
             aria-label={NAME}
             className="flex items-baseline justify-center whitespace-nowrap font-mouse uppercase text-[#E5301E] [-webkit-text-stroke:8px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[6px_6px_0_rgba(36,26,18,0.16)]"
             style={{
-              fontSize: 'clamp(3.6rem, 13vw, 10.5rem)',
+              fontSize: 'clamp(5.6rem, 22vw, 13rem)',
               lineHeight: 0.92,
             }}
           >
@@ -107,6 +133,16 @@ const PlayfulLoader = () => {
             ))}
           </h1>
         </div>
+
+        {/* Tagline — the playful promise */}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="mt-6 text-center font-modak text-sm tracking-wide text-[#E5301E] sm:text-base"
+        >
+          Every detail smiles · Every interaction dances
+        </motion.p>
       </motion.div>
 
       {/* Bottom — scrolling gold ticker bar + progress counter */}

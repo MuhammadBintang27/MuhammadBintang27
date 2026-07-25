@@ -2,8 +2,8 @@ import { useLayoutEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import firstImage from '../../assets/images/hero/imagepertama.webp';
-import secondImage from '../../assets/images/hero/gelap.webp';
+import firstImage from '../../../assets/images/hero/imagepertama.webp';
+import secondImage from '../../../assets/images/hero/gelap.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

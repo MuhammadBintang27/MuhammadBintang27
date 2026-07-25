@@ -6,6 +6,8 @@
 @import "@fontsource/barlow-condensed/900-italic.css";
 @import "@fontsource/dm-mono/400.css";
 @import "@fontsource/dm-mono/500.css";
+@import "@fontsource/mouse-memoirs/400.css";
+@import "@fontsource/modak/400.css";
 
 @tailwind base;
 @tailwind components;

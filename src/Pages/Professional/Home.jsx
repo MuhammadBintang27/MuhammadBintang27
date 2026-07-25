@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import AnimatedProfileImage from '../Components/Profile/AnimatedProfileImage';
+import AnimatedProfileImage from '../../Components/Professional/Profile/AnimatedProfileImage';
+import { PROFILE } from '../../data/profileData';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const profileImage = '/Fotoutama.webp';
+const profileImage = PROFILE.profileImage;
+const [roleOne, roleTwo, roleThree] = PROFILE.roles;
 
 const Home = () => {
   const [cvOpen, setCvOpen] = useState(false);
@@ -141,9 +143,9 @@ const Home = () => {
               <div ref={titleRef}>
                 <TypeAnimation
                   sequence={[
-                    'Full Stack Developer', 2400,
-                    'AI-Driven Builder', 2400,
-                    'Creative Problem Solver', 2000,
+                    roleOne, 2400,
+                    roleTwo, 2400,
+                    roleThree, 2000,
                   ]}
                   wrapper="h1"
                   speed={50}
@@ -156,10 +158,7 @@ const Home = () => {
                 ref={descRef}
                 className="mb-6 max-w-[56ch] text-[1rem] leading-relaxed text-white/62 md:text-[1.1rem]"
               >
-                Informatics graduate from Universitas Syiah Kuala, blending engineering and
-                creativity into products that feel clear, useful, and human. I enjoy
-                exploring AI workflows, designing clean interfaces, and shipping ideas
-                from concept to working experience.
+                {PROFILE.bio}
               </p>
 
               {/* Education decoration */}
@@ -172,14 +171,14 @@ const Home = () => {
                   style={{ animation: 'eduShine 5.5s ease-in-out infinite' }}
                 />
                 <div className="rounded-full ">
-                  <img src="/logousk.webp" alt="Education" className="h-6" />
+                  <img src={PROFILE.education.logo} alt="Education" className="h-6" />
                 </div>
                 <div className="text-left">
                   <p className="text-[0.78rem] font-semibold leading-tight text-white/85">
-                    Bachelor of Informatics
+                    {PROFILE.education.degree}
                   </p>
                   <p className="mt-0.5 text-[0.68rem] leading-tight text-white/40">
-                    Cum Laude&nbsp;·&nbsp;GPA 3.82&nbsp;·&nbsp;Universitas Syiah Kuala
+                    {PROFILE.education.detail}
                   </p>
                 </div>
               </div>
@@ -240,7 +239,7 @@ const Home = () => {
                 </p>
                 <div className="flex items-center gap-2">
                   <a
-                    href="/CV.pdf"
+                    href={PROFILE.cvPath}
                     download
                     className="rounded-lg border border-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/60 transition hover:border-white/25 hover:text-white"
                   >
@@ -258,7 +257,7 @@ const Home = () => {
 
               {/* PDF viewer */}
               <iframe
-                src="/CV.pdf"
+                src={PROFILE.cvPath}
                 title="Muhammad Bintang CV"
                 className="h-full w-full flex-1"
               />

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaGithub, FaArrowLeft, FaExternalLinkAlt } from "react-icons/fa";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { PROJECTS } from "../data/projectsData";
+import { PROJECTS } from "../../data/projectsData";
 
 
 const ProjectDetail = () => {

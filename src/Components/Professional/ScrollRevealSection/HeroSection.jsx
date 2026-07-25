@@ -1,8 +1,8 @@
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import firstImageDefault from '../../assets/images/hero/imagepertama.webp';
-import secondImageDefault from '../../assets/images/hero/gelap.webp';
+import firstImageDefault from '../../../assets/images/hero/imagepertama.webp';
+import secondImageDefault from '../../../assets/images/hero/gelap.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

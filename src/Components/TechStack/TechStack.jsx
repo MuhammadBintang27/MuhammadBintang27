@@ -47,6 +47,7 @@ const THEME_STYLES = {
     eyebrow: 'text-cyan-100/62',
     heading: 'text-[#e8e0c2]',
     headingFont: '',
+    headingSize: 'text-[clamp(2.3rem,7vw,6.2rem)]',
     hintLabel: 'text-cyan-300/80',
     hintTitle: 'text-white',
     hintBody: 'text-slate-300',
@@ -58,6 +59,7 @@ const THEME_STYLES = {
     eyebrow: 'text-[#D68C0A] font-modak tracking-wide',
     heading: 'text-[#E5301E]',
     headingFont: 'font-mouse [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill]',
+    headingSize: 'text-[clamp(3.2rem,12vw,9rem)]',
     hintLabel: 'text-[#D68C0A]',
     hintTitle: 'text-[#241A12]',
     hintBody: 'text-[#4A3220]',
@@ -352,7 +354,7 @@ const TechStack = ({ theme = 'professional' }) => {
           <p className={`mb-2 text-xs font-semibold uppercase tracking-[0.24em] ${styles.eyebrow}`}>
             Skills &amp; Tools
           </p>
-          <h2 className={`text-[clamp(2.3rem,7vw,6.2rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.heading} ${styles.headingFont}`}>
+          <h2 className={`font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.headingSize} ${styles.heading} ${styles.headingFont}`}>
             Tech Stack
           </h2>
         </header>

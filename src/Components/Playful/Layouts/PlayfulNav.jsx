@@ -121,11 +121,9 @@ const PlayfulNav = () => {
                   type="button"
                   onClick={switchToCalm}
                   aria-label="Switch to the calm version"
-                  className="group flex items-center gap-2 rounded-full bg-[#241A12] px-5 py-2.5 text-sm font-bold text-[#F2E1C4] shadow-[3px_3px_0_rgba(36,26,18,0.25)] transition hover:bg-[#0f1014]"
+                  className="rounded-full bg-[#0f1014] px-5 py-2.5 text-sm font-bold text-[#F2E1C4] shadow-[3px_3px_0_rgba(36,26,18,0.25)] transition hover:bg-black"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8]" />
                   Calm
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">↗</span>
                 </button>
               </div>
 

@@ -66,7 +66,7 @@ const PlayfulProjects = () => {
             <p className="mb-3 font-modak text-sm uppercase tracking-[0.28em] text-[#D68C0A]">
               Selected Works
             </p>
-            <h2 className="font-mouse text-[clamp(3rem,11vw,8rem)] uppercase leading-[0.9] tracking-tight text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.18)]">
+            <h2 className="font-mouse text-[clamp(3.2rem,12vw,9rem)] uppercase leading-[0.9] tracking-tight text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.18)]">
               Projects
             </h2>
           </header>

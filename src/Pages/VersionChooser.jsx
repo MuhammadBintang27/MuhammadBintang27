@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import calmHeroImg from '../assets/images/hero/gelap.webp';
+import calmHeroImg from '../assets/images/hero/imagepertama.webp';
 import {
   VERSION_KEY,
   VERSION_ROUTES,
@@ -33,16 +33,19 @@ const WindowChrome = ({ url, dark }) => (
   </div>
 );
 
-/* ---- Calm hero preview — mirrors the dark cinematic hero ---- */
+/* ---- Calm hero preview — mirrors the dark cinematic hero's final frame ---- */
 const CalmPreview = () => (
   <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-[#0b0c10] shadow-2xl">
     <WindowChrome url="bintang.dev/calm" dark />
     <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0b0c10]">
+      {/* full hero frame — the character + cinematic backdrop */}
       <div
-        className="absolute inset-0 opacity-45"
+        className="absolute inset-0"
         style={{ backgroundImage: `url(${calmHeroImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#02040b]/40 via-transparent to-[#02040b]/90" />
+      {/* legibility gradients: darken edges + bottom for the overlays */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(2,4,11,0.72)_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#02040b]/45 via-transparent to-[#02040b]/92" />
 
       {/* corner-bracket frame, like the real hero */}
       <div className="pointer-events-none absolute inset-2 border border-cyan-100/30">
@@ -52,20 +55,59 @@ const CalmPreview = () => (
         <span className="absolute -bottom-px -right-px h-3 w-3 border-b border-r border-cyan-100/80" />
       </div>
 
-      <div className="absolute inset-x-4 top-3 flex items-center justify-between text-[7px] font-bold uppercase tracking-[0.22em] text-cyan-100/80">
+      {/* CREATE / INSPIRE eyebrow */}
+      <div className="absolute inset-x-4 top-3 flex items-center justify-between text-[6px] font-bold uppercase tracking-[0.22em] text-cyan-100/85">
         <span>Create</span>
         <span>Inspire</span>
       </div>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <p className="text-[8px] font-semibold tracking-[0.12em] text-[#e8e0c2]/80" style={{ fontFamily: "'DM Mono',monospace" }}>
+      {/* Hola + oversized BINTANG wordmark, dropped below the face so the
+          letters sit across the body instead of covering it */}
+      <div className="absolute inset-x-0 top-[31%] flex flex-col items-center text-center">
+        <p className="text-[6px] font-semibold tracking-[0.14em] text-[#e8e0c2]/85" style={{ fontFamily: "'DM Mono',monospace" }}>
           Hola, I&apos;m
         </p>
         <p
-          className="leading-[0.85] text-[#E8E0C2]"
-          style={{ fontFamily: CONDENSED, fontWeight: 900, fontSize: 'clamp(1.6rem,6vw,2.8rem)', letterSpacing: '-0.01em' }}
+          className="text-[#E8E0C2]"
+          style={{
+            fontFamily: CONDENSED,
+            fontWeight: 900,
+            fontSize: 'clamp(2.2rem,9vw,3.6rem)',
+            lineHeight: 0.8,
+            letterSpacing: '-0.02em',
+            textShadow: '0 1px 0 rgba(255,248,220,0.16), 0 8px 20px rgba(0,0,0,0.5)',
+          }}
         >
           BINTANG
+        </p>
+      </div>
+
+      {/* bottom-left tagline */}
+      <div className="absolute bottom-3 left-3 max-w-[58%] text-left">
+        <p
+          className="mb-1 text-[5px] font-bold uppercase tracking-[0.2em] text-[#e8e0c2]/55"
+          style={{ borderLeft: '1px solid rgba(220,210,180,0.4)', paddingLeft: '4px', fontFamily: "'DM Mono',monospace" }}
+        >
+          Software Engineer
+        </p>
+        <p className="text-[8px] font-semibold leading-tight text-[#e8e0c2]/90" style={{ fontFamily: CONDENSED }}>
+          Someone who keeps learning and building.
+        </p>
+      </div>
+
+      {/* bottom-right stat card */}
+      <div
+        className="absolute bottom-3 right-3 text-right"
+        style={{ border: '1px solid rgba(220,210,180,0.2)', background: 'rgba(0,0,0,0.4)', padding: '4px 7px 3px' }}
+      >
+        <p
+          className="font-black italic leading-none text-[#E8E0C2]"
+          style={{ fontFamily: CONDENSED, fontSize: 'clamp(0.9rem,3.6vw,1.4rem)', letterSpacing: '0.02em' }}
+        >
+          10,000+
+        </p>
+        <p className="mt-0.5 text-[4.5px] font-bold uppercase tracking-[0.2em] text-[#e8e0c2]/55" style={{ fontFamily: "'DM Mono',monospace" }}>
+          Hours of Coding
         </p>
       </div>
     </div>
@@ -194,13 +236,17 @@ const VersionChooser = () => {
           <h2 className="text-[clamp(2.2rem,6vw,4rem)] font-black uppercase leading-[0.9] tracking-[-0.03em] text-[#e8e0c2]">
             Calm
           </h2>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/45">
-            Dark, cinematic, and detail-driven — quiet focus and slow reveals.
-          </p>
+          <div className="mt-4 max-w-sm">
+            <p className="text-base font-medium leading-snug text-[#e8e0c2]/80 sm:text-lg">
+              Every detail whispers. Every interaction flows.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-white/45 sm:text-[15px]">
+              An experience shaped by balance, precision, and the beauty of less.
+            </p>
+          </div>
 
           <span className="mt-7 inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3 text-sm font-bold text-white/70 transition group-hover:gap-3 group-hover:border-white/40 group-hover:text-white">
             Enter
-            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </motion.div>
       </motion.button>
@@ -246,30 +292,37 @@ const VersionChooser = () => {
           <h2 className="font-mouse text-[clamp(2.4rem,6.5vw,4.4rem)] uppercase leading-[0.9] text-[#E5301E] [-webkit-text-stroke:4px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[3px_3px_0_rgba(36,26,18,0.16)]">
             Playful
           </h2>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-[#4A3220]">
-            Bold, warm, and full of energy — the same story, told with more color.
-          </p>
+          <div className="mt-4 max-w-sm">
+            <p className="text-base font-semibold leading-snug text-[#241A12] sm:text-lg">
+              Every detail smiles. Every interaction dances.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-[#4A3220]/80 sm:text-[15px]">
+              An experience driven by curiosity, expression, and the joy of more.
+            </p>
+          </div>
 
           <span className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#E5301E] px-7 py-3 text-sm font-bold text-[#FFFDF8] shadow-[3px_3px_0_rgba(36,26,18,0.18)] transition group-hover:gap-3 group-hover:bg-[#C22112] group-hover:shadow-[5px_5px_0_rgba(36,26,18,0.22)]">
             Enter
-            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </motion.div>
       </motion.button>
 
       {/* ---- Centre intro badge ---- */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-none absolute left-1/2 top-5 z-10 -translate-x-1/2 sm:top-8"
-      >
-        <div className="rounded-full border border-white/15 bg-black/40 px-5 py-2 text-center backdrop-blur-md">
+      {/* Positioning lives on the outer wrapper; the scale animation lives on
+          the inner node so Framer's inline transform can't clobber the
+          -translate-x-1/2 that centres the badge. */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 sm:top-8 sm:translate-y-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="rounded-full border border-white/15 bg-black/40 px-5 py-2 text-center backdrop-blur-md"
+        >
           <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">
             Choose your experience
           </span>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* ---- Signature ---- */}
       <motion.p

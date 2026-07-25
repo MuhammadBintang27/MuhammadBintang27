@@ -292,7 +292,7 @@ const PlayfulAchievements = () => {
           alt=""
           aria-hidden="true"
           onError={() => setLaptopOk(false)}
-          className="pointer-events-none absolute left-[7%] top-20 z-[1] hidden w-[37%] max-w-[380px] object-contain sm:top-28 lg:block"
+          className="pointer-events-none absolute left-2 top-3 z-[1] w-[22%] max-w-[90px] object-contain opacity-80 sm:left-[7%] sm:top-20 sm:w-[34%] sm:max-w-[260px] sm:opacity-100 lg:top-28 lg:w-[37%] lg:max-w-[380px]"
         />
       )}
       {mouseOk && (
@@ -301,7 +301,7 @@ const PlayfulAchievements = () => {
           alt=""
           aria-hidden="true"
           onError={() => setMouseOk(false)}
-          className="pointer-events-none absolute right-[7%] top-20 z-[1] hidden w-[33%] max-w-[340px] object-contain sm:top-28 lg:block"
+          className="pointer-events-none absolute bottom-3 right-2 z-[1] w-[18%] max-w-[75px] object-contain opacity-80 sm:bottom-auto sm:top-20 sm:w-[30%] sm:max-w-[230px] sm:opacity-100 lg:top-28 lg:w-[33%] lg:max-w-[340px]"
         />
       )}
 

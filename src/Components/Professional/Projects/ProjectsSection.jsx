@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import ScrollLineDivider from "../SectionDivider/ScrollLineDivider";
-import { PROJECTS } from "../../data/projectsData";
+import { PROJECTS } from "../../../data/projectsData";
 
 const ProjectsSection = () => {
   const navigate = useNavigate();

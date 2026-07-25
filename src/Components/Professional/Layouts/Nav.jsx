@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-
-const NAV_ITEMS = [
-  { label: "Home", id: "home" },
-  { label: "Achievement", id: "achievements" },
-  { label: "Projects", id: "projects" },
-  { label: "Tech Stack", id: "tech-stack" },
-  { label: "Contact", id: "contact" },
-];
+import { NAV_ITEMS } from "../../../data/navData";
+import { VERSION_ROUTES, rememberVersion } from "../../../data/versionConfig";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const switchToPlayful = () => {
+    setIsOpen(false);
+    rememberVersion("playful");
+    navigate(VERSION_ROUTES.playful);
+  };
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") setIsOpen(false); };
@@ -28,13 +28,13 @@ const Nav = () => {
 
   const handleNavClick = (id) => {
     setIsOpen(false);
-    if (location.pathname === "/") {
+    if (location.pathname === "/calm") {
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: "smooth" });
       }, 320);
     } else {
-      navigate(`/#${id}`);
+      navigate(`/calm#${id}`);
     }
   };
 
@@ -113,12 +113,26 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ delay: 0.28, duration: 0.3 }}
-              className="absolute bottom-7 left-5 right-5 flex items-end justify-between sm:left-8 sm:right-8"
+              className="absolute bottom-7 left-5 right-5 flex items-center justify-between gap-4 sm:left-8 sm:right-8"
             >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
-                Muhammad Bintang Indra Hidayat
-              </p>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
+              {/* Version switcher */}
+              <div className="flex items-center gap-2.5">
+                <span className="hidden text-[11px] font-semibold uppercase tracking-[0.22em] text-white/30 sm:inline">
+                  Version
+                </span>
+                <button
+                  type="button"
+                  onClick={switchToPlayful}
+                  aria-label="Switch to the playful version"
+                  className="group flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/40 hover:text-white"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#E5301E]" />
+                  Playful
+                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">↗</span>
+                </button>
+              </div>
+
+              <p className="text-right text-[11px] font-semibold uppercase tracking-[0.22em] text-white/25">
                 Portfolio · {new Date().getFullYear()}
               </p>
             </motion.div>

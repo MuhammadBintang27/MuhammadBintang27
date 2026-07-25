@@ -1,232 +1,70 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import ScrollLineDivider from '../SectionDivider/ScrollLineDivider';
+import ScrollLineDivider from '../Professional/SectionDivider/ScrollLineDivider';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ContactShadows, RoundedBox, Text, useTexture } from '@react-three/drei';
+import { TECH_STACK_BASE, TECH_STACK_COLORS } from '../../data/techStackData';
 
-const techKeys = [
-  {
-    name: 'React',
-    icon: '/tech/react.svg',
-    short: 'RE',
-    color: '#61dafb',
-    label: 'Frontend core',
-    description: 'Builds interactive and dynamic user interfaces with a component-based architecture.',
-  },
-  {
-    name: 'Next.js',
-    icon: '/tech/nextdotjs.svg',
-    short: 'NX',
-    color: '#f8fafc',
-    label: 'Full-stack web',
-    description: 'Provides routing, server-side rendering, and modern tooling for scalable web applications.',
-  },
-  {
-    name: 'Node.js',
-    icon: '/tech/nodedotjs.svg',
-    short: 'ND',
-    color: '#4ade80',
-    label: 'Runtime backend',
-    description: 'Powers fast and scalable backend services, APIs, and automation workflows.',
-  },
-  {
-    name: 'GitHub',
-    icon: '/tech/github.svg',
-    short: 'GH',
-    color: '#c084fc',
-    label: 'Collaboration',
-    description: 'Enables version control, team collaboration, and streamlined development workflows.',
-  },
-  {
-    name: 'Express',
-    icon: '/tech/express.svg',
-    short: 'EX',
-    color: '#38bdf8',
-    label: 'API framework',
-    description: 'Lightweight framework for building RESTful APIs and backend services.',
-  },
-  {
-    name: 'MongoDB',
-    icon: '/tech/mongodb.svg',
-    short: 'MG',
-    color: '#34d399',
-    label: 'NoSQL database',
-    description: 'Flexible document database designed for rapid development and evolving data structures.',
-  },
-  {
-    name: 'Laravel',
-    icon: '/tech/laravel.svg',
-    short: 'LV',
-    color: '#fb7185',
-    label: 'PHP framework',
-    description: 'Robust framework for building secure and maintainable web applications.',
-  },
-  {
-    name: 'MySQL',
-    icon: '/tech/mysql.svg',
-    short: 'MY',
-    color: '#60a5fa',
-    label: 'SQL database',
-    description: 'Reliable relational database for structured data and complex queries.',
-  },
-  {
-    name: 'TensorFlow',
-    icon: '/tech/tensorflow.svg',
-    short: 'TF',
-    color: '#fb923c',
-    label: 'Machine learning',
-    description: 'Framework for developing, training, and deploying machine learning models.',
-  },
-  {
-    name: 'PyTorch',
-    icon: '/tech/pytorch.svg',
-    short: 'PT',
-    color: '#f97316',
-    label: 'Deep learning',
-    description: 'Popular deep learning framework for research, experimentation, and production AI.',
-  },
-  {
-    name: 'Flutter',
-    icon: '/tech/flutter.svg',
-    short: 'FL',
-    color: '#22d3ee',
-    label: 'Cross-platform mobile',
-    description: 'Builds high-performance mobile applications from a single codebase.',
-  },
-  {
-    name: 'Kotlin',
-    icon: '/tech/kotlin.svg',
-    short: 'KT',
-    color: '#a78bfa',
-    label: 'Android development',
-    description: 'Modern programming language for creating native Android applications.',
-  },
-  {
-    name: 'TypeScript',
-    icon: '/tech/typescript.svg',
-    short: 'TS',
-    color: '#3178c6',
-    label: 'Typed JavaScript',
-    description: 'Enhances JavaScript with static typing for safer and more maintainable code.',
-  },
-  {
-    name: 'Tailwind CSS',
-    icon: '/tech/tailwindcss.svg',
-    short: 'TW',
-    color: '#06b6d4',
-    label: 'CSS framework',
-    description: 'Utility-first framework for building responsive and modern user interfaces.',
-  },
-  {
-    name: 'Python',
-    icon: '/tech/python.svg',
-    short: 'PY',
-    color: '#facc15',
-    label: 'Programming language',
-    description: 'Versatile language widely used for automation, data science, AI, and backend development.',
-  },
-  {
-    name: 'PostgreSQL',
-    icon: '/tech/postgresql.svg',
-    short: 'PG',
-    color: '#3b82f6',
-    label: 'Relational database',
-    description: 'Advanced SQL database known for reliability, scalability, and performance.',
-  },
-  {
-    name: 'Docker',
-    icon: '/tech/docker.svg',
-    short: 'DK',
-    color: '#0ea5e9',
-    label: 'Containerization',
-    description: 'Packages applications into portable containers for consistent deployment.',
-  },
-  {
-    name: 'Vue.js',
-    icon: '/tech/vue.svg',
-    short: 'VU',
-    color: '#42b883',
-    label: 'Frontend framework',
-    description: 'Progressive JavaScript framework for building modern and reactive interfaces.',
-  },
-  {
-    name: 'Vercel',
-    icon: '/tech/vercel.svg',
-    short: 'VC',
-    color: '#ffffff',
-    label: 'Deployment platform',
-    description: 'Optimized platform for deploying frontend and full-stack web applications.',
-  },
-  {
-    name: 'OpenCV',
-    icon: '/tech/opencv.svg',
-    short: 'CV',
-    color: '#ef4444',
-    label: 'Computer vision',
-    description: 'Open-source library for image processing and computer vision applications.',
-  },
-  {
-    name: 'Scikit-Learn',
-    icon: '/tech/python.svg',
-    short: 'SK',
-    color: '#f97316',
-    label: 'Machine learning',
-    description: 'Comprehensive toolkit for classical machine learning and data analysis.',
-  },
-  {
-    name: 'OpenAI',
-    icon: '/tech/openai.svg',
-    short: 'LX',
-    color: '#eab308',
-    label: 'AI services',
-    description: 'Provides powerful AI models and APIs for natural language processing, computer vision, and more.',
-  },
-  {
-    name: 'Github',
-    icon: '/tech/github.svg',
-    short: 'GT',
-    color: '#f97316',
-    label: 'Version control',
-    description: 'Tracks code changes and supports efficient collaboration across development teams.',
-  },
-  {
-    name: 'FastAPI',
-    icon: '/tech/fastapi.svg',
-    short: 'FA',
-    color: '#14b8a6',
-    label: 'Python backend',
-    description: 'High-performance framework for building modern APIs with Python.',
-  },
-].map((skill, index) => {
-  const columns = 4;
-  const rows = 6;
-  const row = Math.floor(index / columns);
-  const col = index % columns;
-  const xSpacing = 1.03;
-  const ySpacing = 0.88;
-  const rowOffsets = [0.21, 0.13, 0.05, -0.04, -0.13, -0.23];
-  const variation = ((index * 37) % 100) / 100;
-  const signedVariation = (((index * 53) % 100) / 100) - 0.5;
-  const zVariation = (((index * 71) % 100) / 100) - 0.5;
+const buildTechKeys = (theme) => {
+  const colors = TECH_STACK_COLORS[theme] || TECH_STACK_COLORS.professional;
 
-  return {
-    ...skill,
-    position: [
-      (col - 1.5) * xSpacing + rowOffsets[row],
-      ((rows - 1) / 2 - row) * ySpacing,
-      0,
-    ],
-    restHeight: 0.042 + variation * 0.014,
-    hoverDepth: -0.062 - variation * 0.008,
-    tilt: [
-      signedVariation * 0.028,
-      signedVariation * 0.017,
-      zVariation * 0.012,
-    ],
-    iconSize: 0.34 + variation * 0.04,
-  };
-});
+  return TECH_STACK_BASE.map((skill, index) => {
+    const columns = 4;
+    const rows = 6;
+    const row = Math.floor(index / columns);
+    const col = index % columns;
+    const xSpacing = 1.03;
+    const ySpacing = 0.88;
+    const rowOffsets = [0.21, 0.13, 0.05, -0.04, -0.13, -0.23];
+    const variation = ((index * 37) % 100) / 100;
+    const signedVariation = (((index * 53) % 100) / 100) - 0.5;
+    const zVariation = (((index * 71) % 100) / 100) - 0.5;
+
+    return {
+      ...skill,
+      color: colors[skill.name],
+      position: [
+        (col - 1.5) * xSpacing + rowOffsets[row],
+        ((rows - 1) / 2 - row) * ySpacing,
+        0,
+      ],
+      restHeight: 0.042 + variation * 0.014,
+      hoverDepth: -0.062 - variation * 0.008,
+      tilt: [
+        signedVariation * 0.028,
+        signedVariation * 0.017,
+        zVariation * 0.012,
+      ],
+      iconSize: 0.34 + variation * 0.04,
+    };
+  });
+};
+
+const THEME_STYLES = {
+  professional: {
+    sectionBg: 'bg-[#101117]',
+    eyebrow: 'text-cyan-100/62',
+    heading: 'text-[#e8e0c2]',
+    headingFont: '',
+    hintLabel: 'text-cyan-300/80',
+    hintTitle: 'text-white',
+    hintBody: 'text-slate-300',
+    fog: '#101117',
+    contactShadowColor: '#020617',
+  },
+  playful: {
+    sectionBg: 'bg-[#F2E1C4]',
+    eyebrow: 'text-[#D68C0A] font-modak tracking-wide',
+    heading: 'text-[#E5301E]',
+    headingFont: 'font-mouse [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill]',
+    hintLabel: 'text-[#D68C0A]',
+    hintTitle: 'text-[#241A12]',
+    hintBody: 'text-[#4A3220]',
+    fog: '#F2E1C4',
+    contactShadowColor: '#3A2A1A',
+  },
+};
 
 const damp = (current, target, delta, speed = 8) => (
   THREE.MathUtils.lerp(current, target, 1 - Math.exp(-speed * delta))
@@ -405,7 +243,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
   );
 };
 
-const KeyboardScene = ({ hoveredSkill, onHoverChange }) => {
+const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange }) => {
   const keyboardRef = useRef(null);
   const { viewport } = useThree();
   const keyboardScale = viewport.width < 5.6 ? 0.7 : viewport.width < 7 ? 0.82 : 0.93;
@@ -477,9 +315,11 @@ const KeyboardScene = ({ hoveredSkill, onHoverChange }) => {
   );
 };
 
-const TechStack = () => {
+const TechStack = ({ theme = 'professional' }) => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const canvasWrapRef = useRef(null);
+  const techKeys = useMemo(() => buildTechKeys(theme), [theme]);
+  const styles = THEME_STYLES[theme] || THEME_STYLES.professional;
   // Render the 3D scene only while the section is on screen. Once the user
   // scrolls past it, the WebGL frameloop is fully stopped so it can't steal
   // frames from scroll animations elsewhere on the page.
@@ -505,14 +345,14 @@ const TechStack = () => {
 
   return (
     <>
-      <ScrollLineDivider />
+      {theme === 'professional' && <ScrollLineDivider />}
 
-      <div id="tech-stack" className="bg-[#101117]">
+      <div id="tech-stack" className={styles.sectionBg}>
         <header className=" pt-16 text-center ">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/62">
+          <p className={`mb-2 text-xs font-semibold uppercase tracking-[0.24em] ${styles.eyebrow}`}>
             Skills &amp; Tools
           </p>
-          <h2 className="text-[clamp(2.3rem,7vw,6.2rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] text-[#e8e0c2]">
+          <h2 className={`text-[clamp(2.3rem,7vw,6.2rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.heading} ${styles.headingFont}`}>
             Tech Stack
           </h2>
         </header>
@@ -524,7 +364,7 @@ const TechStack = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="relative isolate h-screen w-full px-2 sm:px-4 overflow-visible flex flex-col justify-center gap-10 lg:block"
         >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[#101117]" />
+      <div className={`pointer-events-none absolute inset-0 -z-10 ${styles.sectionBg}`} />
 
       <div className="relative z-20 w-full max-w-xl select-text lg:absolute lg:left-[10%] lg:top-1/2 lg:w-[24%] lg:max-w-none lg:-translate-y-1/2 lg:[transform:translateY(-50%)_perspective(1400px)_rotateY(28deg)_rotateX(8deg)_skewY(-6deg)_scaleY(0.9)] lg:origin-left">
         <motion.article
@@ -534,15 +374,15 @@ const TechStack = () => {
           transition={{ duration: 0.3, ease: 'easeOut' }}
           className="min-h-[230px] max-w-md lg:max-w-[20rem]"
         >
-          <p className="text-xs uppercase tracking-[0.45em] text-cyan-300/80 lg:text-[0.72rem] lg:tracking-[0.55em]">
+          <p className={`text-xs uppercase tracking-[0.45em] lg:text-[0.72rem] lg:tracking-[0.55em] ${styles.hintLabel}`}>
             {hoveredSkill ? hoveredSkill.label : 'Hint'}
           </p>
 
-          <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl lg:mt-3 lg:text-[3.4rem] lg:leading-[0.94]">
+          <h3 className={`mt-4 text-3xl font-semibold sm:text-4xl lg:mt-3 lg:text-[3.4rem] lg:leading-[0.94] ${styles.hintTitle}`}>
             {hoveredSkill ? hoveredSkill.name : 'Hover over a keycap to see details!'}
           </h3>
 
-          <p className="mt-5 max-w-sm text-base leading-8 text-slate-300 sm:text-lg lg:mt-3 lg:max-w-[17rem] lg:text-[1rem] lg:leading-6">
+          <p className={`mt-5 max-w-sm text-base leading-8 sm:text-lg lg:mt-3 lg:max-w-[17rem] lg:text-[1rem] lg:leading-6 ${styles.hintBody}`}>
             {hoveredSkill
               ? hoveredSkill.description
               : 'Keycaps represent various technologies I have experience with. Hovering over each keycap reveals the technology name, category, and a brief description of its role in my skill set.'}
@@ -561,7 +401,7 @@ const TechStack = () => {
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
           onPointerMissed={() => setHoveredSkill(null)}
         >
-          <fog attach="fog" args={['#101117', 7.4, 17]} />
+          {theme !== 'playful' && <fog attach="fog" args={[styles.fog, 7.4, 17]} />}
           <ambientLight intensity={0.52} />
           <directionalLight
             position={[4.5, 6.5, 5.4]}
@@ -575,17 +415,18 @@ const TechStack = () => {
           <pointLight position={[1, 1.4, -3]} intensity={0.2} color="#f8fafc" />
 
           <Suspense fallback={null}>
-            <KeyboardScene hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} />
+            <KeyboardScene techKeys={techKeys} hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} />
           </Suspense>
 
           <ContactShadows
-            position={[0, -2.95, 0]}
-            opacity={0.52}
-            scale={14}
-            blur={2.4}
+            position={theme === 'playful' ? [0.3, -2.5, 0] : [0, -2.95, 0]}
+            opacity={theme === 'playful' ? 0.42 : 0.52}
+            scale={theme === 'playful' ? 8 : 14}
+            blur={theme === 'playful' ? 1.5 : 2.4}
+            resolution={theme === 'playful' ? 1024 : 512}
             far={4.4}
             frames={1}
-            color="#020617"
+            color={styles.contactShadowColor}
           />
         </Canvas>
       </div>

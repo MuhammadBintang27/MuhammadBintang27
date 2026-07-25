@@ -3,65 +3,8 @@ import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollLineDivider from '../SectionDivider/ScrollLineDivider';
-import logikaImage from '../../assets/images/achievement/logika.webp';
-import lidmImage from '../../assets/images/achievement/lidm.webp';
-import hack4HealthImage from '../../assets/images/achievement/hack4health.webp';
-import utuImage from '../../assets/images/achievement/utu.webp';
-import alibabaImage from '../../assets/images/achievement/alibaba.webp';
+import { ACHIEVEMENTS } from '../../../data/achievementsData';
 gsap.registerPlugin(ScrollTrigger);
-
-const ACHIEVEMENTS = [
-  {
-    title: '1st Place LOGIKA UI 2025 Data Science Competition',
-    image: logikaImage,
-    initialX: -290,
-    initialY: -78,
-    initialRotate: -10,
-    targetX: -560,
-    targetY: -120,
-    targetRotate: -20,
-  },
-  {
-    title: 'Bronze Medal LIDM 2025 Digital Learning Innovation',
-    image: lidmImage,
-    initialX: -120,
-    initialY: 42,
-    initialRotate: -6,
-    targetX: -335,
-    targetY: -18,
-    targetRotate: -12,
-  },
-  {
-    title: 'Top 10 AI X Creativity Hackathon Alibaba Cloud',
-    image: alibabaImage,
-    initialX: 22,
-    initialY: -48,
-    initialRotate: 3,
-    targetX: 0,
-    targetY: -120,
-    targetRotate: 0,
-  },
-  {
-    title: '2nd Place Hack4Health Hackathon ITB',
-    image: hack4HealthImage,
-    initialX: 188,
-    initialY: 44,
-    initialRotate: 7,
-    targetX: 335,
-    targetY: -18,
-    targetRotate: 12,
-  },
-  {
-    title: '3rd Place UTU Awards E-Commerce Design',
-    image: utuImage,
-    initialX: 340,
-    initialY: -70,
-    initialRotate: 10,
-    targetX: 560,
-    targetY: -120,
-    targetRotate: 20,
-  },
-];
 
 const computeScale = () => Math.min(1, window.innerWidth / 1400);
 
@@ -103,7 +46,7 @@ const AchievementsSection = () => {
           boxShadow: '0 0 0 1px rgba(245,236,205,0.45), 0 28px 60px rgba(0,0,0,0.72)',
         },
         {
-          borderColor: 'rgba(0,0,0,0.9)',
+          borderColor: 'rgba(207,250,254,0.25)',
           boxShadow: '0 24px 46px rgba(0,0,0,0.58)',
           duration: 0.3,
           ease: 'power2.out',
@@ -136,10 +79,11 @@ const AchievementsSection = () => {
       );
     }, sectionRef);
 
-    // Pinned scatter animation is desktop-only; on phones the cards live in a
-    // native swipe carousel instead, so no pin and no drag-vs-scroll fights.
+    // Pinned scatter animation is desktop-only (≥1024px); on phones and iPad the
+    // cards live in a swipe track instead — matching the Playful version's
+    // breakpoint so both read the same: desktop = scatter, else = slide.
     const mm = gsap.matchMedia();
-    mm.add('(min-width: 768px)', () => {
+    mm.add('(min-width: 1024px)', () => {
       const desktopContext = gsap.context(() => {
         cardRefs.current = cardRefs.current.filter(Boolean);
 
@@ -190,7 +134,7 @@ const AchievementsSection = () => {
 
     // Mobile: vertical scroll drives the card track horizontally — the
     // section pins until every card has slid past, in both directions.
-    mm.add('(max-width: 767px)', () => {
+    mm.add('(max-width: 1023px)', () => {
       const mobileContext = gsap.context(() => {
         const track = trackRef.current;
         const viewport = trackViewportRef.current;
@@ -225,8 +169,8 @@ const AchievementsSection = () => {
   }, []);
 
   const renderCardSurface = (item, index) => (
-    <div className="w-full overflow-hidden rounded-[8px] border border-black/90 bg-[#0c0c10] p-[10px] shadow-[0_24px_46px_rgba(0,0,0,0.58)]">
-      <div className="relative h-52 w-full sm:h-[290px]">
+    <div className="w-full overflow-hidden rounded-[12px] border-[3px] border-cyan-100/25 bg-[#1b1e28] p-[20px] shadow-[0_24px_46px_rgba(0,0,0,0.58)] sm:rounded-[8px] sm:border sm:p-[10px]">
+      <div className="relative h-[52vh] w-full sm:h-[290px]">
         {!loadedImages[index] && (
           <div className="absolute inset-0 overflow-hidden rounded-[2px] bg-neutral-800">
             <div
@@ -274,7 +218,7 @@ const AchievementsSection = () => {
           }}
         />
 
-        <div className="relative z-30 mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-[1500px] flex-col justify-center px-4 pt-6 sm:px-8 sm:pt-8 md:min-h-0 md:justify-start">
+        <div className="relative z-30 mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-[1500px] flex-col justify-start px-4 pt-6 sm:px-8 sm:pt-8 lg:min-h-0">
           <header ref={headingRef} className="mb-8 text-center sm:mb-10">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/62">
               Milestones
@@ -284,9 +228,10 @@ const AchievementsSection = () => {
             </h2>
           </header>
 
-          {/* Mobile — horizontal card track driven by vertical scroll: the
-              section pins while the cards slide through, then releases */}
-          <div className="md:hidden">
+          {/* Mobile + iPad (<1024px) — horizontal card track driven by vertical
+              scroll: the section pins while the cards slide through, then
+              releases */}
+          <div className="lg:hidden">
             <div ref={trackViewportRef} className="-mx-4 overflow-hidden">
               <div ref={trackRef} className="flex w-max gap-5 px-8 pb-2 pt-2">
                 {ACHIEVEMENTS.map((item, index) => (
@@ -296,7 +241,7 @@ const AchievementsSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                    className="w-[76vw] max-w-[320px] shrink-0"
+                    className="w-[82vw] max-w-[340px] shrink-0"
                     style={{ rotate: index % 2 === 0 ? '-1.6deg' : '1.6deg' }}
                   >
                     {renderCardSurface(item, index)}
@@ -306,10 +251,10 @@ const AchievementsSection = () => {
             </div>
           </div>
 
-          {/* Desktop — pinned scatter + draggable cards */}
+          {/* Desktop (≥1024px) — pinned scatter + draggable cards */}
           <div
             ref={cardsContainerRef}
-            className="relative mx-auto hidden h-[60vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)] sm:h-[70vh] md:block"
+            className="relative mx-auto hidden h-[60vh] w-full max-w-[1300px] overflow-visible rounded-[18px] border border-white/10 bg-[#111319] shadow-[0_40px_120px_rgba(0,0,0,0.56)] sm:h-[70vh] lg:block"
           >
             {ACHIEVEMENTS.map((item, index) => (
               <motion.article

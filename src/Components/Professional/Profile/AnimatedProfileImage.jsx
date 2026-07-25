@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import OptimizedImage from '../Elements/OptimizedImage';
+import OptimizedImage from '../../Elements/OptimizedImage';
 
 const AnimatedProfileImage = ({ profileImage, className = '' }) => {
   return (

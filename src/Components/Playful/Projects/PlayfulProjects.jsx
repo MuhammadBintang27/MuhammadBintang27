@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PROJECTS } from '../../../data/projectsData';
 
@@ -9,10 +9,21 @@ import { PROJECTS } from '../../../data/projectsData';
 // the Playful palette: cream header with red ink, then the work list on a red
 // slab (cream ink), comic outline type. It ends in a hand-poured "cat tumpah"
 // (spilled-paint) drip edge that melts into the cream Tech Stack section below.
+
+// Touch has no hover, so mobile gets a long-press-to-peek gesture instead:
+// hold a row to preview the image, release to dismiss; a plain tap still
+// navigates straight to the detail page like the button's onClick always did.
+const LONG_PRESS_MS = 400;
+const LONG_PRESS_MOVE_CANCEL_PX = 10;
+
 const PlayfulProjects = () => {
   const navigate = useNavigate();
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [longPressIndex, setLongPressIndex] = useState(null);
   const previewRef = useRef(null);
+  const longPressTimerRef = useRef(null);
+  const longPressFiredRef = useRef(false);
+  const touchStartRef = useRef({ x: 0, y: 0 });
 
   // Follow the cursor by writing the transform straight to the DOM node — no
   // React re-render per mousemove. Scoped to this section only.
@@ -20,6 +31,50 @@ const PlayfulProjects = () => {
     if (previewRef.current) {
       previewRef.current.style.transform = `translate(${e.clientX + 28}px, ${e.clientY - 72}px)`;
     }
+  };
+
+  const clearLongPressTimer = () => {
+    if (longPressTimerRef.current) {
+      window.clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  };
+
+  const handleTouchStart = (e, index) => {
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    longPressFiredRef.current = false;
+    clearLongPressTimer();
+    longPressTimerRef.current = window.setTimeout(() => {
+      longPressFiredRef.current = true;
+      setLongPressIndex(index);
+      navigator.vibrate?.(15);
+    }, LONG_PRESS_MS);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!longPressTimerRef.current) return;
+    const touch = e.touches[0];
+    const dx = Math.abs(touch.clientX - touchStartRef.current.x);
+    const dy = Math.abs(touch.clientY - touchStartRef.current.y);
+    if (dx > LONG_PRESS_MOVE_CANCEL_PX || dy > LONG_PRESS_MOVE_CANCEL_PX) {
+      clearLongPressTimer();
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    clearLongPressTimer();
+    if (longPressFiredRef.current) {
+      e.preventDefault();
+      longPressFiredRef.current = false;
+      setLongPressIndex(null);
+    }
+  };
+
+  const handleTouchCancel = () => {
+    clearLongPressTimer();
+    longPressFiredRef.current = false;
+    setLongPressIndex(null);
   };
 
   return (
@@ -55,6 +110,39 @@ const PlayfulProjects = () => {
         </div>
       </div>
 
+      {/* Long-press peek — mobile only. Mounts on demand since it's a rare,
+          deliberate gesture rather than a per-frame hover. */}
+      <AnimatePresence>
+        {longPressIndex !== null && (
+          <motion.div
+            key="mobile-project-peek"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="pointer-events-none fixed inset-0 z-[50] flex items-center justify-center bg-[#241A12]/70 px-6 md:hidden"
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0, rotate: -3 }}
+              animate={{ scale: 1, opacity: 1, rotate: -2 }}
+              exit={{ scale: 0.94, opacity: 0 }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-sm overflow-hidden rounded-[1.2rem] border-[5px] border-[#FFFDF8] bg-[#FFFDF8] shadow-[8px_10px_0_rgba(36,26,18,0.28)]"
+            >
+              <img
+                src={PROJECTS[longPressIndex].src}
+                alt={PROJECTS[longPressIndex].title}
+                className="h-56 w-full rounded-[0.85rem] object-cover"
+              />
+              <div className="px-4 py-3">
+                <p className="font-mouse text-lg uppercase tracking-tight text-[#E5301E]">{PROJECTS[longPressIndex].title}</p>
+                <p className="mt-1 text-xs font-semibold text-[#4A3220]/70">Lepas untuk menutup</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <section
         id="projects"
         onMouseMove={handleMouseMove}
@@ -89,7 +177,12 @@ const PlayfulProjects = () => {
                 onClick={() => navigate(`/playful/projects/${project.slug}`)}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="flex w-full cursor-pointer items-center gap-4 py-5 text-left transition-colors duration-200 sm:py-7"
+                onTouchStart={(e) => handleTouchStart(e, index)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchCancel}
+                onContextMenu={(e) => e.preventDefault()}
+                className="flex w-full cursor-pointer select-none items-center gap-4 py-5 text-left transition-colors duration-200 [-webkit-touch-callout:none] sm:py-7"
               >
                 <span className="w-10 shrink-0 font-modak text-base text-[#FFE7A6]/70 transition-colors duration-200 group-hover:text-[#FFE7A6] sm:w-14 sm:text-xl">
                   {String(index + 1).padStart(2, '0')}

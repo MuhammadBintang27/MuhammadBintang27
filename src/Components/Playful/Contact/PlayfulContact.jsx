@@ -66,48 +66,87 @@ const PlayfulContact = () => (
     </div>
 
     {/* Splatter — cream droplets flung across the pour + a couple of red flecks
-        thrown up above the crown, selling the "just spilled" look. */}
+        thrown up above the crown, selling the "just spilled" look. A few
+        drift with a lazy infinite bob so the pour never sits dead still. */}
     <div className="pointer-events-none absolute inset-0 z-[5]" aria-hidden="true">
       <span className="absolute left-[9%] top-[7%] h-4 w-4 rounded-full bg-[#E5301E] sm:h-5 sm:w-5" />
       <span className="absolute right-[12%] top-[5%] h-2.5 w-2.5 rounded-full bg-[#E5301E]" />
-      <span className="absolute left-[14%] top-[34%] h-3 w-3 rounded-full bg-[#F2E1C4] sm:h-4 sm:w-4" />
-      <span className="absolute right-[11%] top-[40%] h-5 w-5 rounded-full bg-[#F2E1C4] sm:h-6 sm:w-6" />
+      <motion.span
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+        className="absolute left-[14%] top-[34%] h-3 w-3 rounded-full bg-[#F2E1C4] sm:h-4 sm:w-4"
+      />
+      <motion.span
+        animate={{ y: [0, -14, 0] }}
+        transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        className="absolute right-[11%] top-[40%] h-5 w-5 rounded-full bg-[#F2E1C4] sm:h-6 sm:w-6"
+      />
       <span className="absolute left-[7%] top-[58%] h-2.5 w-2.5 rounded-full bg-[#F2E1C4]" />
-      <span className="absolute right-[8%] bottom-[24%] h-4 w-4 rounded-full bg-[#F0A716] sm:h-5 sm:w-5" />
+      <motion.span
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 3.9, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
+        className="absolute right-[8%] bottom-[24%] h-4 w-4 rounded-full bg-[#F0A716] sm:h-5 sm:w-5"
+      />
       <span className="absolute left-[16%] bottom-[22%] h-3 w-3 rounded-full bg-[#F0A716]" />
     </div>
 
-    {/* Content — sits straight on the poured paint. */}
+    {/* Content — sits straight on the poured paint. Staggered pop-in so the
+        eyebrow, title, copy and CTA land one beat after another instead of
+        arriving as one flat block. */}
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      whileInView="show"
       viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      variants={{ show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
       className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-2 pb-[118px] pt-[132px] text-center sm:pb-[200px] sm:pt-[176px]"
     >
-      <p className="mb-4 font-modak text-sm uppercase tracking-[0.28em] text-[#FFD23F]">
+      <motion.p
+        variants={{
+          hidden: { opacity: 0, y: 16 },
+          show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+        }}
+        className="mb-4 font-modak text-sm uppercase tracking-[0.28em] text-[#FFD23F]"
+      >
         Get in Touch
-      </p>
+      </motion.p>
 
-      <h2 className="font-mouse text-[clamp(2.8rem,10vw,6.5rem)] uppercase leading-[0.9] tracking-tight text-[#FFFDF8] [-webkit-text-stroke:2px_#241A12] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.22)]">
+      <motion.h2
+        variants={{
+          hidden: { opacity: 0, y: 34, scale: 0.88, rotate: -2 },
+          show: { opacity: 1, y: 0, scale: 1, rotate: 0, transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] } },
+        }}
+        className="font-mouse text-[clamp(2.8rem,10vw,6.5rem)] uppercase leading-[0.9] tracking-tight text-[#FFFDF8] [-webkit-text-stroke:2px_#241A12] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.22)]"
+      >
         Let&apos;s Talk!
-      </h2>
+      </motion.h2>
 
-      <p className="mx-auto mt-6 max-w-[46ch] font-mouse text-lg leading-snug tracking-wide text-[#FFFDF8]/90 sm:text-xl">
+      <motion.p
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+        }}
+        className="mx-auto mt-6 max-w-[46ch] font-mouse text-lg leading-snug tracking-wide text-[#FFFDF8]/90 sm:text-xl"
+      >
         Got a question, a wild idea, or just want to say hi? Slide into any of
         these — I&apos;m always up for a good conversation.
-      </p>
+      </motion.p>
 
       {/* Primary email CTA — the big obvious "poke me here" button */}
-      <a
+      <motion.a
+        variants={{
+          hidden: { opacity: 0, y: 20, scale: 0.85 },
+          show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] } },
+        }}
+        whileHover={{ rotate: -2, scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
         href="mailto:muhammad.bintang.indra@gmail.com"
-        className="group mt-9 inline-flex items-center gap-3 rounded-full bg-[#241A12] px-8 py-3.5 text-base font-bold text-[#FFFDF8] shadow-[5px_5px_0_rgba(36,26,18,0.28)] transition hover:bg-[#3a2a1c] active:translate-y-0.5"
+        className="group mt-9 inline-flex items-center gap-3 rounded-full bg-[#241A12] px-8 py-3.5 text-base font-bold text-[#FFFDF8] shadow-[5px_5px_0_rgba(36,26,18,0.28)] transition-colors hover:bg-[#3a2a1c] active:translate-y-0.5"
       >
         Say Hello
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F0A716]">
           <FaArrowRight className="h-3 w-3 -rotate-45 text-[#241A12] transition-transform group-hover:translate-x-0.5" />
         </span>
-      </a>
+      </motion.a>
 
       {/* Social badges — round cream stickers, each wobbles on hover */}
       <div className="mt-11 flex flex-wrap items-center justify-center gap-4 sm:gap-5">

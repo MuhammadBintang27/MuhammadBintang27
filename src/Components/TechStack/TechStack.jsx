@@ -72,7 +72,27 @@ const damp = (current, target, delta, speed = 8) => (
   THREE.MathUtils.lerp(current, target, 1 - Math.exp(-speed * delta))
 );
 
-const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
+// Same easing as `damp`, but skips the lerp/exp math once a value is already
+// within EPS of its target — avoids paying for 7 damp() calls x 24 keycaps
+// every frame while the scene is idle (no hover in progress).
+const DAMP_EPS = 0.0001;
+const dampTo = (current, target, delta, speed = 8) => (
+  Math.abs(current - target) < DAMP_EPS ? target : damp(current, target, delta, speed)
+);
+
+// `pointer: coarse` = touch-primary input (no real hover). Also drives the
+// low-power downgrade, since coarse-pointer + few cores is a decent proxy
+// for "budget phone" — desktops/laptops never match either flag.
+const detectDeviceProfile = () => {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return { isTouch: false, isLowPower: false };
+  }
+  const isTouch = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+  const cores = navigator.hardwareConcurrency ?? 8;
+  return { isTouch, isLowPower: isTouch && cores <= 4 };
+};
+
+const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
   const groupRef = useRef(null);
   const capBodyMaterialRef = useRef(null);
   const capTopMaterialRef = useRef(null);
@@ -86,6 +106,13 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
   const handleHoverStart = (event) => {
     event.stopPropagation();
     onHoverChange(skill);
+  };
+  // Touch devices don't get pointerover/pointerout, only a tap. Toggle
+  // selection instead of "hovering": tap once to select, tap the same
+  // keycap again to deselect.
+  const handleTap = (event) => {
+    event.stopPropagation();
+    onHoverChange(isHovered ? null : skill);
   };
 
   const handleHoverEnd = (event) => {
@@ -118,24 +145,24 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
     const targetBodyGlow = isHovered ? 0.18 : isSelected ? 0.1 : 0.04;
     const targetHousingGlow = isHovered ? 0.06 : 0.025;
 
-    groupRef.current.position.z = damp(groupRef.current.position.z, targetDepth, delta, 12);
-    groupRef.current.rotation.x = damp(groupRef.current.rotation.x, targetRotationX, delta, 10);
-    groupRef.current.rotation.y = damp(groupRef.current.rotation.y, targetRotationY, delta, 10);
-    groupRef.current.rotation.z = damp(groupRef.current.rotation.z, targetRotationZ, delta, 10);
+    groupRef.current.position.z = dampTo(groupRef.current.position.z, targetDepth, delta, 12);
+    groupRef.current.rotation.x = dampTo(groupRef.current.rotation.x, targetRotationX, delta, 10);
+    groupRef.current.rotation.y = dampTo(groupRef.current.rotation.y, targetRotationY, delta, 10);
+    groupRef.current.rotation.z = dampTo(groupRef.current.rotation.z, targetRotationZ, delta, 10);
 
-    capTopMaterialRef.current.emissiveIntensity = damp(
+    capTopMaterialRef.current.emissiveIntensity = dampTo(
       capTopMaterialRef.current.emissiveIntensity,
       targetGlow,
       delta,
       8,
     );
-    capBodyMaterialRef.current.emissiveIntensity = damp(
+    capBodyMaterialRef.current.emissiveIntensity = dampTo(
       capBodyMaterialRef.current.emissiveIntensity,
       targetBodyGlow,
       delta,
       8,
     );
-    housingMaterialRef.current.emissiveIntensity = damp(
+    housingMaterialRef.current.emissiveIntensity = dampTo(
       housingMaterialRef.current.emissiveIntensity,
       targetHousingGlow,
       delta,
@@ -200,9 +227,10 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
 
       <mesh
         position={[0, 0, 0.2]}
-        onPointerOver={handleHoverStart}
-        onPointerMove={handleHoverStart}
-        onPointerOut={handleHoverEnd}
+        onPointerOver={isTouch ? undefined : handleHoverStart}
+        onPointerMove={isTouch ? undefined : handleHoverStart}
+        onPointerOut={isTouch ? undefined : handleHoverEnd}
+        onClick={isTouch ? handleTap : undefined}
       >
         <boxGeometry args={[0.8, 0.8, 0.88]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
@@ -245,7 +273,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange }) => {
   );
 };
 
-const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange }) => {
+const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
   const keyboardRef = useRef(null);
   const { viewport } = useThree();
   const keyboardScale = viewport.width < 5.6 ? 0.7 : viewport.width < 7 ? 0.82 : 0.93;
@@ -311,6 +339,7 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange }) => {
           isSelected={hoveredSkill?.name === skill.name}
           isHovered={hoveredSkill?.name === skill.name}
           onHoverChange={onHoverChange}
+          isTouch={isTouch}
         />
       ))}
     </group>
@@ -326,6 +355,11 @@ const TechStack = ({ theme = 'professional' }) => {
   // scrolls past it, the WebGL frameloop is fully stopped so it can't steal
   // frames from scroll animations elsewhere on the page.
   const [canvasActive, setCanvasActive] = useState(false);
+  // isLowPower only fires for coarse-pointer + <=4 cores ("budget phone"),
+  // never on desktops/laptops/tablets — dev/testing hardware is unaffected.
+  // isTouch fires for any coarse-pointer device (all phones/tablets) and
+  // switches the keycap interaction model from hover to tap-to-select.
+  const [{ isTouch, isLowPower: isLowPowerDevice }] = useState(detectDeviceProfile);
 
   useEffect(() => {
     const node = canvasWrapRef.current;
@@ -381,13 +415,15 @@ const TechStack = ({ theme = 'professional' }) => {
           </p>
 
           <h3 className={`mt-4 text-3xl font-semibold sm:text-4xl lg:mt-3 lg:text-[3.4rem] lg:leading-[0.94] ${styles.hintTitle}`}>
-            {hoveredSkill ? hoveredSkill.name : 'Hover over a keycap to see details!'}
+            {hoveredSkill ? hoveredSkill.name : (isTouch ? 'Tap a keycap to see details!' : 'Hover over a keycap to see details!')}
           </h3>
 
           <p className={`mt-5 max-w-sm text-base leading-8 sm:text-lg lg:mt-3 lg:max-w-[17rem] lg:text-[1rem] lg:leading-6 ${styles.hintBody}`}>
             {hoveredSkill
               ? hoveredSkill.description
-              : 'Keycaps represent various technologies I have experience with. Hovering over each keycap reveals the technology name, category, and a brief description of its role in my skill set.'}
+              : (isTouch
+                ? 'Keycaps represent various technologies I have experience with. Tap a keycap to reveal the technology name, category, and a brief description of its role in my skill set.'
+                : 'Keycaps represent various technologies I have experience with. Hovering over each keycap reveals the technology name, category, and a brief description of its role in my skill set.')}
           </p>
 
         </motion.article>
@@ -395,11 +431,11 @@ const TechStack = ({ theme = 'professional' }) => {
 
       <div ref={canvasWrapRef} className="relative z-10 w-full lg:ml-auto lg:w-[76%] h-[420px] sm:h-[500px] lg:h-full overflow-visible">
         <Canvas
-          dpr={[1, 1.35]}
-          shadows
+          dpr={isLowPowerDevice ? 1 : [1, 1.35]}
+          shadows={!isLowPowerDevice}
           frameloop={canvasActive ? 'always' : 'never'}
           camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
-          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          gl={{ antialias: !isLowPowerDevice, alpha: true, powerPreference: 'high-performance' }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
           onPointerMissed={() => setHoveredSkill(null)}
         >
@@ -417,7 +453,7 @@ const TechStack = ({ theme = 'professional' }) => {
           <pointLight position={[1, 1.4, -3]} intensity={0.2} color="#f8fafc" />
 
           <Suspense fallback={null}>
-            <KeyboardScene techKeys={techKeys} hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} />
+            <KeyboardScene techKeys={techKeys} hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} isTouch={isTouch} />
           </Suspense>
 
           <ContactShadows

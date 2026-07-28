@@ -80,16 +80,16 @@ const dampTo = (current, target, delta, speed = 8) => (
   Math.abs(current - target) < DAMP_EPS ? target : damp(current, target, delta, speed)
 );
 
-// `pointer: coarse` = touch-primary input (no real hover). Also drives the
-// low-power downgrade, since coarse-pointer + few cores is a decent proxy
-// for "budget phone" — desktops/laptops never match either flag.
+// `pointer: coarse` = touch-primary input (no real hover), used to switch
+// the keycap interaction model from hover to tap-to-select. (An earlier
+// version also used hardwareConcurrency to drop shadows/AA/dpr on "low-power"
+// devices, but that heuristic misfires on plenty of normal phones and made
+// the scene visibly worse — removed; render quality is now the same on
+// every device.)
 const detectDeviceProfile = () => {
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    return { isTouch: false, isLowPower: false };
-  }
+  if (typeof window === 'undefined') return { isTouch: false };
   const isTouch = window.matchMedia?.('(pointer: coarse)').matches ?? false;
-  const cores = navigator.hardwareConcurrency ?? 8;
-  return { isTouch, isLowPower: isTouch && cores <= 4 };
+  return { isTouch };
 };
 
 const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
@@ -355,11 +355,9 @@ const TechStack = ({ theme = 'professional' }) => {
   // scrolls past it, the WebGL frameloop is fully stopped so it can't steal
   // frames from scroll animations elsewhere on the page.
   const [canvasActive, setCanvasActive] = useState(false);
-  // isLowPower only fires for coarse-pointer + <=4 cores ("budget phone"),
-  // never on desktops/laptops/tablets — dev/testing hardware is unaffected.
   // isTouch fires for any coarse-pointer device (all phones/tablets) and
   // switches the keycap interaction model from hover to tap-to-select.
-  const [{ isTouch, isLowPower: isLowPowerDevice }] = useState(detectDeviceProfile);
+  const [{ isTouch }] = useState(detectDeviceProfile);
 
   useEffect(() => {
     const node = canvasWrapRef.current;
@@ -431,11 +429,11 @@ const TechStack = ({ theme = 'professional' }) => {
 
       <div ref={canvasWrapRef} className="relative z-10 w-full lg:ml-auto lg:w-[76%] h-[420px] sm:h-[500px] lg:h-full overflow-visible">
         <Canvas
-          dpr={isLowPowerDevice ? 1 : [1, 1.35]}
-          shadows={!isLowPowerDevice}
+          dpr={[1, 1.35]}
+          shadows
           frameloop={canvasActive ? 'always' : 'never'}
           camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
-          gl={{ antialias: !isLowPowerDevice, alpha: true, powerPreference: 'high-performance' }}
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
           onPointerMissed={() => setHoveredSkill(null)}
         >

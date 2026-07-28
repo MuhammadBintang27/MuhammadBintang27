@@ -223,11 +223,14 @@ const PlayfulAchievements = () => {
           },
         });
 
-        // Hold the pile a beat, then fan the tags out one by one. Opacity stays
-        // at 1 throughout so scrubbing back never fades the cards away.
-        tl.to({}, { duration: 0.5 });
+        // Barely-there hold (just enough for the pin to register before motion
+        // starts), then fan the tags out one by one. A long hold here reads as
+        // the section being "stuck" once scrubbed — most of the scroll should
+        // move something. Opacity stays at 1 throughout so scrubbing back never
+        // fades the cards away.
+        tl.to({}, { duration: 0.15 });
         ACHIEVEMENTS.forEach((_, i) => {
-          const at = 0.6 + i * 0.12;
+          const at = 0.2 + i * 0.12;
           tl.to(cards[i], { x: 0, y: 0 }, at);
           tl.to(inners[i], { rotate: ROTATE[i] }, at);
         });
@@ -287,35 +290,55 @@ const PlayfulAchievements = () => {
       {/* Decorative doodles — section-level (full width), tucked under the
           title. User-supplied SVG/PNG; auto-hidden if absent. */}
       {laptopOk && (
-        <img
+        <motion.img
           src="playful/laptop.webp"
           alt=""
           aria-hidden="true"
           onError={() => setLaptopOk(false)}
+          initial={{ opacity: 0, y: 30, rotate: -8 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -6 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
           className="pointer-events-none absolute left-2 top-3 z-[1] w-[22%] max-w-[90px] object-contain opacity-80 sm:left-[7%] sm:top-20 sm:w-[34%] sm:max-w-[260px] sm:opacity-100 lg:top-28 lg:w-[37%] lg:max-w-[380px]"
         />
       )}
       {mouseOk && (
-        <img
+        <motion.img
           src="playful/mouse.webp"
           alt=""
           aria-hidden="true"
           onError={() => setMouseOk(false)}
+          initial={{ opacity: 0, y: 30, rotate: 8 }}
+          whileInView={{ opacity: 1, y: 0, rotate: 6 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
           className="pointer-events-none absolute bottom-3 right-2 z-[1] w-[18%] max-w-[75px] object-contain opacity-80 sm:bottom-auto sm:top-20 sm:w-[30%] sm:max-w-[230px] sm:opacity-100 lg:top-28 lg:w-[33%] lg:max-w-[340px]"
         />
       )}
 
-      {/* Heading */}
+      {/* Heading — bounces in, subheading fades up a beat behind it */}
       <div className="relative z-20 mx-auto mb-4 max-w-5xl text-center">
-        <h2 className="font-mouse text-[clamp(3.2rem,12vw,9rem)] uppercase leading-[0.95] text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[4px_4px_0_rgba(36,26,18,0.14)]">
+        <motion.h2
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+          className="font-mouse text-[clamp(3.2rem,12vw,9rem)] uppercase leading-[0.95] text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[4px_4px_0_rgba(36,26,18,0.14)]"
+        >
           What I&apos;ve Achieved
-        </h2>
-        <p className="mt-2 font-mouse text-lg tracking-wide text-[#241A12]/70 sm:text-xl">
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.45, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-2 font-mouse text-lg tracking-wide text-[#241A12]/70 sm:text-xl"
+        >
           <span className="lg:hidden">Swipe through the highlights.</span>
           <span className="hidden lg:inline">
             Drag the tags around — they stay on the string.
           </span>
-        </p>
+        </motion.p>
       </div>
 
       {/* Stage (desktop) — measured; holds the thread SVG + pin/scrub tags */}

@@ -148,15 +148,28 @@ const PlayfulProjects = () => {
         onMouseMove={handleMouseMove}
         className="relative overflow-hidden bg-[#F2E1C4] pt-16 sm:pt-20"
       >
-        {/* Header */}
+        {/* Header — eyebrow settles first, then the big title bounces in
+            behind it, matching the pop language used elsewhere. */}
         <div className="mx-auto mb-10 w-full max-w-6xl px-4 sm:mb-14 sm:px-8">
           <header className="text-center">
-            <p className="mb-3 font-modak text-sm uppercase tracking-[0.28em] text-[#D68C0A]">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-3 font-modak text-sm uppercase tracking-[0.28em] text-[#D68C0A]"
+            >
               Selected Works
-            </p>
-            <h2 className="font-mouse text-[clamp(3.2rem,12vw,9rem)] uppercase leading-[0.9] tracking-tight text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.18)]">
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 30, scale: 0.9, rotate: -1.5 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
+              className="font-mouse text-[clamp(3.2rem,12vw,9rem)] uppercase leading-[0.9] tracking-tight text-[#E5301E] [-webkit-text-stroke:2px_#FFFDF8] [paint-order:stroke_fill] drop-shadow-[5px_6px_0_rgba(36,26,18,0.18)]"
+            >
               Projects
-            </h2>
+            </motion.h2>
           </header>
         </div>
 
@@ -166,10 +179,10 @@ const PlayfulProjects = () => {
           {PROJECTS.map((project, index) => (
             <motion.li
               key={project.slug}
-              initial={{ opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 36, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, delay: index * 0.07, ease: [0.34, 1.56, 0.64, 1] }}
               className="group border-t-2 border-[#FFFDF8]/25 last:border-b-2 last:border-[#FFFDF8]/25"
             >
               <button

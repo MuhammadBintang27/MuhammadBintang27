@@ -382,14 +382,37 @@ const TechStack = ({ theme = 'professional' }) => {
       {theme === 'professional' && <ScrollLineDivider />}
 
       <div id="tech-stack" className={styles.sectionBg}>
-        <header className=" pt-16 text-center ">
-          <p className={`mb-2 text-xs font-semibold uppercase tracking-[0.24em] ${styles.eyebrow}`}>
-            Skills &amp; Tools
-          </p>
-          <h2 className={`font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.headingSize} ${styles.heading} ${styles.headingFont}`}>
-            Tech Stack
-          </h2>
-        </header>
+        {theme === 'playful' ? (
+          <header className="pt-16 text-center">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className={`mb-2 text-xs font-semibold uppercase tracking-[0.24em] ${styles.eyebrow}`}
+            >
+              Skills &amp; Tools
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 30, scale: 0.9, rotate: -1.5 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
+              className={`font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.headingSize} ${styles.heading} ${styles.headingFont}`}
+            >
+              Tech Stack
+            </motion.h2>
+          </header>
+        ) : (
+          <header className=" pt-16 text-center ">
+            <p className={`mb-2 text-xs font-semibold uppercase tracking-[0.24em] ${styles.eyebrow}`}>
+              Skills &amp; Tools
+            </p>
+            <h2 className={`font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.headingSize} ${styles.heading} ${styles.headingFont}`}>
+              Tech Stack
+            </h2>
+          </header>
+        )}
 
         <motion.section
           initial={{ opacity: 0, y: 30 }}

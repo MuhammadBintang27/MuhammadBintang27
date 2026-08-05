@@ -9,6 +9,7 @@
     "server": "node server/index.js",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "vite build",
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -19,6 +20,10 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@fontsource-variable/geist": "^5.2.8",
+    "@fontsource/barlow-condensed": "^5.2.8",
+    "@fontsource/dm-mono": "^5.2.7",
+    "@fontsource/modak": "^5.3.0",
+    "@fontsource/mouse-memoirs": "^5.3.0",
     "@react-spring/web": "^9.7.5",
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.17.10",

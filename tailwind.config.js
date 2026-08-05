@@ -9,9 +9,23 @@ export default {
       scale: {
         '50': '0.5',  // Menambahkan custom scale 0.5
       },
+      fontFamily: {
+        mouse: ['"Mouse Memoirs"', 'cursive'],
+        modak: ['Modak', 'cursive'],
+      },
       colors: {
         darkBackground: '#121212', // Latar belakang gelap
         textDark: '#e0e0e0', // Teks terang untuk mode gelap
+        playful: {
+          cream: '#F2E1C4',
+          cream2: '#EAD2A8',
+          red: '#E5301E',
+          redDark: '#C22112',
+          gold: '#F0A716',
+          goldDark: '#D68C0A',
+          ink: '#241A12',
+          white: '#FFFDF8',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

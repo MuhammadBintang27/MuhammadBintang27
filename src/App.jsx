@@ -1,21 +1,21 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import { Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import LayoutWeb from "./Components/Layouts/Layout";
-import Contact from "./Components/Contact/Contact";
-import HeroSection from "./Components/ScrollRevealSection/HeroSection";
-import AchievementsSection from "./Components/Achievements/AchievementsSection";
-import ProjectsSection from "./Components/Projects/ProjectsSection";
-import Home from "./Pages/Home";
-import InitialLoader from "./Components/Elements/InitialLoader";
+import LayoutWeb from "./Components/Professional/Layouts/Layout";
+import VersionChooser from "./Pages/VersionChooser";
+import MainLayout from "./Pages/Professional/MainLayout";
+import InitialLoader from "./Components/Professional/InitialLoader";
+import PlayfulLoader from "./Components/Playful/PlayfulLoader";
+import SplashGate from "./Components/Elements/SplashGate";
 import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
 
-const TechStack = lazy(() => import("./Components/TechStack/TechStack"));
-const ProjectDetail = lazy(() => import("./Pages/ProjectDetail"));
+const ProjectDetail = lazy(() => import("./Pages/Professional/ProjectDetail"));
+const PlayfulMainLayout = lazy(() => import("./Pages/Playful/PlayfulMainLayout"));
+const PlayfulProjectDetail = lazy(() => import("./Pages/Playful/PlayfulProjectDetail"));
 
 // 404 Page Component
 const NotFound = () => (
@@ -35,96 +35,52 @@ const NotFound = () => (
   </LayoutWeb>
 );
 
-const MainLayout = () => (
-  <LayoutWeb>
-    <main>
-
-      <section className="relative hidden md:block">
-        <HeroSection />
-      </section>
-
-      <section className="relative -mt-px">
-        <Home />
-      </section>
-
-      <section className="relative -mt-px">
-        <AchievementsSection />
-      </section>
-
-      <section className="relative -mt-px">
-        <ProjectsSection />
-      </section>
-
-      <section className="relative -mt-px">
-        <Suspense fallback={<div className="h-screen bg-[#0f1014]" />}>
-          <TechStack />
-        </Suspense>
-      </section>
-
-      <Contact />
-    </main>
-  </LayoutWeb>
+const App = () => (
+  <CinematicScrollProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<VersionChooser />} />
+        <Route
+          path="/calm"
+          element={
+            <SplashGate key="splash-calm" Loader={InitialLoader}>
+              <MainLayout />
+            </SplashGate>
+          }
+        />
+        {/* Legacy route — the "calm" version was previously called "professional" */}
+        <Route path="/professional" element={<Navigate to="/calm" replace />} />
+        <Route
+          path="/projects/:slug"
+          element={
+            <Suspense fallback={<div className="h-screen bg-[#0f1014]" />}>
+              <ProjectDetail />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/playful"
+          element={
+            <SplashGate key="splash-playful" Loader={PlayfulLoader}>
+              <Suspense fallback={<div className="h-screen bg-[#F2E1C4]" />}>
+                <PlayfulMainLayout />
+              </Suspense>
+            </SplashGate>
+          }
+        />
+        <Route
+          path="/playful/projects/:slug"
+          element={
+            <Suspense fallback={<div className="h-screen bg-[#F2E1C4]" />}>
+              <PlayfulProjectDetail />
+            </Suspense>
+          }
+        />
+        <Route path="/404" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/404" replace />} />
+      </Routes>
+    </Router>
+  </CinematicScrollProvider>
 );
-
-const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Preload heavy lazy chunks during the loader screen so they're ready when needed
-  useEffect(() => {
-    import("./Components/TechStack/TechStack");
-    import("./Pages/ProjectDetail");
-  }, []);
-
-  useEffect(() => {
-    const minimumLoaderDuration = 1200;
-    const startTime = performance.now();
-    let timeoutId;
-
-    const finishLoading = () => {
-      const elapsed = performance.now() - startTime;
-      const remainingTime = Math.max(minimumLoaderDuration - elapsed, 0);
-
-      timeoutId = window.setTimeout(() => {
-        setIsLoading(false);
-      }, remainingTime);
-    };
-
-    if (document.readyState === "complete") {
-      finishLoading();
-    } else {
-      window.addEventListener("load", finishLoading, { once: true });
-    }
-
-    return () => {
-      window.clearTimeout(timeoutId);
-      window.removeEventListener("load", finishLoading);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = isLoading ? "hidden" : "auto";
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isLoading]);
-
-  if (isLoading) {
-    return <InitialLoader />;
-  }
-
-  return (
-    <CinematicScrollProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainLayout />} />
-          <Route path="/projects/:slug" element={<Suspense fallback={<div className="h-screen bg-[#0f1014]" />}><ProjectDetail /></Suspense>} />
-          <Route path="/404" element={<NotFound />} />
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-      </Router>
-    </CinematicScrollProvider>
-  );
-};
 
 export default App;

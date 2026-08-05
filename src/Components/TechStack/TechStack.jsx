@@ -3,7 +3,7 @@ import ScrollLineDivider from '../Professional/SectionDivider/ScrollLineDivider'
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { ContactShadows, RoundedBox, Text, useTexture } from '@react-three/drei';
+import { RoundedBox, Text, useTexture } from '@react-three/drei';
 import { TECH_STACK_BASE, TECH_STACK_COLORS } from '../../data/techStackData';
 
 const buildTechKeys = (theme) => {
@@ -52,7 +52,6 @@ const THEME_STYLES = {
     hintTitle: 'text-white',
     hintBody: 'text-slate-300',
     fog: '#101117',
-    contactShadowColor: '#020617',
   },
   playful: {
     sectionBg: 'bg-[#F2E1C4]',
@@ -64,7 +63,6 @@ const THEME_STYLES = {
     hintTitle: 'text-[#241A12]',
     hintBody: 'text-[#4A3220]',
     fog: '#F2E1C4',
-    contactShadowColor: '#3A2A1A',
   },
 };
 
@@ -562,17 +560,6 @@ const TechStack = ({ theme = 'professional' }) => {
               requestShadowUpdate={requestShadowUpdate}
             />
           </Suspense>
-
-          <ContactShadows
-            position={theme === 'playful' ? [0.3, -2.5, 0] : [0, -2.95, 0]}
-            opacity={theme === 'playful' ? 0.42 : 0.52}
-            scale={theme === 'playful' ? 8 : 14}
-            blur={theme === 'playful' ? 1.5 : 2.4}
-            resolution={theme === 'playful' ? 1024 : 512}
-            far={4.4}
-            frames={1}
-            color={styles.contactShadowColor}
-          />
         </Canvas>
       </div>
         </motion.section>

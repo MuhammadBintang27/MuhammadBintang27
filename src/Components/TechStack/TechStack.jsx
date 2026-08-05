@@ -97,6 +97,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
   const capBodyMaterialRef = useRef(null);
   const capTopMaterialRef = useRef(null);
   const housingMaterialRef = useRef(null);
+  const invalidate = useThree((state) => state.invalidate);
   const texture = useTexture(skill.icon || '/tech/github.svg');
   const topColor = useMemo(() => new THREE.Color(skill.color), [skill.color]);
   const bodyColor = useMemo(() => {
@@ -145,30 +146,33 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
     const targetBodyGlow = isHovered ? 0.18 : isSelected ? 0.1 : 0.04;
     const targetHousingGlow = isHovered ? 0.06 : 0.025;
 
-    groupRef.current.position.z = dampTo(groupRef.current.position.z, targetDepth, delta, 12);
-    groupRef.current.rotation.x = dampTo(groupRef.current.rotation.x, targetRotationX, delta, 10);
-    groupRef.current.rotation.y = dampTo(groupRef.current.rotation.y, targetRotationY, delta, 10);
-    groupRef.current.rotation.z = dampTo(groupRef.current.rotation.z, targetRotationZ, delta, 10);
+    const nextZ = dampTo(groupRef.current.position.z, targetDepth, delta, 12);
+    const nextRotX = dampTo(groupRef.current.rotation.x, targetRotationX, delta, 10);
+    const nextRotY = dampTo(groupRef.current.rotation.y, targetRotationY, delta, 10);
+    const nextRotZ = dampTo(groupRef.current.rotation.z, targetRotationZ, delta, 10);
+    const nextGlow = dampTo(capTopMaterialRef.current.emissiveIntensity, targetGlow, delta, 8);
+    const nextBodyGlow = dampTo(capBodyMaterialRef.current.emissiveIntensity, targetBodyGlow, delta, 8);
+    const nextHousingGlow = dampTo(housingMaterialRef.current.emissiveIntensity, targetHousingGlow, delta, 8);
 
-    capTopMaterialRef.current.emissiveIntensity = dampTo(
-      capTopMaterialRef.current.emissiveIntensity,
-      targetGlow,
-      delta,
-      8,
-    );
-    capBodyMaterialRef.current.emissiveIntensity = dampTo(
-      capBodyMaterialRef.current.emissiveIntensity,
-      targetBodyGlow,
-      delta,
-      8,
-    );
-    housingMaterialRef.current.emissiveIntensity = dampTo(
-      housingMaterialRef.current.emissiveIntensity,
-      targetHousingGlow,
-      delta,
-      8,
-    );
+    groupRef.current.position.z = nextZ;
+    groupRef.current.rotation.x = nextRotX;
+    groupRef.current.rotation.y = nextRotY;
+    groupRef.current.rotation.z = nextRotZ;
+    capTopMaterialRef.current.emissiveIntensity = nextGlow;
+    capBodyMaterialRef.current.emissiveIntensity = nextBodyGlow;
+    housingMaterialRef.current.emissiveIntensity = nextHousingGlow;
 
+    // Canvas runs frameloop="demand": keep requesting frames while any
+    // damp target hasn't been reached yet, otherwise the transition
+    // freezes mid-way on the next idle frame instead of easing out.
+    const settled = nextZ === targetDepth
+      && nextRotX === targetRotationX
+      && nextRotY === targetRotationY
+      && nextRotZ === targetRotationZ
+      && nextGlow === targetGlow
+      && nextBodyGlow === targetBodyGlow
+      && nextHousingGlow === targetHousingGlow;
+    if (!settled) invalidate();
   });
 
   return (
@@ -275,7 +279,7 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
 
 const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
   const keyboardRef = useRef(null);
-  const { viewport } = useThree();
+  const { viewport, invalidate } = useThree();
   const keyboardScale = viewport.width < 5.6 ? 0.7 : viewport.width < 7 ? 0.82 : 0.93;
 
   useFrame((state, delta) => {
@@ -289,12 +293,30 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
     const targetRotationX = -1.14 + state.mouse.y * 0.06;
     const targetRotationY = 0.26 + state.mouse.x * 0.09;
     const targetRotationZ = 0.34 - state.mouse.x * 0.025;
+    const targetX = baseX + state.mouse.x * 0.12;
+    const targetY = baseY + state.mouse.y * 0.06;
 
-    keyboardRef.current.rotation.x = damp(keyboardRef.current.rotation.x, targetRotationX, delta, 4);
-    keyboardRef.current.rotation.y = damp(keyboardRef.current.rotation.y, targetRotationY, delta, 4);
-    keyboardRef.current.rotation.z = damp(keyboardRef.current.rotation.z, targetRotationZ, delta, 4);
-    keyboardRef.current.position.x = damp(keyboardRef.current.position.x, baseX + state.mouse.x * 0.12, delta, 3);
-    keyboardRef.current.position.y = damp(keyboardRef.current.position.y, baseY + state.mouse.y * 0.06, delta, 3);
+    const nextRotX = dampTo(keyboardRef.current.rotation.x, targetRotationX, delta, 4);
+    const nextRotY = dampTo(keyboardRef.current.rotation.y, targetRotationY, delta, 4);
+    const nextRotZ = dampTo(keyboardRef.current.rotation.z, targetRotationZ, delta, 4);
+    const nextX = dampTo(keyboardRef.current.position.x, targetX, delta, 3);
+    const nextY = dampTo(keyboardRef.current.position.y, targetY, delta, 3);
+
+    keyboardRef.current.rotation.x = nextRotX;
+    keyboardRef.current.rotation.y = nextRotY;
+    keyboardRef.current.rotation.z = nextRotZ;
+    keyboardRef.current.position.x = nextX;
+    keyboardRef.current.position.y = nextY;
+
+    // Same reasoning as Keycap: frameloop="demand" needs an explicit
+    // invalidate() while the mouse-parallax tilt is still easing in,
+    // otherwise it freezes as soon as the pointer stops moving.
+    const settled = nextRotX === targetRotationX
+      && nextRotY === targetRotationY
+      && nextRotZ === targetRotationZ
+      && nextX === targetX
+      && nextY === targetY;
+    if (!settled) invalidate();
   });
 
   return (
@@ -344,6 +366,28 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
       ))}
     </group>
   );
+};
+
+// Canvas runs frameloop="demand" to stay idle when nothing is moving.
+// r3f only auto-invalidates on store/prop changes, but pointer position
+// (`state.mouse`) is mutated in place on every native pointer event, so
+// mouse-parallax and hover/tap need an explicit invalidate() here or the
+// scene freezes as soon as `frameloop` stops being 'always'.
+const CANVAS_ACTIVITY_EVENTS = ['pointermove', 'pointerdown', 'pointerup', 'pointercancel'];
+
+const InvalidateOnPointerActivity = () => {
+  const { invalidate, gl } = useThree();
+
+  useEffect(() => {
+    const domElement = gl.domElement;
+    const handleActivity = () => invalidate();
+    CANVAS_ACTIVITY_EVENTS.forEach((type) => domElement.addEventListener(type, handleActivity));
+    return () => {
+      CANVAS_ACTIVITY_EVENTS.forEach((type) => domElement.removeEventListener(type, handleActivity));
+    };
+  }, [invalidate, gl]);
+
+  return null;
 };
 
 const TechStack = ({ theme = 'professional' }) => {
@@ -454,7 +498,7 @@ const TechStack = ({ theme = 'professional' }) => {
         <Canvas
           dpr={[1, 1.35]}
           shadows
-          frameloop={canvasActive ? 'always' : 'never'}
+          frameloop={canvasActive ? 'demand' : 'never'}
           camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}
@@ -472,6 +516,8 @@ const TechStack = ({ theme = 'professional' }) => {
           <pointLight position={[-4.2, 2.8, 2.2]} intensity={0.72} color="#67e8f9" />
           <pointLight position={[4.2, 2.1, 4.4]} intensity={0.5} color="#f59e0b" />
           <pointLight position={[1, 1.4, -3]} intensity={0.2} color="#f8fafc" />
+
+          <InvalidateOnPointerActivity />
 
           <Suspense fallback={null}>
             <KeyboardScene techKeys={techKeys} hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} isTouch={isTouch} />

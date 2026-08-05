@@ -92,7 +92,7 @@ const detectDeviceProfile = () => {
   return { isTouch };
 };
 
-const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
+const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch, requestShadowUpdate }) => {
   const groupRef = useRef(null);
   const capBodyMaterialRef = useRef(null);
   const capTopMaterialRef = useRef(null);
@@ -172,7 +172,13 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
       && nextGlow === targetGlow
       && nextBodyGlow === targetBodyGlow
       && nextHousingGlow === targetHousingGlow;
-    if (!settled) invalidate();
+    if (!settled) {
+      invalidate();
+      // The key light's shadow map has autoUpdate off (see TechStack), so
+      // it has to be told explicitly to re-render while this cap's depth/
+      // tilt is still moving, otherwise its shadow freezes mid-motion.
+      requestShadowUpdate();
+    }
   });
 
   return (
@@ -277,10 +283,18 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch }) => {
   );
 };
 
-const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
+const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch, requestShadowUpdate }) => {
   const keyboardRef = useRef(null);
   const { viewport, invalidate } = useThree();
   const keyboardScale = viewport.width < 5.6 ? 0.7 : viewport.width < 7 ? 0.82 : 0.93;
+
+  // The key light's shadow map only updates on request (see TechStack).
+  // Force one correct bake once this scene's meshes exist post-Suspense,
+  // otherwise the initial shadow renders without any keycaps in it.
+  useEffect(() => {
+    requestShadowUpdate();
+    invalidate();
+  }, [requestShadowUpdate, invalidate]);
 
   useFrame((state, delta) => {
     if (!keyboardRef.current) {
@@ -316,7 +330,10 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
       && nextRotZ === targetRotationZ
       && nextX === targetX
       && nextY === targetY;
-    if (!settled) invalidate();
+    if (!settled) {
+      invalidate();
+      requestShadowUpdate();
+    }
   });
 
   return (
@@ -362,6 +379,7 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch }) => {
           isHovered={hoveredSkill?.name === skill.name}
           onHoverChange={onHoverChange}
           isTouch={isTouch}
+          requestShadowUpdate={requestShadowUpdate}
         />
       ))}
     </group>
@@ -393,6 +411,17 @@ const InvalidateOnPointerActivity = () => {
 const TechStack = ({ theme = 'professional' }) => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const canvasWrapRef = useRef(null);
+  const directionalLightRef = useRef(null);
+  // The key light's shadow map is expensive to recompute (a full extra
+  // depth pass over every casting/receiving mesh) and was doing it every
+  // single frame by default, even while the scene was sitting still. It's
+  // switched to manual mode (see the ref callback below) and only told to
+  // re-render when something that actually casts a shadow is still moving.
+  const requestShadowUpdate = () => {
+    if (directionalLightRef.current) {
+      directionalLightRef.current.shadow.needsUpdate = true;
+    }
+  };
   const techKeys = useMemo(() => buildTechKeys(theme), [theme]);
   const styles = THEME_STYLES[theme] || THEME_STYLES.professional;
   // Render the 3D scene only while the section is on screen. Once the user
@@ -507,6 +536,11 @@ const TechStack = ({ theme = 'professional' }) => {
           {theme !== 'playful' && <fog attach="fog" args={[styles.fog, 7.4, 17]} />}
           <ambientLight intensity={0.52} />
           <directionalLight
+            ref={(light) => {
+              if (!light) return;
+              directionalLightRef.current = light;
+              light.shadow.autoUpdate = false;
+            }}
             position={[4.5, 6.5, 5.4]}
             intensity={1.25}
             castShadow
@@ -520,7 +554,13 @@ const TechStack = ({ theme = 'professional' }) => {
           <InvalidateOnPointerActivity />
 
           <Suspense fallback={null}>
-            <KeyboardScene techKeys={techKeys} hoveredSkill={hoveredSkill} onHoverChange={setHoveredSkill} isTouch={isTouch} />
+            <KeyboardScene
+              techKeys={techKeys}
+              hoveredSkill={hoveredSkill}
+              onHoverChange={setHoveredSkill}
+              isTouch={isTouch}
+              requestShadowUpdate={requestShadowUpdate}
+            />
           </Suspense>
 
           <ContactShadows

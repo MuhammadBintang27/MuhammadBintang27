@@ -1,39 +1,37 @@
-<div align="center">
+<h1 align="center">Hi, I'm Muhammad Bintang Indra Hidayat👋</h1>
 
-# Hi, I'm Muhammad Bintang 👋
+<p align="center">
+<img src="https://readme-typing-svg.herokuapp.com?color=00F7FF&lines=Not+there+yet,+but+getting+better;In+a+fast+world,+learning+is+survival" /></p>
 
-**Full Stack Developer & AI Enthusiast**
+<p align="center">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWUxbDJlazZyaTNwNmpxbm9xMndrcmgzMml6aXk2YXQ0eXUwc3g1cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/66M6ZwJkTLYikvhrqZ/giphy.gif" width="320"/>
+</p>
 
-Repo untuk situs portofolio pribadi saya. Pengunjung bisa memilih antara dua versi tampilan: **Calm**, yang minimalis dan profesional, atau **Playful**, yang lebih ekspresif dengan banyak animasi.
+---
 
-</div>
-
-<table>
-<tr>
-<td valign="top" width="50%">
-
-### Link
-
-[![Live Site](https://img.shields.io/badge/🌐_Live-mbintang.vercel.app-1a1a1a?style=for-the-badge)](https://mbintang.vercel.app)  
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MuhammadBintang27)  
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/muhammad-bintang-indra-hidayat-b634a2274/)  
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/muhammadbintangindra/)  
-[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:muhammad.bintang.indra@gmail.com)  
-[![CV](https://img.shields.io/badge/📄_CV-1a1a1a?style=for-the-badge)](./public/CV.pdf)
-
+<table align="center" style="border: none;">
+<tr style="border: none;">
+<td style="border: none;">
+<img src="https://streak-stats.demolab.com?user=MuhammadBintang27&theme=tokyonight&hide_border=true" />
 </td>
-<td valign="top" width="50%">
 
-### Dibangun dengan
+<td style="width: 30px;"></td>
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)  
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)  
-![ThreeJS](https://img.shields.io/badge/ThreeJS-black?style=for-the-badge&logo=threedotjs&logoColor=white)  
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)  
-![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=blue)  
-![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
-
+<td style="border: none;">
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=MuhammadBintang27&layout=compact&theme=tokyonight&exclude_repo=Kelompok_6_Tugas01_Data_Preparation&hide_border=true" />
 </td>
 </tr>
 </table>
 
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=react,next,nodejs,php,laravel,flutter,mysql,js,ts" />
+</p>
+
+---
+
+- 1st Place LOGIKA UI 2025 Data Science Competition, Universitas Indonesia  
+- Bronze Medal LIDM 2025 Digital Learning Innovation Competition, Kemdiktisaintek  
+- Top 10 Finalist AI x Creativity Hackathon, Alibaba Cloud (Hybrid, March 2026)  
+- 2nd Place Hack4Health Hackathon (Sandbox 2.0), Institut Teknologi Bandung  
+- 3rd Place E-Commerce Design Category, The 11th UTU Awards, Universitas Teuku Umar  

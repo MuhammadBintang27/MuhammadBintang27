@@ -1,4 +1,18 @@
 export const PROJECTS = [
+{
+  slug: "corepotek",
+  title: "Corepotek",
+  description: "Pharmacy Management System",
+  category: "Web App · Business Tool",
+  year: "2026",
+  role: "Full-Stack Developer",
+  src: "/project/corepotek.webp",
+  github: null,
+  ctaLink: "",
+  summary:
+    "Corepotek is a product of Paripurna Sentosa Digital, where I work as a Full-Stack Developer. It is a multi-tenant pharmacy management system consisting of a pharmacy web application and a separate admin console. The pharmacy app covers the full operational cycle: inventory and stock opname, purchase orders, goods receiving and supplier debt, consignment, a point-of-sale cashier with promotions and discounts, receivables, and profit-and-loss reporting. The admin console handles client registration, menu and role assignment, user management, and activity logs.",
+  tags: ["Healthcare", "Web Development", "Business Management"],
+},
  {
   slug: "darahtanyoe",
   title: "DarahTanyoe",

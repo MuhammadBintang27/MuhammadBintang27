@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ScrollLineDivider from '../Professional/SectionDivider/ScrollLineDivider';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
@@ -66,14 +66,18 @@ const THEME_STYLES = {
   },
 };
 
+// delta is clamped: in demand/never frameloop the first frame after an idle
+// period gets the whole idle time as delta, which would snap instead of ease.
 const damp = (current, target, delta, speed = 8) => (
-  THREE.MathUtils.lerp(current, target, 1 - Math.exp(-speed * delta))
+  THREE.MathUtils.lerp(current, target, 1 - Math.exp(-speed * Math.min(delta, 1 / 30)))
 );
 
 // Same easing as `damp`, but skips the lerp/exp math once a value is already
 // within EPS of its target — avoids paying for 7 damp() calls x 24 keycaps
 // every frame while the scene is idle (no hover in progress).
-const DAMP_EPS = 0.0001;
+// 0.001 (not 0.0001): the last 0.001 of easing is invisible but cost ~2s of
+// full-canvas renders after every hover.
+const DAMP_EPS = 0.001;
 const dampTo = (current, target, delta, speed = 8) => (
   Math.abs(current - target) < DAMP_EPS ? target : damp(current, target, delta, speed)
 );
@@ -180,7 +184,13 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch, requestS
   });
 
   return (
-    <group ref={groupRef} position={skill.position}>
+    // Start at the rest pose (same reason as the keyboard group): otherwise all
+    // 24 caps ease in on first activation = ~40 janky frames right after scroll.
+    <group
+      ref={groupRef}
+      position={[skill.position[0], skill.position[1], skill.restHeight]}
+      rotation={skill.tilt}
+    >
       <RoundedBox
         args={[1.0, 1.0, 0.24]}
         radius={0.105}
@@ -283,24 +293,25 @@ const Keycap = ({ skill, isSelected, isHovered, onHoverChange, isTouch, requestS
 
 const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch, requestShadowUpdate }) => {
   const keyboardRef = useRef(null);
-  const { viewport, invalidate } = useThree();
+  const { viewport, invalidate, advance } = useThree();
   const keyboardScale = viewport.width < 5.6 ? 0.7 : viewport.width < 7 ? 0.82 : 0.93;
+  const baseX = keyboardScale < 0.8 ? 0.46 : 0.44;
+  const baseY = keyboardScale < 0.8 ? 0.3 : 0.24;
 
   // The key light's shadow map only updates on request (see TechStack).
-  // Force one correct bake once this scene's meshes exist post-Suspense,
-  // otherwise the initial shadow renders without any keycaps in it.
+  // Bake it once this scene's meshes exist post-Suspense, and render that
+  // first real frame right now (advance works even while frameloop is
+  // 'never'): this runs at idle-mount, so the ~130ms first-frame cost
+  // (shadow pass + GPU upload) no longer lands mid-scroll.
   useEffect(() => {
     requestShadowUpdate();
-    invalidate();
-  }, [requestShadowUpdate, invalidate]);
+    advance(performance.now());
+  }, [requestShadowUpdate, advance]);
 
   useFrame((state, delta) => {
     if (!keyboardRef.current) {
       return;
     }
-
-    const baseX = keyboardScale < 0.8 ? 0.46 : 0.44;
-    const baseY = keyboardScale < 0.8 ? 0.3 : 0.24;
 
     const targetRotationX = -1.14 + state.mouse.y * 0.06;
     const targetRotationY = 0.26 + state.mouse.x * 0.09;
@@ -335,7 +346,15 @@ const KeyboardScene = ({ techKeys, hoveredSkill, onHoverChange, isTouch, request
   });
 
   return (
-    <group ref={keyboardRef} scale={keyboardScale}>
+    // Start at the rest pose: from the default 0 rotation the keyboard would
+    // ease ~1s into place on first view, re-rendering the full-size canvas +
+    // shadow pass every frame — the first-view stutter on laptops.
+    <group
+      ref={keyboardRef}
+      scale={keyboardScale}
+      rotation={[-1.14, 0.26, 0.34]}
+      position={[baseX, baseY, 0]}
+    >
       <RoundedBox
         args={[5.08, 6.34, 0.42]}
         radius={0.2}
@@ -415,11 +434,13 @@ const TechStack = ({ theme = 'professional' }) => {
   // single frame by default, even while the scene was sitting still. It's
   // switched to manual mode (see the ref callback below) and only told to
   // re-render when something that actually casts a shadow is still moving.
-  const requestShadowUpdate = () => {
+  // Stable identity: KeyboardScene's mount effect depends on it and must not
+  // re-run (and re-render the scene) on every TechStack state change.
+  const requestShadowUpdate = useCallback(() => {
     if (directionalLightRef.current) {
       directionalLightRef.current.shadow.needsUpdate = true;
     }
-  };
+  }, []);
   const techKeys = useMemo(() => buildTechKeys(theme), [theme]);
   const styles = THEME_STYLES[theme] || THEME_STYLES.professional;
   // Render the 3D scene only while the section is on screen. Once the user
@@ -448,6 +469,26 @@ const TechStack = ({ theme = 'professional' }) => {
     return () => observer.disconnect();
   }, []);
 
+  // The scene doesn't depend on scroll position, so pause WebGL while the page
+  // scrolls: Lenis scrolls on the main thread, and any frame rendered meanwhile
+  // shows up as scroll stutter (desktop only — touch uses native scroll).
+  // Listens even while the canvas is inactive, so a section scrolled into
+  // view mid-scroll is already paused instead of rendering its first frames.
+  const [isScrolling, setIsScrolling] = useState(false);
+  useEffect(() => {
+    let timeoutId;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => setIsScrolling(false), 150);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <>
       {theme === 'professional' && <ScrollLineDivider />}
@@ -465,8 +506,8 @@ const TechStack = ({ theme = 'professional' }) => {
               Skills &amp; Tools
             </motion.p>
             <motion.h2
-              initial={{ opacity: 0, y: 30, scale: 0.9, rotate: -1.5 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
               className={`font-black uppercase leading-[0.9] tracking-[-0.02em] ${styles.headingSize} ${styles.heading} ${styles.headingFont}`}
@@ -525,7 +566,10 @@ const TechStack = ({ theme = 'professional' }) => {
         <Canvas
           dpr={[1, 1.35]}
           shadows
-          frameloop={canvasActive ? 'demand' : 'never'}
+          frameloop={canvasActive && !isScrolling ? 'demand' : 'never'}
+          // r3f re-measures (and re-renders) on every scroll by default; pointer
+          // events use offsetX/Y, so scroll offsets aren't needed.
+          resize={{ scroll: false }}
           camera={{ position: [8.9, 4.2, 5.8], fov: 36 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           style={{ width: '100%', height: '100%', touchAction: 'none' }}

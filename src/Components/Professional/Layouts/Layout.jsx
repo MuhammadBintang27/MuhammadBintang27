@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
+import CursorThread from "../../Elements/CursorThread";
 
 const LayoutWeb = ({ children, bgColor = "bg-techstack-theme", isDark = true }) => {
   useEffect(() => {
@@ -32,6 +33,8 @@ const LayoutWeb = ({ children, bgColor = "bg-techstack-theme", isDark = true }) 
       </div>
 
      
+
+      <CursorThread color="rgba(165,243,252,0.55)" width={1.5} />
 
       {/* Konten Utama */}
       <div className="relative z-10 min-h-screen flex flex-col">

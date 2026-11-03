@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { FiArrowUpRight } from "react-icons/fi";
 import ScrollLineDivider from "../SectionDivider/ScrollLineDivider";
 import { PROJECTS } from "../../../data/projectsData";
 
@@ -195,7 +195,7 @@ const ProjectsSection = () => {
                     <span className="w-10 text-right text-sm text-white/30">{project.year}</span>
                   </div>
 
-                  <ArrowUpRight
+                  <FiArrowUpRight
                     className="ml-1 h-5 w-5 shrink-0 text-white/25 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300 sm:h-6 sm:w-6"
                     strokeWidth={1.75}
                   />

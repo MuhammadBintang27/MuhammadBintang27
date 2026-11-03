@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import calmHeroImg from '../assets/images/hero/imagepertama.webp';
-import {
-  VERSION_KEY,
-  VERSION_ROUTES,
-  normaliseVersion,
-  rememberVersion,
-} from '../data/versionConfig';
+import { VERSION_ROUTES, readVersion, rememberVersion } from '../data/versionConfig';
 
 const CONDENSED = "'Barlow Condensed','Roboto Condensed','Arial Narrow',sans-serif";
 
@@ -185,7 +180,7 @@ const VersionChooser = () => {
   const [hovered, setHovered] = useState(null); // 'calm' | 'playful' | null
 
   useEffect(() => {
-    const stored = normaliseVersion(window.localStorage.getItem(VERSION_KEY));
+    const stored = readVersion();
     if (stored) {
       navigate(VERSION_ROUTES[stored], { replace: true });
       return;

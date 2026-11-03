@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect, useState } from "react";
 import LayoutWeb from "../../Components/Professional/Layouts/Layout";
 import Contact from "../../Components/Professional/Contact/Contact";
 import HeroSection from "../../Components/Professional/ScrollRevealSection/HeroSection";
@@ -10,39 +10,49 @@ import LazyMount from "../../Components/Elements/LazyMount";
 
 const TechStack = lazy(() => import("../../Components/TechStack/TechStack"));
 
-const MainLayout = () => (
-  <LayoutWeb>
-    <main>
+const desktopQuery = window.matchMedia("(min-width: 768px)");
 
-      <section className="relative hidden md:block">
-        <HeroSection />
-      </section>
+const MainLayout = () => {
+  const [isDesktop, setIsDesktop] = useState(desktopQuery.matches);
 
-      <section className="relative md:hidden">
-        <MobileHero />
-      </section>
+  useEffect(() => {
+    const onChange = (e) => setIsDesktop(e.matches);
+    desktopQuery.addEventListener("change", onChange);
+    return () => desktopQuery.removeEventListener("change", onChange);
+  }, []);
 
-      <section className="relative -mt-px">
-        <Home />
-      </section>
+  return (
+    <LayoutWeb>
+      <main>
 
-      <section className="relative -mt-px">
-        <AchievementsSection />
-      </section>
+        {/* Mount only the hero that fits, so the hidden one's scroll-scrubbed
+            timeline doesn't run on every scroll. */}
+        <section className="relative">
+          {isDesktop ? <HeroSection /> : <MobileHero />}
+        </section>
 
-      <section className="relative -mt-px">
-        <ProjectsSection />
-      </section>
+        <section className="relative -mt-px">
+          <Home />
+        </section>
 
-      <section className="relative -mt-px">
-        <LazyMount mountOnIdle fallback={<div className="h-screen bg-[#0f1014]" />}>
-          <TechStack />
-        </LazyMount>
-      </section>
+        <section className="relative -mt-px">
+          <AchievementsSection />
+        </section>
 
-      <Contact />
-    </main>
-  </LayoutWeb>
-);
+        <section className="relative -mt-px">
+          <ProjectsSection />
+        </section>
+
+        <section className="relative -mt-px">
+          <LazyMount mountOnIdle fallback={<div className="h-screen bg-[#0f1014]" />}>
+            <TechStack />
+          </LazyMount>
+        </section>
+
+        <Contact />
+      </main>
+    </LayoutWeb>
+  );
+};
 
 export default MainLayout;

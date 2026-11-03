@@ -18,6 +18,15 @@ export const normaliseVersion = (value) => {
   return VERSIONS.includes(value) ? value : null;
 };
 
+// Reads the stored version; storage can throw when the browser blocks it.
+export const readVersion = () => {
+  try {
+    return normaliseVersion(window.localStorage.getItem(VERSION_KEY));
+  } catch {
+    return null;
+  }
+};
+
 // Persists the chosen version (used by the chooser and the in-nav switcher).
 export const rememberVersion = (version) => {
   try {

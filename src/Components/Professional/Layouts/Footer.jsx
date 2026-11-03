@@ -1,27 +1,4 @@
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaArrowUp } from 'react-icons/fa';
-
-const SOCIAL_LINKS = [
-  {
-    href: 'https://github.com/MuhammadBintang27',
-    label: 'GitHub',
-    Icon: FaGithub,
-  },
-  {
-    href: 'https://www.linkedin.com/in/muhammad-bintang-indra-hidayat-b634a2274/',
-    label: 'LinkedIn',
-    Icon: FaLinkedin,
-  },
-  {
-    href: 'https://www.instagram.com/muhammadbintangindra/',
-    label: 'Instagram',
-    Icon: FaInstagram,
-  },
-  {
-    href: 'mailto:muhammad.bintang.indra@gmail.com',
-    label: 'Email',
-    Icon: FaEnvelope,
-  },
-];
+import { FaArrowUp } from 'react-icons/fa';
 
 const scrollToTop = () => {
   if (window.__lenis) window.__lenis.scrollTo(0);

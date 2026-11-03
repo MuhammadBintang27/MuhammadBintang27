@@ -65,9 +65,6 @@
     @apply text-slate-100;
     font-family: 'Geist Variable', 'Inter', sans-serif;
   }
-  * {
-    @apply outline-none;
-  }
 }
 
 @layer components {

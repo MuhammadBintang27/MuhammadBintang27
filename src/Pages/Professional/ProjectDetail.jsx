@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaGithub, FaArrowLeft, FaExternalLinkAlt } from "react-icons/fa";
-import { ArrowUpRight } from "lucide-react";
+import { FiArrowUpRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { PROJECTS } from "../../data/projectsData";
 
@@ -31,7 +31,7 @@ const ProjectDetail = () => {
       {/* Back button */}
       <div className="fixed left-0 right-0 top-0 z-50 px-4 pt-5 sm:px-8">
         <button
-          onClick={() => navigate("/#projects")}
+          onClick={() => navigate("/calm#projects")}
           className="group flex items-center gap-2 rounded-full border border-white/15 bg-[#0f1014]/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white/55 backdrop-blur-md transition hover:border-white/30 hover:text-white"
         >
           <FaArrowLeft className="h-3 w-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
@@ -182,7 +182,7 @@ const ProjectDetail = () => {
                         {proj.title}
                       </h3>
                     </div>
-                    <ArrowUpRight
+                    <FiArrowUpRight
                       className="mb-0.5 h-5 w-5 shrink-0 text-white/22 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300"
                       strokeWidth={1.75}
                     />

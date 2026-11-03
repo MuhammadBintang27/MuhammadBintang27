@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 // Mounts `children` behind a still-opaque `Loader`, then lifts the loader
@@ -9,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 const SplashGate = ({ Loader, preload, children }) => {
   const [showApp, setShowApp] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
+  const { hash } = useLocation();
 
   useEffect(() => {
     const minimumLoaderDuration = 1200;
@@ -53,6 +55,16 @@ const SplashGate = ({ Loader, preload, children }) => {
       document.body.style.overflow = 'auto';
     };
   }, [showLoader]);
+
+  // Links like /calm#projects (back buttons, nav from other pages) land on the
+  // section once the splash lifts, instead of at the top.
+  useEffect(() => {
+    if (showLoader || !hash) return;
+    const el = document.getElementById(hash.slice(1));
+    if (!el) return;
+    if (window.__lenis) window.__lenis.scrollTo(el, { immediate: true });
+    else el.scrollIntoView();
+  }, [showLoader, hash]);
 
   return (
     <>

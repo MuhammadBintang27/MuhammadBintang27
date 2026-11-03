@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { FileText } from 'lucide-react';
+import { FiFileText } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import gsap from 'gsap';
@@ -191,7 +191,7 @@ const Home = () => {
                   onClick={() => setCvOpen(true)}
                   className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 px-7 py-2.5 text-sm font-bold text-[#0f1014] shadow-[0_0_18px_rgba(251,191,36,0.30)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_rgba(251,191,36,0.50)]"
                 >
-                  <FileText size={14} strokeWidth={2.5} />
+                  <FiFileText size={14} strokeWidth={2.5} />
                   View CV
                 </button>
                 <a

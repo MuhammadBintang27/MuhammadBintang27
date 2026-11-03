@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaGithub, FaArrowLeft } from 'react-icons/fa';
-import { ArrowUpRight } from 'lucide-react';
+import { FiArrowUpRight } from 'react-icons/fi';
 import { PROJECTS } from '../../data/projectsData';
 import PlayfulMarquee from '../../Components/Playful/Layouts/PlayfulMarquee';
 
@@ -160,7 +160,7 @@ const PlayfulProjectDetail = () => {
       <div className="fixed left-0 right-0 top-0 z-50 px-4 pt-5 sm:px-8">
         <button
           type="button"
-          onClick={() => navigate('/playful')}
+          onClick={() => navigate('/playful#projects')}
           className="group flex items-center gap-2 rounded-full bg-[#E5301E] px-5 py-2.5 text-xs font-bold uppercase tracking-[0.15em] text-[#FFFDF8] shadow-[3px_4px_0_rgba(36,26,18,0.24)] transition hover:-translate-y-0.5 active:translate-y-0"
         >
           <FaArrowLeft className="h-3 w-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
@@ -236,7 +236,7 @@ const PlayfulProjectDetail = () => {
                     <FaGithub className="h-4 w-4" />
                     GitHub
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F0A716]">
-                      <ArrowUpRight className="h-3.5 w-3.5 text-[#241A12] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+                      <FiArrowUpRight className="h-3.5 w-3.5 text-[#241A12] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
                     </span>
                   </a>
                 )}
@@ -249,7 +249,7 @@ const PlayfulProjectDetail = () => {
                   >
                     Visit Site
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FFFDF8]">
-                      <ArrowUpRight className="h-3.5 w-3.5 text-[#E5301E] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+                      <FiArrowUpRight className="h-3.5 w-3.5 text-[#E5301E] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
                     </span>
                   </a>
                 )}

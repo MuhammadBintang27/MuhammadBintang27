@@ -21,8 +21,11 @@ const Nav = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Only touch the scroll lock while the menu is open, so mounting the nav
+  // doesn't undo SplashGate's lock while the splash is still up.
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (!isOpen) return undefined;
+    document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 

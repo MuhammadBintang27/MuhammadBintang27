@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { FiArrowUpRight } from 'react-icons/fi';
 import { PROJECTS } from '../../../data/projectsData';
 
 // Playful twin of the professional ProjectsSection — identical concept (a full
@@ -211,7 +211,7 @@ const PlayfulProjects = () => {
                 </div>
 
                 <span className="ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFFDF8]/12 text-[#FFFDF8] transition-all duration-200 group-hover:bg-[#FFD23F] group-hover:text-[#7D0C0A] sm:h-11 sm:w-11">
-                  <ArrowUpRight className="h-5 w-5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:h-6 sm:w-6" strokeWidth={2.25} />
+                  <FiArrowUpRight className="h-5 w-5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:h-6 sm:w-6" strokeWidth={2.25} />
                 </span>
               </button>
             </motion.li>

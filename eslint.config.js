@@ -29,6 +29,10 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      // No PropTypes in this project, and three.js/R3F props (position,
+      // intensity, ...) are valid JSX the DOM-only rule doesn't know.
+      'react/prop-types': 'off',
+      'react/no-unknown-property': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

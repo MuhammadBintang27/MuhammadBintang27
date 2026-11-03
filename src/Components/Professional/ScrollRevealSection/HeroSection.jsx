@@ -3,20 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import firstImageDefault from '../../../assets/images/hero/imagepertama.webp';
 import secondImageDefault from '../../../assets/images/hero/gelap.webp';
+import { TITLE_GLYPHS } from './titleGlyphs';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const PANEL_COLUMNS = 7;
 const PANEL_ROWS = 1;
-const TITLE_GLYPHS = [
-  { char: 'B', scaleY: 1.34, scaleX: 1.12 },
-  { char: 'I', scaleY: 1.1, scaleX: 1.08 },
-  { char: 'N', scaleY: 0.82, scaleX: 1.03 },
-  { char: 'T', scaleY: 0.82, scaleX: 1.03 },
-  { char: 'A', scaleY: 0.82, scaleX: 1.03 },
-  { char: 'N', scaleY: 1.1, scaleX: 1.08 },
-  { char: 'G', scaleY: 1.34, scaleX: 1.12 },
-];
 
 const buildPanels = () => {
   const panels = [];

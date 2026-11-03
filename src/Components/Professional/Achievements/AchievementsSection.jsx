@@ -89,7 +89,12 @@ const AchievementsSection = () => {
 
         const setInitialPositions = () => {
           scaleRef.current = computeScale();
+          // Centre explicitly: GSAP used to guess the CSS -50% translate from
+          // rounded sizes, and the vertical guess failed depending on font/load
+          // timing, dropping the cards half a card lower.
           gsap.set(cardRefs.current, {
+            xPercent: -50,
+            yPercent: -50,
             x: (index) => ACHIEVEMENTS[index].initialX * scaleRef.current,
             y: (index) => ACHIEVEMENTS[index].initialY * scaleRef.current,
             rotate: (index) => ACHIEVEMENTS[index].initialRotate,
@@ -268,7 +273,7 @@ const AchievementsSection = () => {
                 dragConstraints={dragBounds}
                 dragElastic={0.16}
                 whileTap={{ cursor: 'grabbing', scale: 1.02 }}
-                className="absolute left-1/2 top-1/2 z-30 w-[300px] cursor-grab -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 z-30 w-[300px] cursor-grab"
                 style={{ zIndex: ACHIEVEMENTS.length - index + 20 }}
               >
                 {renderCardSurface(item, index)}

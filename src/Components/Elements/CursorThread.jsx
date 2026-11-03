@@ -61,6 +61,16 @@ const CursorThread = ({ color, width = 2, stickers = [] }) => {
     };
 
     const onMove = (e) => {
+      // Over a WebGL canvas (the 3D tech stack) every pointer move already
+      // re-renders the scene; redrawing a full-screen overlay on top of it
+      // made both stutter. Step aside there and re-wind at the cursor after.
+      if (e.target instanceof HTMLCanvasElement) {
+        rootRef.current.style.opacity = '0';
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+        head = null;
+        return;
+      }
       if (!head) {
         // Start wound up at the cursor instead of streaking in from the corner.
         points.forEach((p) => {

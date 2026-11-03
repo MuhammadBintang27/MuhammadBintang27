@@ -53,6 +53,9 @@
 @layer base {
   html {
     scroll-behavior: auto;
+    /* Reserve the scrollbar's width even while SplashGate locks scrolling, so
+       unlocking it doesn't narrow the viewport and nudge everything left. */
+    scrollbar-gutter: stable;
     @apply font-sans;
   }
 

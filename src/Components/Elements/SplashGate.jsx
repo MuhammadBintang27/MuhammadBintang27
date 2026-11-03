@@ -4,7 +4,9 @@ import { AnimatePresence } from 'framer-motion';
 // Mounts `children` behind a still-opaque `Loader`, then lifts the loader
 // once the page has settled — reused per version (professional/playful) so
 // each one plays its own themed splash instead of a single app-wide loader.
-const SplashGate = ({ Loader, children }) => {
+// `preload` (optional) is a lazy route's import() — fetched during the splash so
+// the chunk isn't parsed and rendered mid-exit, which made the slide-up stutter.
+const SplashGate = ({ Loader, preload, children }) => {
   const [showApp, setShowApp] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
 
@@ -12,10 +14,12 @@ const SplashGate = ({ Loader, children }) => {
     const minimumLoaderDuration = 1200;
     const appMountSettleTime = 450;
     const startTime = performance.now();
+    let cancelled = false;
     let timeoutId;
     let exitTimeoutId;
 
     const finishLoading = () => {
+      if (cancelled) return;
       const elapsed = performance.now() - startTime;
       const remainingTime = Math.max(minimumLoaderDuration - elapsed, 0);
 
@@ -27,18 +31,20 @@ const SplashGate = ({ Loader, children }) => {
       }, remainingTime);
     };
 
-    if (document.readyState === 'complete') {
-      finishLoading();
-    } else {
-      window.addEventListener('load', finishLoading, { once: true });
-    }
+    const pageLoaded =
+      document.readyState === 'complete'
+        ? Promise.resolve()
+        : new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+
+    // A failed preload still lifts the splash; lazy() surfaces the error itself.
+    Promise.all([pageLoaded, preload?.()]).catch(() => {}).then(finishLoading);
 
     return () => {
+      cancelled = true;
       window.clearTimeout(timeoutId);
       window.clearTimeout(exitTimeoutId);
-      window.removeEventListener('load', finishLoading);
     };
-  }, []);
+  }, [preload]);
 
   useEffect(() => {
     document.body.style.overflow = showLoader ? 'hidden' : 'auto';

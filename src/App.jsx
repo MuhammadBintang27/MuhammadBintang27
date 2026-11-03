@@ -14,7 +14,8 @@ import SplashGate from "./Components/Elements/SplashGate";
 import CinematicScrollProvider from "./Components/Elements/CinematicScrollProvider";
 
 const ProjectDetail = lazy(() => import("./Pages/Professional/ProjectDetail"));
-const PlayfulMainLayout = lazy(() => import("./Pages/Playful/PlayfulMainLayout"));
+const loadPlayfulMainLayout = () => import("./Pages/Playful/PlayfulMainLayout");
+const PlayfulMainLayout = lazy(loadPlayfulMainLayout);
 const PlayfulProjectDetail = lazy(() => import("./Pages/Playful/PlayfulProjectDetail"));
 
 // 404 Page Component
@@ -61,7 +62,7 @@ const App = () => (
         <Route
           path="/playful"
           element={
-            <SplashGate key="splash-playful" Loader={PlayfulLoader}>
+            <SplashGate key="splash-playful" Loader={PlayfulLoader} preload={loadPlayfulMainLayout}>
               <Suspense fallback={<div className="h-screen bg-[#F2E1C4]" />}>
                 <PlayfulMainLayout />
               </Suspense>

@@ -13,7 +13,9 @@ const DOODLES = [
   { src: '/playful/bug.webp', className: 'bottom-24 right-4 w-[18%] max-w-[128px] sm:bottom-28 sm:right-12', rotate: 12, delay: 0.75 },
 ];
 
-const PlayfulLoader = () => {
+// Own component so the per-frame counter update re-renders only this text,
+// not the whole loader (doodles, letter springs, stroked wordmark).
+const ProgressCounter = () => {
   const [progress, setProgress] = useState(1);
 
   useEffect(() => {
@@ -34,11 +36,19 @@ const PlayfulLoader = () => {
     return () => cancelAnimationFrame(rafId);
   }, []);
 
+  return <>{progress.toString().padStart(2, '0')}%</>;
+};
+
+const PlayfulLoader = () => {
   return (
     <motion.div
       className="fixed inset-0 z-[9999] flex flex-col justify-between overflow-hidden bg-[#F2E1C4]"
       style={{ willChange: 'transform' }}
-      exit={{ y: '-100%' }}
+      // Raw `transform` string (not `y`) lets framer run the exit on the
+      // compositor, so it stays smooth while the page mounts underneath.
+      initial={{ transform: 'translateY(0%)' }}
+      animate={{ transform: 'translateY(0%)' }}
+      exit={{ transform: 'translateY(-100%)' }}
       transition={{ duration: 0.85, ease: [0.83, 0, 0.17, 1] }}
     >
       {/* Warm dotted paper — echoes the hero and version-chooser preview */}
@@ -76,7 +86,9 @@ const PlayfulLoader = () => {
       {/* Center — comic-sticker wordmark with tilted tag badges */}
       <motion.div
         className="relative z-10 flex flex-1 flex-col items-center justify-center px-4"
-        exit={{ y: -60, opacity: 0 }}
+        initial={{ transform: 'translateY(0px)' }}
+        animate={{ transform: 'translateY(0px)' }}
+        exit={{ transform: 'translateY(-60px)', opacity: 0 }}
         transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
       >
         <div className="relative flex items-center justify-center">
@@ -154,7 +166,7 @@ const PlayfulLoader = () => {
           className="px-6 pb-2 text-right text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-[#241A12]/60 sm:px-10"
           style={{ fontFamily: "'DM Mono','Courier New',monospace" }}
         >
-          {progress.toString().padStart(2, '0')}%
+          <ProgressCounter />
         </motion.p>
 
         <div className="overflow-hidden whitespace-nowrap bg-[#F0A716] py-3">
